@@ -1,0 +1,252 @@
+$height: 26px;
+$smallHeight: 22px;
+$largeHeight: 30px;
+$borderRadius: 0;//3px
+
+//按钮默认样式风格
+$defaultBorderColor: #d9d9d9;
+$defaultColor: rgba(0,0,0,.8);
+$defaultBGColor: #FFF;
+
+$defaultHoverColor: #108ee9;
+$defaultHoverBGColor: #fff;
+$defaultHoverBorderColor: #108ee9;
+
+$defaultActiveColor: #0e77ca;
+$defaultActiveBGColor: #fff;
+$defaultActiveBorderColor: #0e77ca;
+
+//dashed按钮风格
+$dashedColor: rgba(0,0,0,.7);
+
+//按钮样式风格
+$typeList: primary,danger;
+
+$typeMap: (
+	primaryColor: #FFF,
+	primaryBGColor: #108ee9,
+	primaryBorderColor: #108ee9,
+	primaryHoverColor: #FFF,
+	primaryHoverBGColor: #49a9ee,
+	primaryHoverBorderColor: #49a9ee,
+	primaryActiveColor: #FFF,
+	primaryActiveBGColor: #0e77ca,
+	primaryActiveBorderColor: #0e77ca,
+	
+	dangerColor: #FFF,
+	dangerBGColor: #f04134,
+	dangerBorderColor: #f04134,
+	dangerHoverColor: #FFF,
+	dangerHoverBGColor: #E8685E,
+	dangerHoverBorderColor: #E8685E,
+	dangerActiveColor: #FFF,
+	dangerActiveBGColor: #d73435,
+	dangerActiveBorderColor: #d73435,
+);
+
+//disabled样式
+$disabledColor: rgba(0,0,0,.25);
+$disabledBGColor:#f7f7f7;
+$disabledBorderColor:#d9d9d9;
+$disabledCursor:not-allowed;
+
+.nex-btn {
+    display: inline-block;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    overflow: hidden;
+    position: relative;
+	margin-bottom:0;
+	height:$height;
+	padding: 0 10px;
+	-ms-touch-action:manipulation;
+	touch-action:manipulation;
+	border:1px solid $defaultBorderColor;
+	line-height:normal;
+	font-weight:500;
+	font-size:12px;
+	background: $defaultBGColor;
+	color: $defaultColor;
+	position: relative;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+	vertical-align: middle;
+	border-radius: $borderRadius;
+}
+//??
+.nex-btn-radius {
+	border-radius: $borderRadius;
+}
+
+.nex-btn-block {
+	display:block;
+	width:100%;	
+}
+
+.nex-btn-block+.nex-btn-block {
+    margin-top: 5px;
+}
+
+.nex-btn-inline+.nex-btn-inline {
+    margin-left: 5px;
+}
+
+.nex-btn,
+.nex-btn:active,
+.nex-btn:focus {
+	outline:0
+}
+
+.nex-btn-sm {
+	height:$smallHeight;
+}
+
+.nex-btn-lg {
+	height:$largeHeight;
+}
+
+.nex-btn:focus,
+.nex-btn:hover {
+	color:$defaultHoverColor;
+	background-color:$defaultHoverBGColor;
+	border-color:$defaultHoverBorderColor;
+}
+
+.nex-btn:active,
+.nex-btn-active{
+	color:$defaultActiveColor;
+	background-color:$defaultActiveBGColor;
+	border-color:$defaultActiveBorderColor;
+}
+
+.nex-btn-disabled>*,
+.nex-btn[disabled]>* {
+	pointer-events:none
+}
+
+.nex-btn-dashed {
+	border-style:dashed;
+	color: $dashedColor;
+}
+
+@each $type in $typeList {
+	.nex-btn-#{$type} {
+		color:map-get($typeMap, "#{$type}Color");
+		background-color:map-get($typeMap, "#{$type}BGColor");
+		border-color:map-get($typeMap, "#{$type}BorderColor");
+	}
+	
+	.nex-btn-#{$type}:focus,.nex-btn-#{$type}:hover {
+		color:map-get($typeMap, "#{$type}HoverColor");
+		background-color:map-get($typeMap, "#{$type}HoverBGColor");
+		border-color:map-get($typeMap, "#{$type}HoverBorderColor");
+	}
+	
+	.nex-btn-#{$type}.nex-btn-active,.nex-btn-#{$type}:active {
+		color:map-get($typeMap, "#{$type}ActiveColor");
+		background-color:map-get($typeMap, "#{$type}ActiveBGColor");
+		border-color:map-get($typeMap, "#{$type}ActiveBorderColor");
+	}
+}
+/*
+.nex-btn-primary.nex-btn-disabled,
+.nex-btn-danger.nex-btn-disabled,
+.nex-btn-dashed.nex-btn-disabled,
+*/
+.nex-btn.nex-btn-disabled,
+.nex-btn[disabled],
+.nex-btn:disabled,
+.nex-btn-disabled:active,
+.nex-btn-disabled:hover,
+.nex-btn[disabled]:active,
+.nex-btn[disabled]:hover {
+    color:$disabledColor;
+	background-color:$disabledBGColor;
+	border-color:$disabledBorderColor;
+	cursor:$disabledCursor;
+}
+
+.nex-btn-icon-only {
+	padding-left:8px;
+	padding-right:8px
+}
+
+.nex-btn-icon {
+    vertical-align: baseline;
+    background-position: center center;
+    background-repeat: no-repeat;
+	display: inline-block;
+    font-style: normal;
+    text-align: center;
+    text-transform: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.nex-btn>.nex-btn-icon+.nex-btn-text, .nex-btn>.nex-btn-text+.nex-btn-icon {
+    margin-left: 3px;
+}
+
+.nex-btn-text {
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+.nex-btn-group {
+	position:relative;
+	display:inline-block
+}
+.nex-btn-group>.nex-btn {
+	position:relative;
+	z-index:1
+}
+.nex-btn-group>.nex-btn.active,.nex-btn-group>.nex-btn:active,.nex-btn-group>.nex-btn:focus,.nex-btn-group>.nex-btn:hover {
+	z-index:2
+}
+.nex-btn-group>.nex-btn:disabled {
+	z-index:0
+}
+
+.nex-btn-group .nex-btn+.nex-btn {
+	margin-left:-1px
+}
+.nex-btn-group .nex-btn:not(:first-child):not(:last-child) {
+	border-radius:0;
+}
+.nex-btn-group>.nex-btn:first-child {
+	margin-left:0
+}
+.nex-btn-group>.nex-btn:first-child:not(:last-child) {
+	border-bottom-right-radius:0;
+	border-top-right-radius:0;
+}
+.nex-btn-group>.nex-btn:last-child:not(:first-child) {
+	border-bottom-left-radius:0;
+	border-top-left-radius:0;
+}
+.nex-btn-group .nex-btn-primary:not(:first-child):not(:last-child) {
+	border-right-color:map-get($typeMap, "primaryHoverBGColor");
+	border-left-color:map-get($typeMap, "primaryActiveBGColor");
+}
+.nex-btn-group .nex-btn-primary:not(:first-child):not(:last-child):disabled {
+	border-color:$disabledBorderColor
+}
+.nex-btn-group .nex-btn-primary:first-child:not(:last-child) {
+	border-right-color:map-get($typeMap, "primaryActiveBGColor");
+}
+.nex-btn-group .nex-btn-primary:first-child:not(:last-child)[disabled] {
+	border-right-color:$disabledBorderColor
+}
+.nex-btn-group .nex-btn-primary+.nex-btn-primary,.nex-btn-group .nex-btn-primary:last-child:not(:first-child) {
+	border-left-color:map-get($typeMap, "primaryActiveBGColor");
+}
+.nex-btn-group .nex-btn-primary+.nex-btn-primary[disabled],.nex-btn-group .nex-btn-primary:last-child:not(:first-child)[disabled] {
+	border-left-color:$disabledBorderColor
+}

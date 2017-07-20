@@ -1,0 +1,12 @@
+{
+    "esnext": true,
+    "asi": false,
+    "browser": false,
+    "shadow": true,
+    "curly": true,
+    "noarg": true,
+    "undef": true,
+    "unused": false,
+    "node": true,
+    "jasmine": true
+}

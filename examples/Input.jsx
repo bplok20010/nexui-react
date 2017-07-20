@@ -1,0 +1,17 @@
+import { Input,InputGroup } from '../dist/rnexui';
+
+ReactDOM.render(<div>
+    <Input addonBefore="test..." width="200px" ref={(Input)=>Input.focus()} onPressEnter={()=>console.log('enter')}/>
+	<Input block={false} addonAfter="test..."/>
+	<Input type="textarea" defaultValue="test" width="200px" height="150px" autosize />
+	<Input  type="hidden" value="test"/>
+	<InputGroup size="small">
+		<Input width={50} />
+		<Input width={50} />
+		<Input width={50} />
+		<Input width={50} />
+	</InputGroup>
+	<div onClick={()=>console.log('click')}>
+		<input type="checkbox" defaultChecked onChange={(e)=> {e.preventDefault();e.stopPropagation()}} />
+	</div>
+</div>, demo);
