@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import shallowEqual from 'shallowequal';
-import RCheckbox from './RCheckbox';
+import RRadio from './RRadio';
 
-export default class Checkbox extends Component {
+export default class Radio extends Component {
 	static propTypes = {
 		className: PropTypes.string,
 		style: PropTypes.object,
@@ -12,23 +12,24 @@ export default class Checkbox extends Component {
 	};
 
 	static defaultProps = {
-		prefixCls: 'nex-checkbox',
+		prefixCls: 'nex-radio',
 		className: '',
 		style: {}
 	};
 	
 	static contextTypes = {
-		checkboxGroup: PropTypes.any,
+		radioGroup: PropTypes.any,
 	};
 	
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
 		return !shallowEqual(this.props, nextProps) ||
 			   !shallowEqual(this.state, nextState) ||
-			   !shallowEqual(this.context.checkboxGroup, nextContext.checkboxGroup);
+			   !shallowEqual(this.context.radioGroup, nextContext.radioGroup);
 	}
 
 	render() {
-		const { props, context } = this;
+		const {props, context} = this;
+		
 		const {
 			prefixCls,
 			className,
@@ -37,19 +38,20 @@ export default class Checkbox extends Component {
 			onMouseEnter,
       		onMouseLeave,
 			...others
-		} = this.props;
-		
-		const { checkboxGroup } = context;
-		if (checkboxGroup) {
-			others.onChange = () => checkboxGroup.toggleOption({ label: children, value: props.value });
-			others.checked = checkboxGroup.value.indexOf(props.value) !== -1;
-			others.disabled = 'disabled' in props ? props.disabled : checkboxGroup.disabled;
-		}
+		} = props;
 
 		const classString = classNames({
 			[`${prefixCls}-wrapper`]: true,
 			[className]: !!className
 		});
+		
+		const { radioGroup } = context;
+	
+		if (radioGroup) {
+			others.onChange = radioGroup.onChange;
+			others.checked = props.value+'' === radioGroup.value+'';
+			others.disabled = props.disabled || radioGroup.disabled;
+		}
 
 		return (
 			<label 
@@ -58,7 +60,7 @@ export default class Checkbox extends Component {
 				onMouseEnter={onMouseEnter}
         		onMouseLeave={onMouseLeave}
 			>
-				<RCheckbox
+				<RRadio
 					{...others}
 					prefixCls={prefixCls}
 				/>

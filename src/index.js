@@ -8,6 +8,8 @@ import Checkbox from './checkbox/Checkbox';
 import CheckboxGroup from './checkbox/CheckboxGroup';
 
 import RRadio from './radio/RRadio';
+import Radio from './radio/Radio';
+import RadioGroup from './radio/RadioGroup';
 
 export {
 	Button,
@@ -17,5 +19,7 @@ export {
 	RCheckbox,
 	Checkbox,
 	CheckboxGroup,
-	RRadio
+	RRadio,
+	RadioGroup,
+	Radio
 }

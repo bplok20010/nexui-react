@@ -2,36 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import shallowEqual from 'shallowequal';
-import Checkbox from './Checkbox';
+import Radio from './Radio';
 
-export default class CheckboxGroup extends React.Component {
+export default class RadioGroup extends React.Component {
 	static defaultProps = {
 		options: [],
-		prefixCls: 'nex-checkbox-group',
+		prefixCls: 'nex-radio-group',
 	};
 
 	static propTypes = {
-		defaultValue: PropTypes.array,
-		value: PropTypes.array,
+		defaultValue: PropTypes.any,
+		value: PropTypes.any,
 		options: PropTypes.array.isRequired,
 		onChange: PropTypes.func,
 	};
 	
 	static childContextTypes = {
-		checkboxGroup: PropTypes.any,
+		radioGroup: PropTypes.any,
 	};
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			value: props.value || props.defaultValue || [],
+			value: props.value || props.defaultValue || null,
 		};
 	}
 	
 	getChildContext() {
 		return {
-			checkboxGroup: {
-				toggleOption: this.toggleOption,
+			radioGroup: {
+				onChange: this.toggleOption,
 				value: this.state.value,
 				disabled: this.props.disabled,
 			},
@@ -41,7 +41,7 @@ export default class CheckboxGroup extends React.Component {
 	componentWillReceiveProps(nextProps) {
 		if ('value' in nextProps) {
 			this.setState({
-				value: nextProps.value || [],
+				value: nextProps.value || null,
 			});
 		}
 	}
@@ -61,44 +61,40 @@ export default class CheckboxGroup extends React.Component {
 			return option;
 		});
 	}
-	toggleOption = (option) => {
-		const optionIndex = this.state.value.indexOf(option.value);
-		const value = [...this.state.value];
-		if (optionIndex === - 1) {
-			value.push(option.value);
-		} else {
-			value.splice(optionIndex, 1);
-		}
+	toggleOption = (e) => {
+		const lastValue = this.state.value;
+		const { value } = e.target;
+		
 		if (!('value' in this.props)) {
 			this.setState({ value });
 		}
 		const onChange = this.props.onChange;
-		if (onChange) {
+		if (onChange && ''+value !== ''+lastValue) {
 			onChange(value);
 		}
 	}
 	render() {
 		const { props, state } = this;
-		const { prefixCls, className, options } = props;
+		const { prefixCls, className, options,style={} } = props;
 		let children = props.children;
 		if (options && options.length > 0) {
 			children = this.getOptions().map(option => (
-				<Checkbox
+				<Radio
 					key={option.value}
 					disabled={'disabled' in option ? option.disabled : props.disabled}
 					value={option.value}
-					checked={state.value.indexOf(option.value) !== -1}
-					onChange={() => this.toggleOption(option)}
+					checked={state.value + '' === option.value + ''}
+					onChange={this.toggleOption}
 					className={`${prefixCls}-item`}
 				>
 					{option.label}
-				</Checkbox>
+				</Radio>
 			));
 		}
 
 		const classString = classNames(prefixCls, className);
 		return (
-			<div className={classString}>
+			<div className={classString} style={style}>
 				{children}
 			</div>
 		);

@@ -39,7 +39,7 @@ $checkboxBorderRadius: 0;//3px
     border-radius: 14px;
     border-color: #bbb;
     background-color: #ffffff;
-	vertical-align:top;
+	vertical-align:middle;
   }
 
   &-input {
@@ -107,18 +107,21 @@ $checkboxBorderRadius: 0;//3px
 	cursor: pointer;
     font-size: 12px;
     display: inline-block;
+	vertical-align:middle;
+	.nex-radio-label {
+		padding-left: 5px;
+		padding-right: 5px;
+		vertical-align: middle;
+	}
 }
 .nex-radio-wrapper:not(:last-child) {
     margin-right: 8px;
 }
-.nex-radio+span.nex-radio-label {
-    padding-left: 5px;
-    padding-right: 5px;
-	display: inline-block;
-    vertical-align: middle;
-	line-height:14px;
-}
-.nex-radio-disabled+span.nex-radio-label {
+.nex-radio-disabled+.nex-radio-label {
     color: rgba(0,0,0,.4);
     cursor: not-allowed;
+}
+.nex-radio-group {
+	display:inline-block;
+	font-size: 12px;	
 }

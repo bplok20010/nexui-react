@@ -86,21 +86,14 @@ define(['../dist/rnexui', 'react'], function (_rnexui, _react) {
         return _react2['default'].createElement(
           'div',
           null,
-          _react2['default'].createElement(_rnexui.RRadio, { disabled: true, checked: true }),
-          _react2['default'].createElement(_rnexui.RRadio, { disabled: true }),
-          _react2['default'].createElement(_rnexui.RRadio, null)
-        );
-        return _react2['default'].createElement(
-          'div',
-          null,
           _react2['default'].createElement(
-            Radio,
+            _rnexui.Radio,
             { defaultChecked: false, disabled: this.state.disabled },
             'Disabled'
           ),
           _react2['default'].createElement('br', null),
           _react2['default'].createElement(
-            Radio,
+            _rnexui.Radio,
             { defaultChecked: true, disabled: this.state.disabled },
             'Disabled'
           ),
@@ -112,6 +105,18 @@ define(['../dist/rnexui', 'react'], function (_rnexui, _react) {
               { type: 'primary', onClick: this.toggleDisabled },
               'Toggle disabled'
             )
+          ),
+          _react2['default'].createElement(
+            'form',
+            null,
+            _react2['default'].createElement(_rnexui.RRadio, { disabled: true, checked: true }),
+            _react2['default'].createElement(_rnexui.RRadio, { disabled: true }),
+            _react2['default'].createElement(_rnexui.RRadio, { name: 'test', onChange: function onChange(e) {
+                return console.log(e);
+              } }),
+            _react2['default'].createElement(_rnexui.RRadio, { name: 'test', onChange: function onChange(e) {
+                return console.log(e);
+              } })
           )
         );
       }

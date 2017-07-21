@@ -18,7 +18,7 @@ export default class Input extends PureComponent{
 		addonBeforeCls: '',
 		addonAfterCls: '',
 		type: 'text',
-		block: true,
+		block: false,
 		prefixCls: 'nex-input'
 	};
 	
@@ -56,7 +56,7 @@ export default class Input extends PureComponent{
 	}
 	renderInput(){
 		const props = this.props;
-		const { value, className } = this.props;
+		const { value, className, style={} } = this.props;
 		// Fix https://fb.me/react-unknown-prop
 		const otherProps = omit(this.props, [
 			'prefixCls',
@@ -68,12 +68,12 @@ export default class Input extends PureComponent{
 			'addonAfterCls',
 			'addonAfterStyle',
 			'autoFocus',
+			'style',
 			'size',
 			'block',
 			'width'
 		]);	
 		
-		const style = {};
 		if( 'width' in props ) {
 			style.width = props.width;	
 		}

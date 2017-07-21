@@ -1,4 +1,4 @@
-import { RRadio,Button } from '../dist/rnexui';
+import { RRadio,Button,Radio } from '../dist/rnexui';
 import React from 'react';
 
 class App extends React.Component {
@@ -11,13 +11,6 @@ class App extends React.Component {
     });
   }
   render() {
-  	return (
-		<div>
-		<RRadio disabled checked={true}/>
-		<RRadio disabled />
-		<RRadio />
-		</div>
-	);
     return (
       <div>
         <Radio defaultChecked={false} disabled={this.state.disabled}>Disabled</Radio>
@@ -28,7 +21,15 @@ class App extends React.Component {
             Toggle disabled
           </Button>
         </div>
-      </div>
+      
+		  <form>
+			<RRadio disabled checked={true}/>
+			<RRadio disabled />
+			<RRadio name="test" onChange={(e)=>console.log(e)} />
+			<RRadio name="test" onChange={(e)=>console.log(e)} />
+		  </form>
+	  
+	  </div>
     );
   }
 }

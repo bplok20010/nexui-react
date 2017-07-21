@@ -57,6 +57,10 @@ define(['../dist/rnexui', 'react'], function (_rnexui, _react) {
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
+  function _onChange(checkedValues) {
+    console.log('checked = ', checkedValues);
+  }
+
   var plainOptions = ['Apple', 'Pear', 'Orange'];
   var defaultCheckedList = ['Apple', 'Orange'];
 
@@ -127,6 +131,11 @@ define(['../dist/rnexui', 'react'], function (_rnexui, _react) {
   var options = [{ label: 'Apple', value: 'Apple' }, { label: 'Pear', value: 'Pear' }, { label: 'Orange', value: 'Orange' }];
   var optionsWithDisabled = [{ label: 'Apple', value: 'Apple' }, { label: 'Pear', value: 'Pear' }, { label: 'Orange', value: 'Orange', disabled: false }];
 
+  var CStyle = {
+    lineHeight: '26px',
+    height: 26
+  };
+
   ReactDOM.render(_react2['default'].createElement(
     'div',
     null,
@@ -137,18 +146,35 @@ define(['../dist/rnexui', 'react'], function (_rnexui, _react) {
     _react2['default'].createElement(_rnexui.CheckboxGroup, { options: optionsWithDisabled, disabled: true, defaultValue: ['Apple'], onChange: onChange }),
     _react2['default'].createElement('hr', null),
     _react2['default'].createElement(App, null),
+    _react2['default'].createElement('hr', null),
     _react2['default'].createElement(
-      'select',
-      { style: { opacity: 0 } },
+      _rnexui.CheckboxGroup,
+      { onChange: _onChange },
       _react2['default'].createElement(
-        'option',
-        null,
-        'a'
+        _rnexui.Checkbox,
+        { style: CStyle, value: 'A' },
+        'A'
       ),
       _react2['default'].createElement(
-        'option',
-        null,
-        'b'
+        _rnexui.Checkbox,
+        { style: CStyle, value: 'B' },
+        'B'
+      ),
+      _react2['default'].createElement(
+        _rnexui.Checkbox,
+        { style: CStyle, value: 'C' },
+        'C'
+      ),
+      _react2['default'].createElement(
+        _rnexui.Checkbox,
+        { style: CStyle, value: 'D' },
+        'D'
+      ),
+      _react2['default'].createElement(
+        _rnexui.Checkbox,
+        { style: CStyle, value: 'E' },
+        'E ',
+        _react2['default'].createElement(_rnexui.Input, { block: false, defaultValue: 'EEE' })
       )
     )
   ), demo);

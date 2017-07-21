@@ -1,5 +1,10 @@
-import { Checkbox, CheckboxGroup } from '../dist/rnexui';
+import { Checkbox, CheckboxGroup, Input } from '../dist/rnexui';
 import React from 'react';
+
+
+function _onChange(checkedValues) {
+  console.log('checked = ', checkedValues);
+}
 
 const plainOptions = ['Apple', 'Pear', 'Orange'];
 const defaultCheckedList = ['Apple', 'Orange'];
@@ -58,6 +63,11 @@ const optionsWithDisabled = [
   { label: 'Orange', value: 'Orange', disabled: false },
 ];
 
+const CStyle = {
+	lineHeight : '26px',
+	height : 26	
+};
+
 ReactDOM.render(
   <div>
     <CheckboxGroup options={plainOptions} defaultValue={['Apple']} onChange={onChange} />
@@ -67,9 +77,13 @@ ReactDOM.render(
     <CheckboxGroup options={optionsWithDisabled} disabled defaultValue={['Apple']} onChange={onChange} />
 	<hr />
 	<App />
-	<select style={{opacity:0}}>
-		<option>a</option>
-		<option>b</option>
-	</select>
+	<hr />
+	<CheckboxGroup onChange={_onChange} >
+      <Checkbox style={CStyle} value="A">A</Checkbox>
+      <Checkbox style={CStyle} value="B">B</Checkbox>
+      <Checkbox style={CStyle} value="C">C</Checkbox>
+      <Checkbox style={CStyle} value="D">D</Checkbox>
+      <Checkbox style={CStyle} value="E">E <Input block={false} defaultValue='EEE' /></Checkbox>
+    </CheckboxGroup>
   </div>
 , demo);
