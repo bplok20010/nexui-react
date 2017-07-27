@@ -11,6 +11,10 @@ import RRadio from './radio/RRadio';
 import Radio from './radio/Radio';
 import RadioGroup from './radio/RadioGroup';
 
+import Row from './grid/Row';
+import Col from './grid/Col';
+import Portal from './portal/Portal';
+
 export {
 	Button,
 	ButtonGroup,
@@ -21,5 +25,8 @@ export {
 	CheckboxGroup,
 	RRadio,
 	RadioGroup,
-	Radio
+	Radio,
+	Row,
+	Col,
+	Portal
 }

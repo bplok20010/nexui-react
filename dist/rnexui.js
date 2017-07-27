@@ -515,10 +515,10 @@ var _descriptors = !_fails(function () {
     } }).a != 7;
 });
 
-var document = _global.document;
-var is = _isObject(document) && _isObject(document.createElement);
+var document$1 = _global.document;
+var is = _isObject(document$1) && _isObject(document$1.createElement);
 var _domCreate = function _domCreate(it) {
-  return is ? document.createElement(it) : {};
+  return is ? document$1.createElement(it) : {};
 };
 
 var _ie8DomDefine = !_descriptors && !_fails(function () {
@@ -1918,6 +1918,192 @@ RadioGroup.childContextTypes = {
 	radioGroup: index.any
 };
 
+var Row = function (_React$Component) {
+	inherits(Row, _React$Component);
+
+	function Row() {
+		classCallCheck(this, Row);
+		return possibleConstructorReturn(this, (Row.__proto__ || Object.getPrototypeOf(Row)).apply(this, arguments));
+	}
+
+	createClass(Row, [{
+		key: 'render',
+		value: function render() {
+			var _props = this.props,
+			    _props$prefixCls = _props.prefixCls,
+			    prefixCls = _props$prefixCls === undefined ? 'nex-row' : _props$prefixCls,
+			    className = _props.className,
+			    gutter = _props.gutter,
+			    style = _props.style,
+			    children = _props.children,
+			    others = objectWithoutProperties(_props, ['prefixCls', 'className', 'gutter', 'style', 'children']);
+
+
+			var classes = index$1(defineProperty({}, prefixCls, true), className);
+
+			var rowStyle = gutter > 0 ? _extends({
+				marginLeft: gutter / -2,
+				marginRight: gutter / -2
+			}, style) : style;
+
+			var cols = React.Children.map(children, function (col) {
+				if (!col) {
+					return null;
+				}
+				if (col.props && gutter > 0) {
+					return React.cloneElement(col, {
+						style: _extends({
+							paddingLeft: gutter / 2,
+							paddingRight: gutter / 2
+						}, col.props.style)
+					});
+				}
+				return col;
+			});
+			return React__default.createElement(
+				'div',
+				_extends({}, others, { className: classes, style: rowStyle }),
+				cols
+			);
+		}
+	}]);
+	return Row;
+}(React__default.Component);
+
+Row.propTypes = {
+	className: index.string,
+	children: index.node,
+	gutter: index.number,
+	prefixCls: index.string
+};
+Row.defaultProps = {
+	gutter: 0
+};
+
+var stringOrNumber = index.oneOfType([index.string, index.number]);
+
+var Col = function (_React$Component) {
+	inherits(Col, _React$Component);
+
+	function Col() {
+		classCallCheck(this, Col);
+		return possibleConstructorReturn(this, (Col.__proto__ || Object.getPrototypeOf(Col)).apply(this, arguments));
+	}
+
+	createClass(Col, [{
+		key: 'render',
+		value: function render() {
+			var _classNames;
+
+			var _props = this.props,
+			    span = _props.span,
+			    offset = _props.offset,
+			    className = _props.className,
+			    _props$prefixCls = _props.prefixCls,
+			    prefixCls = _props$prefixCls === undefined ? 'nex-col' : _props$prefixCls,
+			    children = _props.children,
+			    others = objectWithoutProperties(_props, ['span', 'offset', 'className', 'prefixCls', 'children']);
+
+
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-' + span, span), defineProperty(_classNames, prefixCls + '-offset-' + offset, offset), defineProperty(_classNames, className, className), _classNames));
+
+			return React__default.createElement(
+				'div',
+				_extends({}, others, { className: classes }),
+				children
+			);
+		}
+	}]);
+	return Col;
+}(React__default.Component);
+
+Col.propTypes = {
+	span: stringOrNumber,
+	offset: stringOrNumber,
+	className: index.string,
+	children: index.node,
+	prefixCls: index.string
+};
+
+function getDom(selector) {
+	var dom = typeof selector === 'string' ? document.querySelector(selector) : selector;
+	return dom || document.body;
+}
+
+function createContainer(parent) {
+	var div = document.createElement('div');
+	return parent.appendChild(div);
+}
+
+function removeContainer(elm) {
+	var parentNode = elm.parentNode;
+
+	if (parentNode) {
+		parentNode.removeChild(elm);
+	}
+}
+
+var Portal = function (_React$Component) {
+	inherits(Portal, _React$Component);
+
+	function Portal() {
+		classCallCheck(this, Portal);
+		return possibleConstructorReturn(this, (Portal.__proto__ || Object.getPrototypeOf(Portal)).apply(this, arguments));
+	}
+
+	createClass(Portal, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var elm = getDom(this.props.selector);
+			this._container = createContainer(elm);
+			this.renderPortal();
+		}
+	}, {
+		key: 'renderPortal',
+		value: function renderPortal() {
+			var children = React__default.Children.only(this.props.children);
+
+			ReactDOM.unstable_renderSubtreeIntoContainer(this, children, this._container, this.props.onUpdate);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			var container = this._container;
+			ReactDOM.unmountComponentAtNode(container);
+			removeContainer(container);
+			this._container = null;
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			this.renderPortal();
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {}
+	}, {
+		key: 'render',
+		value: function render() {
+			return null;
+		}
+	}]);
+	return Portal;
+}(React__default.Component);
+
+Portal.propTypes = {
+	children: index.node.isRequired,
+	selector: index.oneOfType([index.string, index.object]).isRequired,
+	className: index.string,
+	css: index.object,
+	prefix: index.string
+};
+Portal.defaultProps = {
+	selector: 'body',
+	className: '',
+	css: {},
+	prefix: 'zent'
+};
+
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
 exports.Input = Input;
@@ -1928,6 +2114,9 @@ exports.CheckboxGroup = CheckboxGroup;
 exports.RRadio = Radio;
 exports.RadioGroup = RadioGroup;
 exports.Radio = Radio$1;
+exports.Row = Row;
+exports.Col = Col;
+exports.Portal = Portal;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

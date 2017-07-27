@@ -1,10 +1,7 @@
-'use strict';
-import React, {PureComponent, PropTypes} from 'react';
+import Button from './Button';
+import ButtonGroup from './ButtonGroup';
 
-export default class Button extends PureComponent{
-	
-	render(){
-		return <button>按钮</button>	
-	}
-		
-}
+export {
+  Button,
+  ButtonGroup,
+};
