@@ -1,0 +1,37 @@
+$gridColumns: 24 !default;
+
+.nex-row {
+	position:relative;
+	margin-left:0;
+	margin-right:0;
+	height:auto;
+	zoom:1;
+	display:block;
+	&:after,&:before {
+		content:" ";
+		display:table
+	}
+	&:after {
+		clear:both;
+		visibility:hidden;
+		font-size:0;
+		height:0
+	}
+}
+
+.nex-col {
+    float: left;
+    box-sizing: border-box;
+	position: relative;
+    display: block;
+}
+
+@for $i from 1 through $gridColumns {
+	$percent: percentage($i / $gridColumns);
+	.nex-col-#{$i} {
+		width: $percent;
+	}
+	.nex-col-offset-#{$i} {
+		margin-left: $percent;
+	}
+}
