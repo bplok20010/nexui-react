@@ -6,20 +6,15 @@ export default class Portal extends React.Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
 		selector: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-		className: PropTypes.string,
-		css: PropTypes.object,
-		prefix: PropTypes.string
 	};
 
 	static defaultProps = {
 		selector: 'body',
-		className: '',
-		css: {},
-		prefix: 'zent'
 	};
 
 	componentDidMount() {
-		const elm = getDom(this.props.selector);
+		const { selector, onCreate } = this.props
+		const elm = getDom(selector);
 		this._container = createContainer(elm);
 		this.renderPortal();
 	}
@@ -27,27 +22,28 @@ export default class Portal extends React.Component {
 	renderPortal(){
 		const children = React.Children.only(this.props.children);
 		
-		ReactDOM.unstable_renderSubtreeIntoContainer(
+		this._instance = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
 			children,
 			this._container,
 			this.props.onUpdate
 		);
 	}
-
-	componentWillUnmount() {
+	
+	removePortal(){
 		const container = this._container;
 		ReactDOM.unmountComponentAtNode(container);
 		removeContainer(container);
-		this._container = null;
+		this._container = null;	
+		this._instance = null;	
+	}
+
+	componentWillUnmount() {
+		this.removePortal();
 	}
 
 	componentDidUpdate() {
 		this.renderPortal();
-	}
-
-	componentWillReceiveProps(nextProps) {
-		
 	}
 
 	render() {

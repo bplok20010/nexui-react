@@ -364,7 +364,8 @@ var Button = function (_PureComponent) {
 			    iconCls = _props.iconCls,
 			    type = _props.type,
 			    size = _props.size,
-			    block = _props.block;
+			    block = _props.block,
+			    className = _props.className;
 
 
 			var nodeProps = {};
@@ -378,7 +379,7 @@ var Button = function (_PureComponent) {
 				'button',
 				_extends({ type: htmlType, onClick: function onClick(e) {
 						return _this2.handleClick(e);
-					} }, nodeProps, { className: classNames((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-' + type, type), defineProperty(_classNames2, prefixCls + '-block', block), defineProperty(_classNames2, prefixCls + '-inline', !block), defineProperty(_classNames2, prefixCls + '-sm', size === 'small'), defineProperty(_classNames2, prefixCls + '-lg', size === 'large'), defineProperty(_classNames2, prefixCls + '-disabled', disabled), _classNames2)) }),
+					} }, nodeProps, { className: classNames((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-' + type, type), defineProperty(_classNames2, prefixCls + '-block', block), defineProperty(_classNames2, prefixCls + '-inline', !block), defineProperty(_classNames2, prefixCls + '-sm', size === 'small'), defineProperty(_classNames2, prefixCls + '-lg', size === 'large'), defineProperty(_classNames2, prefixCls + '-disabled', disabled), defineProperty(_classNames2, className, true), _classNames2)) }),
 				Icon,
 				this.props.children ? React__default.createElement(
 					'span',
@@ -2054,7 +2055,11 @@ var Portal = function (_React$Component) {
 	createClass(Portal, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var elm = getDom(this.props.selector);
+			var _props = this.props,
+			    selector = _props.selector,
+			    onCreate = _props.onCreate;
+
+			var elm = getDom(selector);
 			this._container = createContainer(elm);
 			this.renderPortal();
 		}
@@ -2063,24 +2068,27 @@ var Portal = function (_React$Component) {
 		value: function renderPortal() {
 			var children = React__default.Children.only(this.props.children);
 
-			ReactDOM.unstable_renderSubtreeIntoContainer(this, children, this._container, this.props.onUpdate);
+			this._instance = ReactDOM.unstable_renderSubtreeIntoContainer(this, children, this._container, this.props.onUpdate);
 		}
 	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
+		key: 'removePortal',
+		value: function removePortal() {
 			var container = this._container;
 			ReactDOM.unmountComponentAtNode(container);
 			removeContainer(container);
 			this._container = null;
+			this._instance = null;
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			this.removePortal();
 		}
 	}, {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate() {
 			this.renderPortal();
 		}
-	}, {
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextProps) {}
 	}, {
 		key: 'render',
 		value: function render() {
@@ -2092,16 +2100,238 @@ var Portal = function (_React$Component) {
 
 Portal.propTypes = {
 	children: index.node.isRequired,
-	selector: index.oneOfType([index.string, index.object]).isRequired,
-	className: index.string,
-	css: index.object,
-	prefix: index.string
+	selector: index.oneOfType([index.string, index.object]).isRequired
 };
 Portal.defaultProps = {
-	selector: 'body',
-	className: '',
-	css: {},
-	prefix: 'zent'
+	selector: 'body'
+};
+
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/* eslint-disable no-unused-vars */
+
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty$2 = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject$1(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+var index$3 = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject$1(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty$2.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+var position = function (target, source, config) {
+	$(target).position(index$3({}, config, {
+		of: source
+	}));
+};
+
+var Popup = function (_React$Component) {
+	inherits(Popup, _React$Component);
+
+	function Popup(props) {
+		classCallCheck(this, Popup);
+
+		var _this = possibleConstructorReturn(this, (Popup.__proto__ || Object.getPrototypeOf(Popup)).call(this, props));
+
+		_this.state = {
+			visible: props.visible
+		};
+		return _this;
+	}
+
+	createClass(Popup, [{
+		key: 'closePopup',
+		value: function closePopup() {
+			var onClose = this.props.onClose;
+
+
+			this.setState({
+				visible: false
+			});
+
+			if (onClose) {
+				onClose();
+			}
+		}
+	}, {
+		key: 'setPosition',
+		value: function setPosition() {
+			var popup = this.refs.popup;
+			var _props = this.props,
+			    of = _props.of,
+			    my = _props.my,
+			    at = _props.at,
+			    collision = _props.collision,
+			    using = _props.using,
+			    within = _props.within;
+
+			var config = {};
+
+			if (my) {
+				config.my = my;
+			}
+			if (at) {
+				config.at = at;
+			}
+			if (collision) {
+				config.collision = collision;
+			}
+			if (using) {
+				config.using = using;
+			}
+			if (within) {
+				config.within = within;
+			}
+
+			position(popup, of || document.body, config);
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.setPosition();
+			this.doOpen();
+		}
+	}, {
+		key: 'doOpen',
+		value: function doOpen() {
+			var el = this.refs.popup;
+			$(el).hide().fadeIn(1000);
+		}
+	}, {
+		key: 'doClose',
+		value: function doClose() {
+			var _this2 = this;
+
+			var el = this.refs.popup;
+			$(el).fadeOut(1000, function () {
+				_this2.closePopup();
+			});
+		}
+	}, {
+		key: 'getRenderComponent',
+		value: function getRenderComponent() {
+			var _props2 = this.props,
+			    prefixCls = _props2.prefixCls,
+			    position$$1 = _props2.position,
+			    className = _props2.className,
+			    _props2$style = _props2.style,
+			    style = _props2$style === undefined ? {} : _props2$style,
+			    fixed = _props2.fixed;
+			var visible = this.state.visible;
+
+			var classes = index$1(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
+
+			var others = omit(this.props, ['prefixCls', 'position', 'className', 'style', 'visible', 'fixed', 'onClose', 'doClose', 'of', 'my', 'at', 'collision', 'using', 'within']);
+
+			var popup = React__default.createElement(
+				'div',
+				null,
+				React__default.createElement('div', _extends({ ref: 'popup', className: classes, style: style, tabIndex: -1 }, others))
+			);
+
+			return visible ? React__default.createElement(
+				Portal,
+				{ onCreate: this.doOpen },
+				popup
+			) : null;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return this.getRenderComponent();
+		}
+	}]);
+	return Popup;
+}(React__default.Component);
+
+Popup.propTypes = {
+	prefixCls: index.string,
+	className: index.oneOfType([index.string, index.object]),
+	visible: index.bool,
+	fixed: index.bool,
+	doClose: index.func
+};
+Popup.defaultProps = {
+	prefixCls: 'nex-popop',
+	fixed: true,
+	visible: false
 };
 
 exports.Button = Button;
@@ -2117,6 +2347,7 @@ exports.Radio = Radio$1;
 exports.Row = Row;
 exports.Col = Col;
 exports.Portal = Portal;
+exports.Popup = Popup;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

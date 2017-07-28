@@ -1,0 +1,23 @@
+
+.nex-popop {
+	position:absolute;
+	outline:0;
+}
+
+.nex-popop-fixed {
+	position:fixed;
+	
+	& + .nex-popop-mask {
+		position:fixed;
+	}
+}
+
+.nex-popop-mask {
+	position:absolute;
+	left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	background: #000;
+	opacity: 0.1;
+}

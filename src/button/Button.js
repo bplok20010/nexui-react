@@ -39,7 +39,7 @@ export default class Button extends PureComponent{
 	}
 
 	render(){
-		const {prefixCls,htmlType, disabled, iconCls, type, size, block} = this.props;
+		const {prefixCls,htmlType, disabled, iconCls, type, size, block, className} = this.props;
 		
 		let nodeProps = {};
 		if( disabled ) {
@@ -59,7 +59,8 @@ export default class Button extends PureComponent{
 				[`${prefixCls}-inline`]: !block,
 				[`${prefixCls}-sm`]: size === 'small',
 				[`${prefixCls}-lg`]: size === 'large',
-				[`${prefixCls}-disabled`]: disabled
+				[`${prefixCls}-disabled`]: disabled,
+				[className]: true
 			})}>
                 {Icon}
 				{this.props.children ? <span className="nex-btn-text">{this.props.children}</span> : null}

@@ -15,6 +15,8 @@ import Row from './grid/Row';
 import Col from './grid/Col';
 import Portal from './portal/Portal';
 
+import Popup from './popup/Popup';
+
 export {
 	Button,
 	ButtonGroup,
@@ -28,5 +30,6 @@ export {
 	Radio,
 	Row,
 	Col,
-	Portal
+	Portal,
+	Popup
 }
