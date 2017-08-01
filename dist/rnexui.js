@@ -2584,6 +2584,238 @@ Select.defaultProps = {
 	textField: 'text'
 };
 
+var ListItem = function (_React$Component) {
+	inherits(ListItem, _React$Component);
+
+	function ListItem() {
+		var _ref;
+
+		var _temp, _this, _ret;
+
+		classCallCheck(this, ListItem);
+
+		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+			args[_key] = arguments[_key];
+		}
+
+		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function () {
+			var _this$props = _this.props,
+			    onSelect = _this$props.onSelect,
+			    onDeselect = _this$props.onDeselect,
+			    selected = _this$props.selected,
+			    disabled = _this$props.disabled;
+
+			if (disabled) return;
+			if (!selected) {
+				onSelect && onSelect();
+			} else {
+				onDeselect && onDeselect();
+			}
+		}, _temp), possibleConstructorReturn(_this, _ret);
+	}
+
+	createClass(ListItem, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
+			return !index$2(this.props, nextProps) || !index$2(this.state, nextState);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames;
+
+			var _props = this.props,
+			    value = _props.value,
+			    prefixCls = _props.prefixCls,
+			    disabled = _props.disabled,
+			    selected = _props.selected,
+			    children = _props.children;
+
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-selected', selected), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+
+			return React__default.createElement(
+				'div',
+				{ className: classes, onClick: this.handleItemClick },
+				children
+			);
+		}
+	}]);
+	return ListItem;
+}(React__default.Component);
+
+ListItem.defaultProps = {
+	prefixCls: 'nex-listbox-item',
+	value: '',
+	selected: false,
+	disabled: false
+};
+
+var ListBox = function (_React$Component) {
+	inherits(ListBox, _React$Component);
+
+	function ListBox(props) {
+		classCallCheck(this, ListBox);
+
+		var _this = possibleConstructorReturn(this, (ListBox.__proto__ || Object.getPrototypeOf(ListBox)).call(this, props));
+
+		_this.state = {
+			value: props.value || props.defaultValue
+		};
+		return _this;
+	}
+
+	createClass(ListBox, [{
+		key: 'onSelect',
+		value: function onSelect(item) {
+			var props = this.props;
+			var state = this.state;
+			var multiple = props.multiple;
+			if (multiple) {
+				if (!isArray(state.value)) {
+					state.value = [state.value];
+				}
+				state.value.push(item[props.valueField]);
+			} else {
+				//if( isArray(state.value) ) {
+				//	state.value = state.value[0]
+				//}	
+				state.value = item[props.valueField];
+			}
+
+			if (!('value' in props)) {
+				this.setState({
+					value: state.value
+				});
+			}
+
+			if (props.onChange) {
+				props.onChange(state.value);
+			}
+		}
+	}, {
+		key: 'onDeselect',
+		value: function onDeselect(item) {
+			var _props = this.props,
+			    textField = _props.textField,
+			    valueField = _props.valueField,
+			    multiple = _props.multiple,
+			    onChange = _props.onChange;
+
+			var state = this.state;
+			if (!multiple) return;
+
+			if (!isArray(state.value)) {
+				state.value = [state.value];
+			}
+
+			var idx = state.value.indexOf(item[valueField]);
+
+			if (idx >= 0) state.value.splice(idx, 1);
+
+			if (!('value' in this.props)) {
+				this.setState({
+					value: state.value
+				});
+			}
+
+			if (onChange) {
+				onChange(state.value);
+			}
+		}
+	}, {
+		key: 'getListItem',
+		value: function getListItem(item) {
+			var _this2 = this;
+
+			var _props2 = this.props,
+			    textField = _props2.textField,
+			    valueField = _props2.valueField,
+			    prefixCls = _props2.prefixCls,
+			    multiple = _props2.multiple;
+			var value = this.state.value;
+
+
+			var markMap = {};
+
+			if (isArray(value)) {
+				value.forEach(function (v) {
+					return markMap[v] = true;
+				});
+			} else {
+				markMap[value] = true;
+			}
+
+			return React__default.createElement(
+				ListItem,
+				{
+					key: item[valueField],
+					value: item[valueField],
+					prefixCls: prefixCls + '-item',
+					selected: markMap[item[valueField]],
+					disabled: item.disabled,
+					onSelect: function onSelect() {
+						return _this2.onSelect(item);
+					},
+					onDeselect: function onDeselect() {
+						return _this2.onDeselect(item);
+					}
+				},
+				item[textField]
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this3 = this;
+
+			var _props3 = this.props,
+			    filter$$1 = _props3.filter,
+			    className = _props3.className,
+			    value = _props3.value,
+			    prefixCls = _props3.prefixCls,
+			    items = _props3.items,
+			    width = _props3.width,
+			    height = _props3.height,
+			    _props3$style = _props3.style,
+			    style = _props3$style === undefined ? {} : _props3$style;
+
+
+			return React__default.createElement(
+				'div',
+				{ ref: 'listbox', className: index$1('' + prefixCls, className), style: index$3({
+						width: width,
+						height: height
+					}, style) },
+				React__default.createElement(
+					'div',
+					{ className: prefixCls + '-body' },
+					items.map(function (item, i) {
+						return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
+					})
+				)
+			);
+		}
+	}]);
+	return ListBox;
+}(React__default.Component);
+
+ListBox.propTypes = {
+	className: React.PropTypes.string,
+	style: React.PropTypes.object,
+	prefixCls: React.PropTypes.string,
+	items: React.PropTypes.array,
+	filter: React.PropTypes.func,
+	multiple: React.PropTypes.bool
+};
+ListBox.defaultProps = {
+	prefixCls: 'nex-listbox',
+	valueField: 'value',
+	textField: 'text',
+	height: 90,
+	width: '100%',
+	items: []
+};
+
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
 exports.Input = Input;
@@ -2599,6 +2831,7 @@ exports.Col = Col;
 exports.Portal = Portal;
 exports.Popup = Popup;
 exports.Select = Select;
+exports.ListBox = ListBox;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
