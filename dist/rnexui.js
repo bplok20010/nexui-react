@@ -2217,22 +2217,28 @@ var Popup = function (_React$Component) {
 	}
 
 	createClass(Popup, [{
-		key: 'closePopup',
-		value: function closePopup() {
-			var onClose = this.props.onClose;
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(_ref) {
+			var visible = _ref.visible;
 
-
-			this.setState({
-				visible: false
-			});
-
-			if (onClose) {
-				onClose();
-			}
+			return !!(this.props.visible || visible);
 		}
+
+		/**
+  * 获取显示方位 
+  *  @param number 1 默认 
+  *	- 1 位置
+  *	- 2 方位
+  *	- 0 包含位置和方位
+  */
+
 	}, {
-		key: 'setPosition',
-		value: function setPosition() {
+		key: 'getPosition',
+		value: function getPosition() {
+			var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+
+			var pos = void 0,
+			    dir = void 0;
 			var popup = this.refs.popup;
 			var _props = this.props,
 			    of = _props.of,
@@ -2242,7 +2248,12 @@ var Popup = function (_React$Component) {
 			    using = _props.using,
 			    within = _props.within;
 
-			var config = {};
+			var config = {
+				using: function using(p, d) {
+					pos = p;
+					dir = d;
+				}
+			};
 
 			if (my) {
 				config.my = my;
@@ -2253,62 +2264,96 @@ var Popup = function (_React$Component) {
 			if (collision) {
 				config.collision = collision;
 			}
-			if (using) {
-				config.using = using;
-			}
 			if (within) {
 				config.within = within;
 			}
 
 			position(popup, of || document.body, config);
+
+			return type == 1 ? pos : type == 2 ? dir : index$3(pos, dir);
+		}
+	}, {
+		key: 'setPosition',
+		value: function setPosition(pos) {
+			var popup = this.refs.popup;
+			$(popup).css(pos || this.getPosition());
 		}
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			this.setPosition();
-			this.doOpen();
+			if (this.props.visible) {
+				this.doShow();
+			}
 		}
 	}, {
-		key: 'doOpen',
-		value: function doOpen() {
-			var el = this.refs.popup;
-			$(el).hide().fadeIn(1000);
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			if (this.props.visible) {
+				this.doShow();
+			}
 		}
 	}, {
-		key: 'doClose',
-		value: function doClose() {
-			var _this2 = this;
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(_ref2) {
+			var visible = _ref2.visible;
 
-			var el = this.refs.popup;
-			$(el).fadeOut(1000, function () {
-				_this2.closePopup();
+			this.setState({
+				visible: visible
 			});
+		}
+	}, {
+		key: 'doShow',
+		value: function doShow() {
+			this.setPosition();
+		}
+	}, {
+		key: 'close',
+		value: function close() {
+			var onClose = this.props.onClose;
+			if (onClose) onClose();
+		}
+	}, {
+		key: 'getMaskComponent',
+		value: function getMaskComponent() {
+			var _classNames;
+
+			var _props2 = this.props,
+			    prefixCls = _props2.prefixCls,
+			    mask = _props2.mask,
+			    maskCks = _props2.maskCks;
+
+
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, maskCks, maskCks), _classNames));
+
+			return React__default.createElement('div', { ref: 'mask', className: classes });
 		}
 	}, {
 		key: 'getRenderComponent',
 		value: function getRenderComponent() {
-			var _props2 = this.props,
-			    prefixCls = _props2.prefixCls,
-			    position$$1 = _props2.position,
-			    className = _props2.className,
-			    _props2$style = _props2.style,
-			    style = _props2$style === undefined ? {} : _props2$style,
-			    fixed = _props2.fixed;
+			var _props3 = this.props,
+			    prefixCls = _props3.prefixCls,
+			    position$$1 = _props3.position,
+			    className = _props3.className,
+			    _props3$style = _props3.style,
+			    style = _props3$style === undefined ? {} : _props3$style,
+			    fixed = _props3.fixed,
+			    mask = _props3.mask;
 			var visible = this.state.visible;
 
 			var classes = index$1(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 
-			var others = omit(this.props, ['prefixCls', 'position', 'className', 'style', 'visible', 'fixed', 'onClose', 'doClose', 'of', 'my', 'at', 'collision', 'using', 'within']);
+			var others = omit(this.props, ['prefixCls', 'position', 'className', 'style', 'visible', 'fixed', 'onClose', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask']);
 
 			var popup = React__default.createElement(
 				'div',
 				null,
+				mask ? this.getMaskComponent() : null,
 				React__default.createElement('div', _extends({ ref: 'popup', className: classes, style: style, tabIndex: -1 }, others))
 			);
 
 			return visible ? React__default.createElement(
 				Portal,
-				{ onCreate: this.doOpen },
+				null,
 				popup
 			) : null;
 		}
@@ -2324,14 +2369,219 @@ var Popup = function (_React$Component) {
 Popup.propTypes = {
 	prefixCls: index.string,
 	className: index.oneOfType([index.string, index.object]),
+	destroyOnClose: index.bool,
 	visible: index.bool,
 	fixed: index.bool,
-	doClose: index.func
+	onClose: index.func
 };
 Popup.defaultProps = {
-	prefixCls: 'nex-popop',
+	prefixCls: 'nex-popup',
+	mask: false,
 	fixed: true,
 	visible: false
+};
+
+var Select = function (_React$Component) {
+	inherits(Select, _React$Component);
+
+	function Select(props) {
+		classCallCheck(this, Select);
+
+		var _this = possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this, props));
+
+		_this.handleDropdownCreate = function (el) {
+			_this.refs.dropdown = el;
+		};
+
+		_this.handleClick = function (e) {
+			_this.setState({
+				showDropdown: !_this.state.showDropdown
+			}, function () {
+				var _this$refs = _this.refs,
+				    dropdown = _this$refs.dropdown,
+				    select = _this$refs.select;
+
+				$(dropdown).css('minWidth', $(select).outerWidth());
+				$(dropdown).css('maxHeight', $(window).height() * .7);
+			});
+		};
+
+		_this.state = {
+			value: props.value || props.defaultValue,
+			showDropdown: false
+		};
+		return _this;
+	}
+
+	createClass(Select, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			$(window).resize(function () {
+				if (_this2.state.showDropdown) {
+					_this2.hideDropdown();
+				}
+			});
+
+			$(document).on('mousedown', function (e) {
+				if (_this2.state.showDropdown && !$(e.target).closest(_this2.refs.dropdown).length) {
+					if ($(e.target).closest(_this2.refs.select).length) return;
+					_this2.hideDropdown();
+				}
+			});
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(_ref) {
+			var value = _ref.value;
+
+			this.setState({
+				value: value
+			});
+		}
+	}, {
+		key: 'getSelectText',
+		value: function getSelectText() {
+			var _props = this.props,
+			    options = _props.options,
+			    valueField = _props.valueField,
+			    textField = _props.textField;
+
+			var value = this.state.value;
+			for (var i = 0; i < options.length; i++) {
+				var option = options[i];
+				if (option[valueField] + '' === value + '') {
+					return option[textField];
+				}
+			}
+			return '';
+		}
+	}, {
+		key: 'handleItemClick',
+		value: function handleItemClick(item) {
+			var props = this.props;
+			if (!('value' in props)) {
+				this.setState({
+					value: item[props.valueField]
+				});
+			}
+
+			if (props.onChange) props.onChange(item[props.valueField]);
+
+			this.hideDropdown();
+		}
+	}, {
+		key: 'getOptions',
+		value: function getOptions() {
+			var _this3 = this;
+
+			var _props2 = this.props,
+			    prefixCls = _props2.prefixCls,
+			    options = _props2.options,
+			    children = _props2.children,
+			    valueField = _props2.valueField,
+			    textField = _props2.textField;
+
+			var value = this.state.value;
+
+			return React__default.createElement(
+				'div',
+				{ ref: this.handleDropdownCreate, className: prefixCls + '-dropdown' },
+				React__default.createElement(
+					'div',
+					{ className: prefixCls + '-dropdown-body' },
+					React__default.createElement(
+						'ul',
+						null,
+						options.map(function (item) {
+							var _classNames;
+
+							var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-item', true), defineProperty(_classNames, prefixCls + '-item-selected', String(value) === String(item[valueField])), defineProperty(_classNames, prefixCls + '-item-disabled', item.disabled), _classNames));
+							return React__default.createElement(
+								'li',
+								{ key: item[valueField], className: classes, onClick: function onClick() {
+										_this3.handleItemClick(item);
+									} },
+								item[textField]
+							);
+						})
+					)
+				)
+			);
+		}
+	}, {
+		key: 'hideDropdown',
+		value: function hideDropdown() {
+			this.setState({
+				showDropdown: false
+			});
+		}
+	}, {
+		key: 'renderSelect',
+		value: function renderSelect() {
+			var _classNames2, _classNames3;
+
+			var props = this.props;
+			var showDropdown = this.state.showDropdown;
+			var prefixCls = props.prefixCls,
+			    tabIndex = props.tabIndex,
+			    block = props.block,
+			    disabled = props.disabled,
+			    readOnly = props.readOnly,
+			    arrowCls = props.arrowCls,
+			    children = props.children,
+			    options = props.options,
+			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'block', 'disabled', 'readOnly', 'arrowCls', 'children', 'options']);
+
+			var classes = index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls, true), defineProperty(_classNames2, prefixCls + '-inline', !block), defineProperty(_classNames2, prefixCls + '-readonly', readOnly), defineProperty(_classNames2, prefixCls + '-disabled', disabled), _classNames2));
+
+			var otherProps = omit(others, ['value', 'valueField', 'textField']);
+
+			return React__default.createElement(
+				'div',
+				null,
+				React__default.createElement(
+					'div',
+					_extends({ ref: 'select', className: classes, tabIndex: tabIndex, onClick: this.handleClick }, otherProps),
+					React__default.createElement(
+						'div',
+						{ className: prefixCls + '-text' },
+						this.getSelectText()
+					),
+					React__default.createElement('span', { className: index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-arrow', true), defineProperty(_classNames3, arrowCls, true), _classNames3)) })
+				),
+				React__default.createElement(
+					Popup,
+					{ visible: showDropdown, fixed: false, of: this.refs.select, my: 'left top', at: 'left bottom' },
+					this.getOptions()
+				)
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return this.renderSelect();
+		}
+	}]);
+	return Select;
+}(React__default.Component);
+
+Select.propTypes = {
+	className: React.PropTypes.string,
+	style: React.PropTypes.object,
+	prefixCls: React.PropTypes.string,
+	options: React.PropTypes.array
+};
+Select.defaultProps = {
+	disabled: false,
+	readOnly: false,
+	block: false,
+	tabIndex: 0,
+	prefixCls: 'nex-select',
+	arrowCls: 'fa fa-caret-down',
+	valueField: 'value',
+	textField: 'text'
 };
 
 exports.Button = Button;
@@ -2348,6 +2598,7 @@ exports.Row = Row;
 exports.Col = Col;
 exports.Portal = Portal;
 exports.Popup = Popup;
+exports.Select = Select;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

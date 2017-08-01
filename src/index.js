@@ -17,6 +17,8 @@ import Portal from './portal/Portal';
 
 import Popup from './popup/Popup';
 
+import Select from './select/Select';
+
 export {
 	Button,
 	ButtonGroup,
@@ -31,5 +33,6 @@ export {
 	Row,
 	Col,
 	Portal,
-	Popup
+	Popup,
+	Select,
 }

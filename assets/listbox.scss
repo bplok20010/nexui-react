@@ -1,0 +1,36 @@
+.nex-listbox {
+	border:1px solid #26A0DA;
+	background:#FFF;
+	overflow:auto;
+	.nex-listbox-body {
+	
+		> .nex-listbox-item {
+			list-style:none;
+			padding:0 5px;
+			cursor: pointer;
+			line-height:26px;
+			height:26px;
+			white-space: nowrap;
+			overflow:hidden;
+			&:hover {
+				background: #30bde0;
+				color: #FFF;
+			}
+		}
+		
+		> .nex-listbox-item-selected {
+			background: #30bde0;
+			color: #FFF;
+		}
+		
+		> .nex-listbox-item-disabled {
+			opacity: .5;
+			cursor: default;
+			&:hover {
+				background: none;
+				color: rgba(0,0,0,.25);
+			}	
+		}
+	
+	}
+}	

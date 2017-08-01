@@ -1,13 +1,15 @@
-.nex-popop {
+.nex-popup {
   position: absolute;
+  left: -99999px;
+  top: -99999px;
   outline: 0; }
 
-.nex-popop-fixed {
+.nex-popup-fixed {
   position: fixed; }
-  .nex-popop-fixed + .nex-popop-mask {
+  .nex-popup-fixed + .nex-popup-mask {
     position: fixed; }
 
-.nex-popop-mask {
+.nex-popup-mask {
   position: absolute;
   left: 0;
   top: 0;

@@ -1,13 +1,5 @@
-define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _reactDom) {
+define(['../../dist/rnexui'], function (_rnexui) {
 	'use strict';
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) {
-		return obj && obj.__esModule ? obj : {
-			default: obj
-		};
-	}
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -65,78 +57,48 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-			_this.togglChange = function (e) {
-				_this.setState({
-					visible: !_this.state.visible
-				});
-			};
+			_this.handleChange = function (value) {
+				//this.setState({
+				//	value	
+				//})	
 
-			_this.onClose = function () {
-				console.log('onClose');
-				_this.setState({
-					visible: false
-				});
-			};
-
-			_this.close = function () {
-				_this.refs.popup.close();
+				console.log('changed ', value);
 			};
 
 			_this.state = {
-				visible: false
+				value: 2
 			};
 			return _this;
 		}
 
 		_createClass(App, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				setTimeout(function () {
-					//this.refs.popup.closePopup();	
-				}, 2000);
-			}
-		}, {
-			key: 'getButtonEl',
-			value: function getButtonEl() {
-				return (0, _reactDom.findDOMNode)(this.refs.button);
-			}
-		}, {
 			key: 'render',
 			value: function render() {
-				var visible = this.state.visible;
-
-				var cls = 'btn_' + ~~(Math.random() * 1000 % 1000);
-				console.log(cls);
-				return _react2['default'].createElement(
-					'div',
-					null,
-					_react2['default'].createElement(
-						_rnexui.Button,
-						{ onClick: this.togglChange, ref: 'button', className: cls },
-						'\u663E\u793A'
-					),
-					visible ? _react2['default'].createElement(
-						_rnexui.Popup,
-						{ ref: 'popup', mask: true, visible: this.state.visible, onClose: this.onClose, className: 'demo-popup', of: '.' + cls, my: 'left bottom', at: 'left top' },
-						'test....',
-						_react2['default'].createElement('br', null),
-						'test....',
-						_react2['default'].createElement('br', null),
-						'test....',
-						_react2['default'].createElement('br', null),
-						_react2['default'].createElement(App, null),
-						_react2['default'].createElement(
-							'span',
-							{ className: 'icon-close', onClick: this.close },
-							'X'
-						)
-					) : null
-				);
+				console.log(this.state.value);
+				return React.createElement(_rnexui.Select, {
+					style: { width: 150 },
+					defaultValue: this.state.value,
+					onChange: this.handleChange,
+					options: data
+				});
 			}
 		}]);
 
 		return App;
-	}(_react2['default'].Component);
+	}(React.Component);
 
-	ReactDOM.render(_react2['default'].createElement(App, null), demo);
+	var data = [
+		//{value: 1, text: '选项一'},
+		//{value: 2, text: '选项二'},
+		//{value: 3, text: '选项三'}
+	];
+
+	for (var i = 0; i < 100; i++) {
+		data.push({
+			value: i,
+			text: '选项' + (i + 1)
+		});
+	}
+
+	ReactDOM.render(React.createElement(App, null), demo);
 });
