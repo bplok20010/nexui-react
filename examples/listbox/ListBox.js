@@ -58,11 +58,18 @@ define(['../../dist/rnexui'], function (_rnexui) {
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 			_this.handleChange = function (value) {
-				//this.setState({
-				//	value	
-				//})	
+				_this.setState({
+					value: value
+				});
 
 				console.log('changed ', value);
+			};
+
+			_this.filterMsg = '';
+
+			_this.search = function (e) {
+				_this.filterMsg = e.target.value;
+				_this.forceUpdate();
 			};
 
 			_this.state = {
@@ -74,15 +81,28 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		_createClass(App, [{
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				console.log(this.state.value);
-				return React.createElement(_rnexui.ListBox, {
-					width: 250,
-					height: 150,
-					multiple: true,
-					defaultValue: this.state.value,
-					onChange: this.handleChange,
-					items: data
-				});
+				return React.createElement(
+					'div',
+					null,
+					React.createElement(_rnexui.Input, { placeholder: '\u641C\u7D20...', onChange: this.search }),
+					React.createElement(_rnexui.ListBox, {
+						style: {
+							width: 250,
+							minHeight: 26,
+							maxHeight: 150
+						},
+
+						value: this.state.value,
+						onChange: this.handleChange,
+						items: data,
+						filter: function filter(item, i) {
+							return item.text.indexOf(_this2.filterMsg) >= 0;
+						}
+					})
+				);
 			}
 		}]);
 

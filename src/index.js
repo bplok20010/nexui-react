@@ -15,7 +15,7 @@ import Row from './grid/Row';
 import Col from './grid/Col';
 import Portal from './portal/Portal';
 
-import Popup from './popup/Popup';
+import Popup from './popup/index';
 
 import Select from './select/Select';
 

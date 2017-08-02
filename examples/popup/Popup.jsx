@@ -7,12 +7,15 @@ class App extends React.Component {
 	constructor(props){
 		super(props)
 		this.state = {
-			visible: false	
+			idx: 1,
+			visible: false,
+			destroy: false,
 		}	
 	}
 	
 	togglChange = (e)=>{
 		this.setState( {
+			destroy: false,
 			visible: !this.state.visible
 		} )
 	}
@@ -25,32 +28,71 @@ class App extends React.Component {
 	}
 	
 	close= ()=>{
-		this.refs.popup.close()
+		this.setState( {
+			visible: false
+		} )
 	}
 	
-	componentDidMount(){
-		setTimeout(()=>{
-			//this.refs.popup.closePopup();	
-		}, 2000);	
+	popup = null
+	
+	showPopup= ()=>{
+		if( this.popup ) {
+			this.popup.toggle();
+			return;	
+		}
+		this.popup = Popup.create({
+			parentComponent: this,
+			destroyOnClose: false,
+			of: findDOMNode(this.refs.cp),
+			my: 'left top',
+			at: 'left bottom',
+			content : () => <div style={{ padding: 10, border:'1px solid green', background: '#FFF' }}>test....{this.state.idx}</div>
+		});
+		
+		//setTimeout(this.popup.close, 1000)
+	}
+	
+	componentDidMount(){	
+		setInterval(()=>{
+			this.setState({
+				idx : ++this.state.idx
+			});
+			if( this.popup ) {
+				this.popup.update()
+			}
+		},1000);
 	}
 	
 	getButtonEl(){
 		return findDOMNode(this.refs.button)	
 	}	
-	
+	//
   render() {
-	 const {visible} = this.state;
-	let cls = `btn_${~~(Math.random() * 1000 % 1000)}`;
-	console.log(cls);
+	 const {visible, idx, destroy} = this.state;
     return (
 		<div>
-			<Button onClick={this.togglChange} ref="button" className={cls}>显示</Button>
-			{visible ? (
-				<Popup ref="popup" mask={true} visible={this.state.visible} onClose={this.onClose} className="demo-popup" of={`.${cls}`} my="left bottom" at="left top">
+			<Button onClick={this.togglChange} ref="button">显示{idx}</Button>
+			<Button onClick={()=> this.setState( { destroy: true, visible: false } )} >销毁{idx}</Button>
+			<Button onClick={this.showPopup} ref="cp">触发是弹窗</Button>
+			{!destroy ? (
+				<Popup ref="popup" mask={false} destroyOnClose={false} visible={this.state.visible} maskAnimate={{
+					appear: (el) => {
+						$(el).hide().stop(true, true).fadeIn(500);	
+					},
+					leave: (el, done) => {
+						$(el).stop(true, true).fadeOut(500,done);		
+					}	
+				}} popupAnimate={{
+					appear: (el) => {
+						$(el).hide().stop(true, true).fadeIn(500);	
+					},
+					leave: (el, done) => {
+						$(el).stop(true, true).fadeOut(500,done);		
+					}	
+				}} className="demo-popup" of={()=>findDOMNode(this.refs.button)} my="left bottom" at="left top">
+					test....{this.state.idx}<br/>
 					test....<br/>
 					test....<br/>
-					test....<br/>
-					<App />
 					<span className="icon-close" onClick={this.close}>X</span>
 				</Popup>
 			) : null}

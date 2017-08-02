@@ -7,7 +7,8 @@ import {getDom, createContainer, removeContainer} from './util';
 export default class Portal extends React.Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		selector: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+		container: PropTypes.node,
+		renderTo: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 		animate: PropTypes.shape({
 			appear: PropTypes.func,
 			leave: PropTypes.func	
@@ -15,15 +16,21 @@ export default class Portal extends React.Component {
 	};
 
 	static defaultProps = {
-		selector: 'body',
+		renderTo: 'body',
 		className: '',
+		container: null,
 		prefixCls: 'nex-portal'
 	};
 
 	componentDidMount() {
-		const { selector, onCreate, prefixCls, className, animate={} } = this.props
-		const elm = getDom(selector);
-		this._container = createContainer(elm);
+		const { renderTo, onCreate, prefixCls, className, container, animate={} } = this.props;
+		if( !container ) {
+			const elm = getDom(typeof renderTo === 'function' ? renderTo() : renderTo);
+			this._container = createContainer(elm);
+		} else {
+			console.log('??')
+			this._container = container;	
+		}
 		this.renderPortal();
 		
 		if( animate.appear ) {

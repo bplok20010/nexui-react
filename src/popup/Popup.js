@@ -190,13 +190,21 @@ export default class Popup extends React.Component {
 	}
 	
 	getRenderComponent(){
-		const {prefixCls, position,className, destroyOnClose, style={}, fixed, mask, animate={}} = this.props;
+		const {prefixCls,className, destroyOnClose, fixed, mask, animate={}, renderTo, container, ..._others} = this.props;
 		let { visible, isInit } = this.state;
 		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 		
-		const others = omit(this.props, [
+		let PortalConf = {};
+		
+		if( renderTo ) {
+			PortalConf.renderTo = renderTo;
+		}
+		if( container ) {
+			PortalConf.container = container;
+		}
+		
+		const others = omit(_others, [
 			'prefixCls',
-			'position',
 			'className',
 			'visible',
 			'fixed',
@@ -209,7 +217,8 @@ export default class Popup extends React.Component {
 			'mask',
 			'destroyOnClose',
 			'popupAnimate',
-			'maskAnimate'
+			'maskAnimate',
+			'selector'
 		]);
 		
 		const popup = (
@@ -228,7 +237,7 @@ export default class Popup extends React.Component {
 			<Portal animate={{
 				appear: this.animateAppear,
 				leave: this.animateLeave	
-			}}>{popup}</Portal>
+			}} {...PortalConf}>{popup}</Portal>
 		) : null;
 	}
 

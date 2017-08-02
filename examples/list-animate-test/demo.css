@@ -1,0 +1,26 @@
+/* CSS Document */
+
+html, body {
+	height:100%;	
+}
+
+
+.demo-popup {
+	border:1px solid #0e77ca;
+	background:#FFF;
+	padding: 20px;
+	width:150px;
+}
+.icon-close {
+	display:inline-block;
+	width:20px;
+	height:20px;
+	right: 0;
+	top:0;
+	background:#000;
+	color:#FFF;
+	position:absolute;
+	line-height: 20px;
+	text-align:center;
+	cursor:pointer;
+}

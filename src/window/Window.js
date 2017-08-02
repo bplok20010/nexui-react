@@ -8,6 +8,8 @@ import _assign from 'object-assign';
 
 const noop = () => {}
 
+let zIndex = 9999;
+
 export default class Window extends React.Component {
 	static propTypes = {
 		prefixCls: PropTypes.string,
@@ -16,22 +18,13 @@ export default class Window extends React.Component {
 
 	static defaultProps = {
 		prefixCls: 'nex-window',
+		renderTo: document.body,
 		modal: false,
 	};
 	
-	getHeader(){
-		const {title, headerCls} = this.props;
-		const classes = classNames(`${headerCls}-header`, headerCls)
-		
-		const header = title ? (
-			<div ref="header" className={classes}>
-				<div className={`${headerCls}-title`}>
-					{title}
-				</div>
-			</div>
-		) : null;
-		
-		return header;
+	constructor(props){
+		super(props);
+			
 	}
 	
 	getRenderComponent(){
@@ -50,8 +43,23 @@ export default class Window extends React.Component {
 		);	
 		
 	}
+	
+	componentWillUnmount() {
+		this.removePortal();
+	}
+
+	componentDidUpdate() {
+		this.renderWindow();
+	}
+	
+	componentDidMount() {
+		const { selector, onCreate } = this.props
+		const elm = getDom(selector);
+		this._container = createContainer(elm);
+		this.renderWindow();
+	}
 
 	render() {
-		return this.getRenderComponent();
+		return null;
 	}
 }

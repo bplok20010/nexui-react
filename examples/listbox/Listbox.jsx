@@ -1,4 +1,4 @@
-import { ListBox } from '../../dist/rnexui';
+import { ListBox, Input } from '../../dist/rnexui';
 
 class App extends React.Component{
 	
@@ -11,23 +11,37 @@ class App extends React.Component{
 	}
 	
 	handleChange= (value)=>{
-		//this.setState({
-		//	value	
-		//})	
+		this.setState({
+			value	
+		})	
 		
 		console.log('changed ',value)
 	}
 	
+	filterMsg = ''
+	
+	search=(e)=>{
+		this.filterMsg = e.target.value;
+		this.forceUpdate()
+	}
+	
 	render(){
 		console.log(this.state.value);
-		return 	<ListBox
-					width={250}
-					height = {150}
-					multiple
-					defaultValue={this.state.value}
+		return 	<div>
+			<Input placeholder="搜素..." onChange={this.search} />
+			<ListBox
+					style={{
+						width: 250,
+						minHeight: 26,
+						maxHeight: 150	
+					}}
+					
+					value={this.state.value}
 					onChange={this.handleChange}
 					items={data}
+					filter={(item, i) => item.text.indexOf( this.filterMsg ) >= 0}
 				  />
+			</div>	  
 	}	
 }
 

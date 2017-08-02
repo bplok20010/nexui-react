@@ -67,6 +67,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 
 			_this.togglChange = function (e) {
 				_this.setState({
+					destroy: false,
 					visible: !_this.state.visible
 				});
 			};
@@ -79,11 +80,41 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 			};
 
 			_this.close = function () {
-				_this.refs.popup.close();
+				_this.setState({
+					visible: false
+				});
+			};
+
+			_this.popup = null;
+
+			_this.showPopup = function () {
+				if (_this.popup) {
+					_this.popup.toggle();
+					return;
+				}
+				_this.popup = _rnexui.Popup.create({
+					parentComponent: _this,
+					destroyOnClose: false,
+					of: (0, _reactDom.findDOMNode)(_this.refs.cp),
+					my: 'left top',
+					at: 'left bottom',
+					content: function content() {
+						return _react2['default'].createElement(
+							'div',
+							{ style: { padding: 10, border: '1px solid green', background: '#FFF' } },
+							'test....',
+							_this.state.idx
+						);
+					}
+				});
+
+				//setTimeout(this.popup.close, 1000)
 			};
 
 			_this.state = {
-				visible: false
+				idx: 1,
+				visible: false,
+				destroy: false
 			};
 			return _this;
 		}
@@ -91,9 +122,16 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		_createClass(App, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				setTimeout(function () {
-					//this.refs.popup.closePopup();	
-				}, 2000);
+				var _this2 = this;
+
+				setInterval(function () {
+					_this2.setState({
+						idx: ++_this2.state.idx
+					});
+					if (_this2.popup) {
+						_this2.popup.update();
+					}
+				}, 1000);
 			}
 		}, {
 			key: 'getButtonEl',
@@ -103,28 +141,61 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		}, {
 			key: 'render',
 			value: function render() {
-				var visible = this.state.visible;
+				var _this3 = this;
 
-				var cls = 'btn_' + ~~(Math.random() * 1000 % 1000);
-				console.log(cls);
+				var _state = this.state,
+				    visible = _state.visible,
+				    idx = _state.idx,
+				    destroy = _state.destroy;
+
 				return _react2['default'].createElement(
 					'div',
 					null,
 					_react2['default'].createElement(
 						_rnexui.Button,
-						{ onClick: this.togglChange, ref: 'button', className: cls },
-						'\u663E\u793A'
+						{ onClick: this.togglChange, ref: 'button' },
+						'\u663E\u793A',
+						idx
 					),
-					visible ? _react2['default'].createElement(
+					_react2['default'].createElement(
+						_rnexui.Button,
+						{ onClick: function onClick() {
+								return _this3.setState({ destroy: true, visible: false });
+							} },
+						'\u9500\u6BC1',
+						idx
+					),
+					_react2['default'].createElement(
+						_rnexui.Button,
+						{ onClick: this.showPopup, ref: 'cp' },
+						'\u89E6\u53D1\u662F\u5F39\u7A97'
+					),
+					!destroy ? _react2['default'].createElement(
 						_rnexui.Popup,
-						{ ref: 'popup', mask: true, visible: this.state.visible, onClose: this.onClose, className: 'demo-popup', of: '.' + cls, my: 'left bottom', at: 'left top' },
+						{ ref: 'popup', mask: false, destroyOnClose: false, visible: this.state.visible, maskAnimate: {
+								appear: function appear(el) {
+									$(el).hide().stop(true, true).fadeIn(500);
+								},
+								leave: function leave(el, done) {
+									$(el).stop(true, true).fadeOut(500, done);
+								}
+							}, popupAnimate: {
+								appear: function appear(el) {
+									$(el).hide().stop(true, true).fadeIn(500);
+								},
+								leave: function leave(el, done) {
+									$(el).stop(true, true).fadeOut(500, done);
+								}
+							}, className: 'demo-popup', of: function of() {
+								return (0, _reactDom.findDOMNode)(_this3.refs.button);
+							}, my: 'left bottom', at: 'left top' },
 						'test....',
+						this.state.idx,
 						_react2['default'].createElement('br', null),
 						'test....',
 						_react2['default'].createElement('br', null),
 						'test....',
 						_react2['default'].createElement('br', null),
-						_react2['default'].createElement(App, null),
 						_react2['default'].createElement(
 							'span',
 							{ className: 'icon-close', onClick: this.close },

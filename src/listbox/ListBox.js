@@ -5,6 +5,10 @@ import _assign from 'object-assign';
 import ListItem from './ListItem';
 import {isArray} from '../shared/util';
 
+function copy(data){
+	return isArray(data) ? [].concat(data) : data;
+}
+
 export default class ListBox extends React.Component{
 	
 	static propTypes = {
@@ -20,8 +24,6 @@ export default class ListBox extends React.Component{
 		prefixCls: 'nex-listbox',
 		valueField: 'value',
 		textField: 'text',
-		height: 90,
-		width: '100%',
 		items: []
 	};
 	
@@ -37,26 +39,29 @@ export default class ListBox extends React.Component{
 		const props = this.props;
 		const state = this.state;
 		const multiple = props.multiple;
+		
+		let v = copy(state.value);
+		
 		if( multiple ) {
-			if( !isArray(state.value) ) {
-				state.value = [state.value]	
+			if( !isArray(v) ) {
+				v = [v]	
 			}
-			state.value.push(item[props.valueField])
+			v.push(item[props.valueField])
 		} else {
-			//if( isArray(state.value) ) {
-			//	state.value = state.value[0]
+			//if( isArray(v) ) {
+			//	v = v[0]
 			//}	
-			state.value = item[props.valueField]
+			v = item[props.valueField]
 		}
 		
 		if( !('value' in props) ) {
 			this.setState({
-				value: state.value	
+				value: v	
 			})	
 		}
-		
+	
 		if( props.onChange ) {
-			props.onChange(state.value)	
+			props.onChange(v)	
 		}
 	}
 	
@@ -64,26 +69,32 @@ export default class ListBox extends React.Component{
 		const {textField, valueField, multiple, onChange} = this.props;
 		const state = this.state;
 		if( !multiple )	return;
-		
-		if( !isArray(state.value) ) {
-			state.value = [state.value]	
+		let v = copy(state.value);
+		if( !isArray(v) ) {
+			v = [v]	
 		}
 		
-		let idx = state.value.indexOf(item[valueField]);
+		let idx = v.indexOf(item[valueField]);
 		
 		if( idx >= 0 )
-			state.value.splice(idx , 1);
+			v.splice(idx , 1);
 		
 		if( !('value' in this.props) ) {
 			this.setState({
-				value: state.value	
+				value: v	
 			})	
 		}
 		
 		if( onChange ) {
-			onChange(state.value)	
+			onChange(v)	
 		}
 		
+	}
+	
+	componentWillReceiveProps({value}){
+		this.setState({
+			value	
+		})
 	}
 	
 	getListItem(item){
@@ -117,10 +128,7 @@ export default class ListBox extends React.Component{
 		const {filter, className, value, prefixCls, items, width, height, style={}} = this.props;
 		
 		return (
-			<div ref="listbox" className={classNames(`${prefixCls}`, className)} style={_assign({
-				width,
-				height	
-			}, style)}>
+			<div ref="listbox" className={classNames(`${prefixCls}`, className)} style={style}>
 				<div className={`${prefixCls}-body`}>
 					{items.map((item, i) => {
 						return (filter ? filter(item, i) : true) ? this.getListItem(item) : null;	
