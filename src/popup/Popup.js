@@ -15,6 +15,7 @@ export default class Popup extends React.Component {
 		destroyOnClose: PropTypes.bool,
 		visible: PropTypes.bool,
 		fixed: PropTypes.bool,
+		disabledSetPosition: PropTypes.bool,
 		onMaskClick: PropTypes.func,
 		popupAnimate: PropTypes.shape({
 			appear: PropTypes.func,
@@ -31,6 +32,7 @@ export default class Popup extends React.Component {
 		mask: false,
 		fixed: false,
 		destroyOnClose: true,
+		disabledSetPosition: false,
 		visible: false
 	};
 	
@@ -166,7 +168,9 @@ export default class Popup extends React.Component {
 	}
 	
 	doShow(){
-		this.setPosition();	
+		if( !this.props.disabledSetPosition ) {
+			this.setPosition();	
+		}
 	}
 	
 	handleMaskClick=(e)=>{
@@ -234,7 +238,7 @@ export default class Popup extends React.Component {
 		}
 		
 		return visible ? (
-			<Portal animate={{
+			<Portal className={`${prefixCls}-root`} animate={{
 				appear: this.animateAppear,
 				leave: this.animateLeave	
 			}} {...PortalConf}>{popup}</Portal>

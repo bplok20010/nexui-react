@@ -2427,7 +2427,9 @@ var Popup$1 = function (_React$Component) {
 	}, {
 		key: 'doShow',
 		value: function doShow() {
-			this.setPosition();
+			if (!this.props.disabledSetPosition) {
+				this.setPosition();
+			}
 		}
 	}, {
 		key: 'getMaskComponent',
@@ -2490,7 +2492,7 @@ var Popup$1 = function (_React$Component) {
 
 			return visible ? React$1__default.createElement(
 				Portal,
-				_extends({ animate: {
+				_extends({ className: prefixCls + '-root', animate: {
 						appear: this.animateAppear,
 						leave: this.animateLeave
 					} }, PortalConf),
@@ -2512,6 +2514,7 @@ Popup$1.propTypes = {
 	destroyOnClose: index.bool,
 	visible: index.bool,
 	fixed: index.bool,
+	disabledSetPosition: index.bool,
 	onMaskClick: index.func,
 	popupAnimate: index.shape({
 		appear: index.func,
@@ -2527,13 +2530,9 @@ Popup$1.defaultProps = {
 	mask: false,
 	fixed: false,
 	destroyOnClose: true,
+	disabledSetPosition: false,
 	visible: false
 };
-
-function getRender(selector) {
-	var dom = typeof selector === 'string' ? document.querySelector(selector) : selector;
-	return dom || document.body;
-}
 
 var defaultConfig = {
 	renderTo: document.body,
@@ -2563,9 +2562,6 @@ var create = function (opt) {
 	}
 
 	var container = document.createElement('div');
-	container.className = 'test';
-	var render = getRender(renderTo);
-	render.appendChild(container);
 
 	var getPopup = function getPopup() {
 		return React.createElement(
@@ -2578,7 +2574,11 @@ var create = function (opt) {
 	};
 
 	var renderer = function renderer() {
-		inst = ReactDOM$1__default.unstable_renderSubtreeIntoContainer(parentComponent, getPopup(), container, onUpdate);
+		if (parentComponent) {
+			inst = ReactDOM$1__default.unstable_renderSubtreeIntoContainer(parentComponent, getPopup(), container, onUpdate);
+		} else {
+			inst = ReactDOM$1__default.render(getPopup(), container);
+		}
 	};
 
 	if (autoShow) renderer();

@@ -30,9 +30,6 @@ export default function(opt){
 	}
 	
 	const container = document.createElement('div');
-	container.className = 'test'
-	const render = getRender(renderTo);
-	render.appendChild( container );
 
 	const getPopup = ()=>{
 		return (
@@ -46,7 +43,11 @@ export default function(opt){
 	}
 	
 	const renderer = () => {
-		inst = ReactDOM.unstable_renderSubtreeIntoContainer(parentComponent, getPopup(), container, onUpdate);	
+		if( parentComponent ) {
+			inst = ReactDOM.unstable_renderSubtreeIntoContainer(parentComponent, getPopup(), container, onUpdate);
+		} else {
+			inst = ReactDOM.render(getPopup(), container);	
+		}
 	}
 	
 	if( autoShow )
