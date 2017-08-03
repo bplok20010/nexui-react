@@ -99,11 +99,11 @@ export default class Popup extends React.Component {
 	componentDidMount(){
 		const { visible } = this.props;
 		
-		this.state.isInit = false;
-		
 		if( visible ) {
 			this.doShow();
 		}
+		
+		this.state.isInit = false;
 	}
 	
 	componentWillReceiveProps({visible}){
@@ -168,7 +168,7 @@ export default class Popup extends React.Component {
 	}
 	
 	doShow(){
-		if( !this.props.disabledSetPosition ) {
+		if( this.state.isInit || !this.props.disabledSetPosition ) {
 			this.setPosition();	
 		}
 	}
