@@ -1,11 +1,12 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom'], factory) :
-	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM));
-}(this, (function (exports,React$1,ReactDOM$1) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom'), require('jquery')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom', 'jquery'], factory) :
+	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM,global.$$1));
+}(this, (function (exports,React$1,ReactDOM$1,$$1) { 'use strict';
 
 var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
 var ReactDOM$1__default = 'default' in ReactDOM$1 ? ReactDOM$1['default'] : ReactDOM$1;
+$$1 = 'default' in $$1 ? $$1['default'] : $$1;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -2069,7 +2070,6 @@ var Portal = function (_React$Component) {
 				var elm = getDom(typeof renderTo === 'function' ? renderTo() : renderTo);
 				this._container = createContainer(elm);
 			} else {
-				console.log('??');
 				this._container = container;
 			}
 			this.renderPortal();
@@ -2367,7 +2367,7 @@ var Popup$1 = function (_React$Component) {
 		key: 'setPosition',
 		value: function setPosition(pos) {
 			var popup = this.refs.popup;
-			$(popup).css(pos || this.getPosition());
+			$$1(popup).css(pos || this.getPosition());
 		}
 	}, {
 		key: 'componentDidMount',
@@ -2375,11 +2375,11 @@ var Popup$1 = function (_React$Component) {
 			var visible = this.props.visible;
 
 
-			this.state.isInit = false;
-
 			if (visible) {
 				this.doShow();
 			}
+
+			this.state.isInit = false;
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -2400,8 +2400,8 @@ var Popup$1 = function (_React$Component) {
 
 			if (visible) {
 				if (this.state.isHidden) {
-					$(popup).show();
-					$(mask).show();
+					$$1(popup).show();
+					$$1(mask).show();
 				}
 
 				this.doShow();
@@ -2412,8 +2412,8 @@ var Popup$1 = function (_React$Component) {
 				}
 			} else if (this.state.isHidden) {
 				this.animateLeave(null, function () {
-					$(popup).hide();
-					$(mask).hide();
+					$$1(popup).hide();
+					$$1(mask).hide();
 				});
 			}
 		}
@@ -2427,7 +2427,7 @@ var Popup$1 = function (_React$Component) {
 	}, {
 		key: 'doShow',
 		value: function doShow() {
-			if (!this.props.disabledSetPosition) {
+			if (this.state.isInit || !this.props.disabledSetPosition) {
 				this.setPosition();
 			}
 		}

@@ -28,7 +28,6 @@ export default class Portal extends React.Component {
 			const elm = getDom(typeof renderTo === 'function' ? renderTo() : renderTo);
 			this._container = createContainer(elm);
 		} else {
-			console.log('??')
 			this._container = container;	
 		}
 		this.renderPortal();

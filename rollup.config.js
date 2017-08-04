@@ -9,10 +9,12 @@ export default {
     legacy: true,
     sourceMap: true,
 	external: [
+		'jquery',
 		'react',
 		'react-dom'
 	],
 	globals: {
+		'jquery',
 		'react': 'React',
 		'react-dom': 'ReactDOM'
 	},
