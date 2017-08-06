@@ -1,12 +1,11 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom'), require('jquery')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom', 'jquery'], factory) :
-	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM,global.$$1));
-}(this, (function (exports,React$1,ReactDOM$1,$$1) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom'], factory) :
+	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM));
+}(this, (function (exports,React$1,ReactDOM$1) { 'use strict';
 
 var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
 var ReactDOM$1__default = 'default' in ReactDOM$1 ? ReactDOM$1['default'] : ReactDOM$1;
-$$1 = 'default' in $$1 ? $$1['default'] : $$1;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -2245,6 +2244,7 @@ var position = function (target, source, config) {
 	}));
 };
 
+//import $ from 'jquery';
 var Popup$1 = function (_React$Component) {
 	inherits(Popup, _React$Component);
 
@@ -2367,7 +2367,7 @@ var Popup$1 = function (_React$Component) {
 		key: 'setPosition',
 		value: function setPosition(pos) {
 			var popup = this.refs.popup;
-			$$1(popup).css(pos || this.getPosition());
+			$(popup).css(pos || this.getPosition());
 		}
 	}, {
 		key: 'componentDidMount',
@@ -2400,8 +2400,8 @@ var Popup$1 = function (_React$Component) {
 
 			if (visible) {
 				if (this.state.isHidden) {
-					$$1(popup).show();
-					$$1(mask).show();
+					$(popup).show();
+					$(mask).show();
 				}
 
 				this.doShow();
@@ -2412,8 +2412,8 @@ var Popup$1 = function (_React$Component) {
 				}
 			} else if (this.state.isHidden) {
 				this.animateLeave(null, function () {
-					$$1(popup).hide();
-					$$1(mask).hide();
+					$(popup).hide();
+					$(mask).hide();
 				});
 			}
 		}
@@ -2476,7 +2476,7 @@ var Popup$1 = function (_React$Component) {
 				PortalConf.container = container;
 			}
 
-			var others = omit(_others, ['prefixCls', 'className', 'visible', 'fixed', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask', 'destroyOnClose', 'popupAnimate', 'maskAnimate', 'selector']);
+			var others = omit(_others, ['prefixCls', 'className', 'visible', 'fixed', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask', 'destroyOnClose', 'popupAnimate', 'maskAnimate', 'disabledSetPosition']);
 
 			var popup = React$1__default.createElement(
 				'div',
@@ -3073,6 +3073,569 @@ ListBox.defaultProps = {
 	items: []
 };
 
+var ScrollViewBody = function (_React$Component) {
+	inherits(ScrollViewBody, _React$Component);
+
+	function ScrollViewBody() {
+		classCallCheck(this, ScrollViewBody);
+		return possibleConstructorReturn(this, (ScrollViewBody.__proto__ || Object.getPrototypeOf(ScrollViewBody)).apply(this, arguments));
+	}
+
+	createClass(ScrollViewBody, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(_ref) {
+			var _shouldComponentUpdate = _ref.shouldComponentUpdate;
+
+			return _shouldComponentUpdate;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _props = this.props,
+			    shouldComponentUpdate = _props.shouldComponentUpdate,
+			    component = _props.component,
+			    others = objectWithoutProperties(_props, ['shouldComponentUpdate', 'component']);
+
+
+			var Node = component;
+
+			return React$1__default.createElement(Node, others);
+		}
+	}]);
+	return ScrollViewBody;
+}(React$1__default.Component);
+
+ScrollViewBody.propTypes = {
+	className: index.string,
+	shouldComponentUpdate: index.bool,
+	component: index.oneOfType([index.string, index.func])
+};
+ScrollViewBody.defaultProps = {
+	className: '',
+	shouldComponentUpdate: true,
+	component: 'div'
+};
+
+var ScrollView = function (_React$Component) {
+	inherits(ScrollView, _React$Component);
+
+	function ScrollView(props) {
+		classCallCheck(this, ScrollView);
+
+		var _this = possibleConstructorReturn(this, (ScrollView.__proto__ || Object.getPrototypeOf(ScrollView)).call(this, props));
+
+		_this.handleWheel = function () {
+			var defNoop = function defNoop(e) {
+				e.preventDefault();
+			};
+			var noop = function noop() {};
+			//滚动到底部时下一次滚动不需要禁用默认行为
+			//dir 1 向下 -1 向上
+			var nextEnd = defNoop;
+			var lastDir = 1;
+			return function (e) {
+				var deltaY = e.deltaY;
+				var _this$props = _this.props,
+				    wheelStep = _this$props.wheelStep,
+				    wheelDir = _this$props.wheelDir,
+				    enablePreventDefaultOnEnd = _this$props.enablePreventDefaultOnEnd;
+
+				var curDir = deltaY > 0 ? 1 : -1;
+				var state = _this.state;
+
+				if (lastDir != curDir) {
+					lastDir = curDir;
+					nextEnd = defNoop;
+				}
+
+				_this.scrollTo(wheelDir, deltaY > 0 ? _this.getScrollPos(wheelDir) + wheelStep : _this.getScrollPos(wheelDir) - wheelStep);
+
+				if (enablePreventDefaultOnEnd /* && wheelDir !== 'x' */) {
+						var isEnd = deltaY > 0 ? _this.isScrollEnd(wheelDir) : _this.getScrollPos(wheelDir) <= 0;
+						if (!isEnd) {
+							e.preventDefault();
+							nextEnd = defNoop;
+						} else {
+							nextEnd(e);
+							nextEnd = noop;
+						}
+					} else {
+					e.preventDefault();
+				}
+			};
+		}();
+
+		_this.handleScroll = function (e) {
+			var _this$props2 = _this.props,
+			    onScroll = _this$props2.onScroll,
+			    onHScrollEnd = _this$props2.onHScrollEnd,
+			    onHScrollStart = _this$props2.onHScrollStart,
+			    onVScrollEnd = _this$props2.onVScrollEnd,
+			    onVScrollStart = _this$props2.onVScrollStart;
+
+			var state = _this.state;
+			var target = e.target;
+
+			var lastScrollTop = state.scrollTop,
+			    lastScrollLeft = state.scrollLeft;
+
+			state.scrollTop = target.scrollTop;
+			state.scrollLeft = target.scrollLeft;
+
+			_this.updateScrollBarPosition();
+
+			if (onScroll) {
+				onScroll.call(_this, state.scrollLeft, state.scrollTop, e);
+			}
+
+			if (lastScrollTop !== state.scrollTop) {
+				if (onVScrollEnd && _this.isScrollEnd('y')) {
+					onVScrollEnd.call(_this, e);
+				}
+				if (onVScrollStart && state.scrollTop === 0) {
+					onVScrollStart.call(_this, e);
+				}
+			}
+
+			if (lastScrollLeft !== state.scrollLeft) {
+				if (onHScrollEnd && _this.isScrollEnd('x')) {
+					onHScrollEnd.call(_this, e);
+				}
+				if (onHScrollStart && state.scrollLeft === 0) {
+					onHScrollStart.call(_this, e);
+				}
+			}
+		};
+
+		_this.handleTrackMouseDown = function (e) {
+			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
+
+			var target = e.target;
+			var _this$state = _this.state,
+			    scrollXRatio = _this$state.scrollXRatio,
+			    scrollYRatio = _this$state.scrollYRatio;
+			var _this$refs = _this.refs,
+			    verticalBarThumbEl = _this$refs.verticalBarThumbEl,
+			    horizontalBarThumbEl = _this$refs.horizontalBarThumbEl;
+
+			var rect = target.getBoundingClientRect();
+			var isVertical = dir === 'y';
+			var proto = isVertical ? 'scrollTop' : 'scrollLeft';
+			var trackPos = rect[isVertical ? 'top' : 'left'] + (document.documentElement && document.documentElement[proto] ? document.documentElement[proto] : document.body[proto]);
+			var thumbEl = isVertical ? verticalBarThumbEl : horizontalBarThumbEl;
+
+			var clickPagePos = e[isVertical ? 'pageY' : 'pageX'];
+			var clickPos = clickPagePos - trackPos;
+
+			var thumbPos = parseInt(getComputedStyle(thumbEl)[isVertical ? 'top' : 'left'], 10);
+			var thumbSize = thumbEl[isVertical ? 'offsetHeight' : 'offsetWidth'];
+
+			var ratio = isVertical ? scrollYRatio : scrollXRatio;
+
+			if (clickPos < thumbPos) {
+				_this.scrollTo(dir, (clickPagePos - trackPos) * ratio);
+			} else {
+				_this.scrollTo(dir, (thumbPos + clickPagePos - (thumbPos + thumbSize + trackPos)) * ratio);
+			}
+		};
+
+		_this.state = {
+			shouldComponentUpdate: true,
+			hasScrollX: false,
+			hasScrollY: false,
+			isUpdating: false,
+			scrollXRatio: null,
+			scrollYRatio: null,
+			scrollTop: 0,
+			scrollLeft: 0
+		};
+		return _this;
+	}
+
+	createClass(ScrollView, [{
+		key: 'getChildContext',
+		value: function getChildContext() {
+			return {
+				ScrollView: this
+			};
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+
+			this.updateScrollBarLayoutAndPosition();
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps() {
+			this.setState({
+				shouldComponentUpdate: true
+			});
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			if (!this.state.isUpdating) this.updateScrollBarLayoutAndPosition();
+		}
+	}, {
+		key: 'scrollTo',
+		value: function scrollTo() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+			var pos = arguments[1];
+
+			var scrollview = this.getScrollViewBody();
+			var proto = dir === 'y' ? 'scrollTop' : 'scrollLeft';
+
+			if (this.state[proto] === pos) {
+				return;
+			}
+
+			scrollview[proto] = pos;
+		}
+	}, {
+		key: 'scrollX',
+		value: function scrollX(sLeft) {
+			this.scrollTo('x', sLeft);
+		}
+	}, {
+		key: 'scrollY',
+		value: function scrollY() {
+			this.scrollTo('y', sTop);
+		}
+	}, {
+		key: 'setThumbPos',
+		value: function setThumbPos() {
+			this.setThumbYPos();
+			this.setThumbXPos();
+		}
+	}, {
+		key: 'setThumbYPos',
+		value: function setThumbYPos() {
+			var _state = this.state,
+			    hasScrollY = _state.hasScrollY,
+			    scrollYRatio = _state.scrollYRatio,
+			    scrollTop = _state.scrollTop;
+
+			if (!hasScrollY) return;
+
+			this.refs.verticalBarThumbEl.style.top = scrollTop / scrollYRatio + 'px';
+		}
+	}, {
+		key: 'setThumbXPos',
+		value: function setThumbXPos() {
+			var _state2 = this.state,
+			    hasScrollX = _state2.hasScrollX,
+			    scrollXRatio = _state2.scrollXRatio,
+			    scrollLeft = _state2.scrollLeft;
+
+			if (!hasScrollX) return;
+
+			this.refs.horizontalBarThumbEl.style.left = scrollLeft / scrollXRatio + 'px';
+		}
+	}, {
+		key: 'getScrollViewBody',
+		value: function getScrollViewBody() {
+			return ReactDOM$1.findDOMNode(this.refs.scrollviewBody);
+		}
+	}, {
+		key: 'getThumbSize',
+		value: function getThumbSize() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+			var _props = this.props,
+			    thumbSize = _props.thumbSize,
+			    thumbMinSize = _props.thumbMinSize,
+			    thumbMaxSize = _props.thumbMaxSize;
+			var _refs = this.refs,
+			    verticalBarWrapEl = _refs.verticalBarWrapEl,
+			    horizontalBarWrapEl = _refs.horizontalBarWrapEl;
+
+			var scrollview = this.getScrollViewBody();
+			var isVertical = dir === 'y';
+			var client = isVertical ? scrollview.clientHeight : scrollview.clientWidth,
+			    scroll = isVertical ? scrollview.scrollHeight : scrollview.scrollWidth,
+			    trackSize = isVertical ? verticalBarWrapEl.clientHeight : horizontalBarWrapEl.clientWidth;
+
+			return thumbSize && thumbSize > 0 ? thumbSize : Math.min(Math.max(thumbMinSize, client / scroll * trackSize), thumbMaxSize);
+		}
+
+		//判断是否创建滚动条
+
+	}, {
+		key: 'hasVerticalScrollBar',
+		value: function hasVerticalScrollBar() {
+			var _props2 = this.props,
+			    overflow = _props2.overflow,
+			    overflowY = _props2.overflowY;
+			//const {scrollview} = this.refs;
+
+			var scrollview = this.getScrollViewBody();
+
+			if (!overflowY && (overflow === 'hidden' || overflow === 'visible')) {
+				return false;
+			} else if (overflow === 'scroll') {
+				return true;
+			}
+
+			if (overflowY === 'hidden' || overflowY === 'visible') {
+				return false;
+			} else if (overflow === 'scroll') {
+				return true;
+			}
+
+			return scrollview.scrollHeight > scrollview.clientHeight;
+		}
+		//判断是否创建滚动条
+
+	}, {
+		key: 'hasHorizontalScrollBar',
+		value: function hasHorizontalScrollBar() {
+			var _props3 = this.props,
+			    overflow = _props3.overflow,
+			    overflowX = _props3.overflowX;
+			//const {scrollview} = this.refs;
+
+			var scrollview = this.getScrollViewBody();
+
+			if (!overflowX && (overflow === 'hidden' || overflow === 'visible')) {
+				return false;
+			} else if (overflow === 'scroll') {
+				return true;
+			}
+
+			if (overflowX === 'hidden' || overflowX === 'visible') {
+				return false;
+			} else if (overflow === 'scroll') {
+				return true;
+			}
+
+			return scrollview.scrollWidth > scrollview.clientWidth;
+		}
+	}, {
+		key: 'isScrollEnd',
+		value: function isScrollEnd() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+
+			//const {scrollview} = this.refs;
+			var scrollview = this.getScrollViewBody();
+
+			return dir === 'y' ? scrollview.scrollTop >= scrollview.scrollHeight - scrollview.clientHeight : scrollview.scrollLeft >= scrollview.scrollWidth - scrollview.clientWidth;
+		}
+	}, {
+		key: 'getScrollPos',
+		value: function getScrollPos() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+
+			var scrollview = this.getScrollViewBody();
+
+			return scrollview[dir === 'y' ? 'scrollTop' : 'scrollLeft'];
+		}
+	}, {
+		key: 'hasScroll',
+		value: function hasScroll() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+
+			return dir === 'y' ? this.hasVerticalScrollBar() : this.hasHorizontalScrollBar();
+		}
+	}, {
+		key: 'refreshScrollBar',
+		value: function refreshScrollBar() {
+			this.updateScrollBarLayoutAndPosition();
+		}
+	}, {
+		key: 'updateScrollBarLayoutAndPosition',
+		value: function updateScrollBarLayoutAndPosition() {
+			var _this2 = this;
+
+			var hasScrollX = this.hasScroll('x'),
+			    hasScrollY = this.hasScroll('y');
+
+			this.state.isUpdating = true;
+
+			this.setState({
+				shouldComponentUpdate: false,
+				hasScrollX: hasScrollX,
+				hasScrollY: hasScrollY
+			}, function () {
+
+				_this2.updateScrollBarLayout();
+				_this2.updateScrollBarPosition();
+
+				_this2.state.isUpdating = false;
+			});
+		}
+	}, {
+		key: 'updateScrollBarLayout',
+		value: function updateScrollBarLayout() {
+			var _refs2 = this.refs,
+			    verticalBarEl = _refs2.verticalBarEl,
+			    horizontalBarEl = _refs2.horizontalBarEl,
+			    verticalBarWrapEl = _refs2.verticalBarWrapEl,
+			    horizontalBarWrapEl = _refs2.horizontalBarWrapEl,
+			    verticalBarThumbEl = _refs2.verticalBarThumbEl,
+			    horizontalBarThumbEl = _refs2.horizontalBarThumbEl;
+
+			var scrollview = this.getScrollViewBody();
+			var state = this.state;
+			var hasScrollX = state.hasScrollX,
+			    hasScrollY = state.hasScrollY;
+
+
+			if (hasScrollX && hasScrollY) {
+				verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + (parseInt(getComputedStyle(horizontalBarEl)['bottom'], 10) || 0) + 'px';
+				horizontalBarEl.style.right = verticalBarEl.offsetWidth + (parseInt(getComputedStyle(verticalBarEl)['right'], 10) || 0) + 'px';
+			}
+
+			if (hasScrollY) {
+				var thumbSize = this.getThumbSize('y');
+				verticalBarThumbEl.style.height = thumbSize + 'px';
+				state.scrollYRatio = (scrollview.scrollHeight - scrollview.clientHeight) / (verticalBarWrapEl.clientHeight - thumbSize);
+			}
+
+			if (hasScrollX) {
+				var _thumbSize = this.getThumbSize('x');
+				horizontalBarThumbEl.style.width = _thumbSize + 'px';
+				state.scrollXRatio = (scrollview.scrollWidth - scrollview.clientWidth) / (horizontalBarWrapEl.clientWidth - _thumbSize);
+			}
+		}
+	}, {
+		key: 'updateScrollBarPosition',
+		value: function updateScrollBarPosition() {
+			this.setThumbPos();
+		}
+	}, {
+		key: 'getScrollBar',
+		value: function getScrollBar() {
+			var _this3 = this,
+			    _classNames,
+			    _classNames2;
+
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+			var _props4 = this.props,
+			    prefixCls = _props4.prefixCls,
+			    showTrack = _props4.showTrack,
+			    thumbCls = _props4.thumbCls,
+			    trackCls = _props4.trackCls;
+
+			var isVertical = dir === 'y';
+			var dirCls = prefixCls + '-bar-' + (isVertical ? 'vertical' : 'horizontal');
+
+			var ScrollbarRef = function ScrollbarRef(el) {
+				_this3.refs[isVertical ? 'verticalBarEl' : 'horizontalBarEl'] = el;
+			};
+
+			var scrollbarRef = isVertical ? 'verticalBarEl' : 'horizontalBarEl',
+			    scrollbarWrapRef = isVertical ? 'verticalBarWrapEl' : 'horizontalBarWrapEl',
+			    scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
+			    scrollbarThumbRef = isVertical ? 'verticalBarThumbEl' : 'horizontalBarThumbEl';
+
+			return React$1__default.createElement(
+				'div',
+				{ ref: scrollbarRef, className: index$1(prefixCls + '-bar', dirCls) },
+				React$1__default.createElement(
+					'div',
+					{ ref: scrollbarWrapRef, className: prefixCls + '-bar-wrap' },
+					showTrack ? React$1__default.createElement('div', {
+						ref: scrollbarTrackRef,
+						className: index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-bar-track', true), defineProperty(_classNames, trackCls, trackCls), _classNames)),
+						onMouseDown: function onMouseDown(e) {
+							return _this3.handleTrackMouseDown(e, dir);
+						}
+					}) : null,
+					React$1__default.createElement('div', { ref: scrollbarThumbRef, className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-bar-thumb', true), defineProperty(_classNames2, thumbCls, thumbCls), _classNames2)) })
+				)
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames3, _classNames4;
+
+			var _props5 = this.props,
+			    prefixCls = _props5.prefixCls,
+			    className = _props5.className,
+			    scrollViewBodyCls = _props5.scrollViewBodyCls,
+			    _props5$style = _props5.style,
+			    style = _props5$style === undefined ? {} : _props5$style,
+			    _props5$component = _props5.component,
+			    component = _props5$component === undefined ? 'div' : _props5$component,
+			    _props5$scrollViewBod = _props5.scrollViewBodyStyle,
+			    scrollViewBodyStyle = _props5$scrollViewBod === undefined ? {} : _props5$scrollViewBod,
+			    children = _props5.children,
+			    others = objectWithoutProperties(_props5, ['prefixCls', 'className', 'scrollViewBodyCls', 'style', 'component', 'scrollViewBodyStyle', 'children']);
+			var _state3 = this.state,
+			    shouldComponentUpdate = _state3.shouldComponentUpdate,
+			    hasScrollX = _state3.hasScrollX,
+			    hasScrollY = _state3.hasScrollY;
+
+
+			var classes = index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-view', true), defineProperty(_classNames3, '' + className, className), _classNames3));
+
+			var bodyClasses = index$1((_classNames4 = {}, defineProperty(_classNames4, prefixCls + '-view-body', true), defineProperty(_classNames4, '' + scrollViewBodyCls, scrollViewBodyCls), _classNames4));
+
+			var otherProps = omit(others, Object.keys(ScrollView.defaultProps));
+
+			return React$1__default.createElement(
+				'div',
+				_extends({}, otherProps, { ref: 'scrollview', className: classes, style: style, onWheel: this.handleWheel }),
+				React$1__default.createElement(
+					ScrollViewBody,
+					{ ref: 'scrollviewBody', component: component, onScroll: this.handleScroll, style: scrollViewBodyStyle, className: bodyClasses, shouldComponentUpdate: shouldComponentUpdate },
+					children
+				),
+				hasScrollX ? this.getScrollBar('x') : null,
+				hasScrollY ? this.getScrollBar('y') : null
+			);
+		}
+	}]);
+	return ScrollView;
+}(React$1__default.Component);
+
+ScrollView.propTypes = {
+	prefixCls: index.string,
+	className: index.oneOfType([index.string, index.object]),
+	scrollViewBodyCls: index.string,
+	scrollViewBodyStyle: index.object,
+	overflow: index.oneOfType(['hidden', 'auto', 'scroll', 'visible']),
+	overflowX: index.oneOfType(['hidden', 'auto', 'scroll', 'visible']),
+	overflowY: index.oneOfType(['hidden', 'auto', 'scroll', 'visible']),
+	wheelDir: index.oneOfType(['x', 'y']),
+	thumbCls: index.string,
+	trackCls: index.string,
+	thumbSize: index.number,
+	thumbMinSize: index.number,
+	thumbMaxSize: index.number,
+	showTrack: index.bool,
+	wheelStep: index.number,
+	enablePreventDefaultOnEnd: index.bool,
+	onScroll: index.func,
+	onHScrollEnd: index.func,
+	onVScrollEnd: index.func,
+	onHScrollStart: index.func,
+	onVScrollStart: index.func
+};
+ScrollView.defaultProps = {
+	prefixCls: 'nex-scroll',
+	className: '',
+	scrollViewBodyCls: '',
+	wheelDir: 'y',
+	thumbCls: '',
+	trackCls: '',
+	thumbSize: null,
+	thumbMinSize: 6,
+	thumbMaxSize: 999999,
+	showTrack: true,
+	wheelStep: 20,
+	enablePreventDefaultOnEnd: true,
+	onScroll: null,
+	onHScrollEnd: null,
+	onVScrollEnd: null,
+	onHScrollStart: null,
+	onVScrollStart: null
+};
+ScrollView.childContextTypes = {
+	ScrollView: index.object
+};
+
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
 exports.Input = Input;
@@ -3089,6 +3652,7 @@ exports.Portal = Portal;
 exports.Popup = Popup$1;
 exports.Select = Select;
 exports.ListBox = ListBox;
+exports.ScrollView = ScrollView;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

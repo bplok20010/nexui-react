@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="../style/style.css">
         <link rel="stylesheet" href="./demo.css">
         <link rel="stylesheet" href="../../css/button.css">
-        <link rel="stylesheet" href="../../css/popup.css">
+        <link rel="stylesheet" href="../../css/scrollbar.css">
         <script src="../lib/jquery/jquery.min.js"></script>
         <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
         <script src="../lib/react/dist/react.js"></script>
@@ -27,12 +27,12 @@ define('jquery', function(){
 define('react', React);
 define('react-dom', ReactDOM);
 </script>
-
+<div  style="border:1px solid #E6E6E6;  height:620px; margin:0 auto; padding:10px;"></div>
 <div id="demo" style="border:1px solid #E6E6E6; width:620px; margin:0 auto; padding:10px;"></div>
-
+<div  style="border:1px solid #E6E6E6; height:620px; margin:0 auto; padding:10px;"></div>
 <script>
 
-require(['./Popup'], function(Button){
+require(['./Scrollbar'], function(Button){
 	console.log('load success')
 });
 

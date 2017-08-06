@@ -21,6 +21,8 @@ import Select from './select/Select';
 
 import ListBox from './listbox/ListBox';
 
+import ScrollView from './scrollview/ScrollView';
+
 export {
 	Button,
 	ButtonGroup,
@@ -38,4 +40,5 @@ export {
 	Popup,
 	Select,
 	ListBox,
+	ScrollView
 }

@@ -25,10 +25,14 @@ gulp.task('rollup',async function () {
     const bundle = await rollup.rollup({
         entry: './src/index.js',
 		external: [
+			'jquery',
 			'react',
+			'$',
 			'react-dom'
 		],
 		globals: {
+			'jquery': 'jQuery',
+			'$': 'jQuery',
 			'react': 'React',
 			'react-dom': 'ReactDOM'
 		},

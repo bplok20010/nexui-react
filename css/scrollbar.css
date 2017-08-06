@@ -1,0 +1,76 @@
+.nex-scroll-view {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
+
+.nex-scroll-view-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
+
+.nex-scroll-bar {
+  position: absolute; }
+
+.nex-scroll-bar-vertical {
+  top: 2px;
+  bottom: 2px;
+  right: 1px;
+  width: 7px; }
+  .nex-scroll-bar-vertical .nex-scroll-bar-wrap {
+    top: 0;
+    bottom: 0;
+    width: 100%; }
+  .nex-scroll-bar-vertical .nex-scroll-bar-thumb {
+    width: 100%;
+    top: 0px; }
+  .nex-scroll-bar-vertical .nex-scroll-bar-track {
+    height: 100%;
+    width: 100%;
+    top: 0px; }
+
+.nex-scroll-bar-horizontal {
+  bottom: 1px;
+  left: 2px;
+  right: 2px;
+  height: 7px; }
+  .nex-scroll-bar-horizontal .nex-scroll-bar-wrap {
+    left: 0;
+    right: 0;
+    height: 100%; }
+  .nex-scroll-bar-horizontal .nex-scroll-bar-track {
+    width: 100%;
+    height: 100%;
+    left: 0px; }
+  .nex-scroll-bar-horizontal .nex-scroll-bar-thumb {
+    height: 100%;
+    left: 0px; }
+
+.nex-scroll-bar-wrap {
+  position: absolute;
+  cursor: default; }
+
+.nex-scroll-bar-track,
+.nex-scroll-bar-thumb {
+  position: absolute;
+  z-index: 1;
+  cursor: default; }
+
+.nex-scroll-bar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px; }
+
+.nex-scroll-bar-thumb {
+  border-radius: 3px;
+  background: padding-box padding-box rgba(0, 0, 0, 0.5); }
+
+.nex-scroll-bar-thumb {
+  z-index: 2; }
+
+.nex-scroller-wrapper {
+  position: relative; }
+
+.nex-scroller {
+  position: absolute;
+  overflow: hidden; }

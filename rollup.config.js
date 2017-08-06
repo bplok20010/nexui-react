@@ -14,7 +14,7 @@ export default {
 		'react-dom'
 	],
 	globals: {
-		'jquery',
+		'jquery': 'jQuery',
 		'react': 'React',
 		'react-dom': 'ReactDOM'
 	},

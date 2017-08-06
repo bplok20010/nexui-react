@@ -1,4 +1,4 @@
-import $ from 'jquery';
+//import $ from 'jquery';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -223,7 +223,7 @@ export default class Popup extends React.Component {
 			'destroyOnClose',
 			'popupAnimate',
 			'maskAnimate',
-			'selector'
+			'disabledSetPosition'
 		]);
 		
 		const popup = (
