@@ -46,10 +46,52 @@ export function contains(parent, child) {
 	}
 }
 
-export function offset(){
-		
+export getStyle(el, proto){
+	const style = getComputedStyle ? getComputedStyle(el) : el.currentStyle;
+	return style[proto];	
 }
 
-export function position(){
+export setStyle(el, pro, value){
+	el.style[pro] = value;
+}
+
+export function offset(el){
+	const rect = el.getBoundingClientRect();
+	const docEl = document.documentElement;
+	const bd = document.body;
+	
+	return {
+		top: rect.top + (docEl && docEl.scrollTop ? docEl.scrollTop : bd.scrollTop),
+		left: rect.left + (docEl && docEl.scrollLeft ? docEl.scrollLeft : bd.scrollLeft)
+	}	
+}
+
+export function position({offsetLeft, offsetTop}){
+	return {
+		left: offsetLeft,
+		top: offsetTop	
+	}	
+}
+
+export function positionOfViewport(el){
+	return el.getBoundingClientRect();
+}
+
+export function getWidth(el) {
+	return el.clientWidth + el.scrollLeft - parseInt(getStyle(el, 'paddingLeft')) - parseInt(getStyle(el, 'paddingRight'));
+}
+
+export function getHeight(el) {
+	return el.clientHeight + el.scrollTop - parseInt(getStyle(el, 'paddingTop')) - parseInt(getStyle(el, 'paddingBottom'));	
+}
+
+/**
+* @param margin {boolean} 是否包含margin
+*/
+export function getOuterWidth(el, margin){
+	const w = el.offsetWidth;	
+}
+
+export function getOuterHeight(el, margin){
 		
 }
