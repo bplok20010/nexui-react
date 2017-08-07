@@ -1,3 +1,4 @@
+import {disableSelection, on, contains} from '../shared/dom';
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
@@ -170,7 +171,7 @@ export default class ScrollView extends React.Component {
 		
 	}
 	
-	handleTrackMouseDown= (e, dir = 'y')=>{
+	handleTrackMouseDown(e, dir = 'y'){
 		const target = e.target;
 		const {scrollXRatio, scrollYRatio} = this.state;
 		const {verticalBarThumbEl, horizontalBarThumbEl} = this.refs;
@@ -197,6 +198,36 @@ export default class ScrollView extends React.Component {
 		}
 	}
 	
+	handleThumbMouseDown(e, dir = 'y'){
+		const doc = document;
+		const state = this.state;
+		const startY = e.pageY;
+		const startX = e.pageX;
+		const start = this.getScrollPos(dir);
+		const ratio = state[dir === 'y' ? 'scrollYRatio' : 'scrollXRatio'];
+		
+		let moveOff, upOff, cursor;
+		
+		cursor = doc.body.style.cursor;
+		
+		doc.body.style.cursor = 'default';
+		
+		const enableSelection = disableSelection(doc.body);
+		
+		upOff = on(doc, 'mouseup', (e)=>{
+			enableSelection()
+			upOff();
+			moveOff();	
+			doc.body.style.cursor = cursor;
+		});
+		
+		moveOff = on(doc, 'mousemove', (e)=>{
+			var moveDist = dir === 'y' ? (e.pageY - startY) : (e.pageX - startX);
+			var sPos = start + moveDist * ratio;
+			this.scrollTo(dir, sPos);
+		});
+	}
+	
 	scrollTo(dir = 'y', pos){
 		const scrollview = this.getScrollViewBody();
 		const proto = dir === 'y' ? 'scrollTop' : 'scrollLeft';
@@ -212,8 +243,29 @@ export default class ScrollView extends React.Component {
 		this.scrollTo('x', sLeft)	
 	}
 	
-	scrollY(){
+	scrollY(sTop){
 		this.scrollTo('y', sTop)		
+	}
+	
+	scrollEnd(dir = 'y'){
+		const scrollview = this.getScrollViewBody();
+		const proto = dir === 'y' ? 'Height' : 'Width';
+		
+		const c = scrollview[`client${proto}`];
+		const s = scrollview[`scroll${proto}`];
+		
+		if( s <= c ){
+			return;	
+		}
+		
+		this.scrollTo( dir, s - c );
+	}
+	
+	scrollIntoView(el){
+		const scrollview = this.getScrollViewBody();
+		if( !contains(scrollview, el) ) return;
+		
+		
 	}
 	
 	setThumbPos(){
@@ -394,10 +446,14 @@ export default class ScrollView extends React.Component {
 						></div> : 
 						null
 					}
-					<div ref={scrollbarThumbRef} className={classNames({
-						[`${prefixCls}-bar-thumb`]: true,
-						[thumbCls]: thumbCls
-					})}></div>
+					<div 
+						ref={scrollbarThumbRef} 
+						className={classNames({
+							[`${prefixCls}-bar-thumb`]: true,
+							[thumbCls]: thumbCls
+						})}
+						onMouseDown={(e)=>this.handleThumbMouseDown(e, dir)}
+					></div>
 				</div>
 			</div>
 		);	
