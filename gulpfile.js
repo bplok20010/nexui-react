@@ -27,15 +27,8 @@ gulp.task('rollup',async function () {
 		external: [
 			'jquery',
 			'react',
-			'$',
 			'react-dom'
 		],
-		globals: {
-			'jquery': 'jQuery',
-			'$': 'jQuery',
-			'react': 'React',
-			'react-dom': 'ReactDOM'
-		},
         plugins: [
 			resolve(),
         	commonjs(),
@@ -62,14 +55,12 @@ gulp.task('rollup',async function () {
     await bundle.write({
         format: 'umd',
         moduleName: 'rnexui',
-		external: [
-			'react',
-			'react-dom'
-		],
 		globals: {
+			'jquery': 'jQuery',
 			'react': 'React',
 			'react-dom': 'ReactDOM'
 		},
+		intro: 'var React = 12;',
         dest: './dist/rnexui.js',
         //sourceMap: true
     });

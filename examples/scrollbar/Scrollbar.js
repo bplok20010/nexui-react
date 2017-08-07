@@ -89,7 +89,8 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					}
 
 					_this2.setState({}, function () {
-						_this2.context.ScrollView.updateScrollBarLayoutAndPosition();
+						_this2.context.ScrollView.refreshScrollBar();
+						_this2.context.ScrollView.scrollEnd('y');
 					});
 				}, 300);
 			}
@@ -142,7 +143,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							} },
 						_react2['default'].createElement(
 							_rnexui.ScrollView,
-							{ enablePreventDefaultOnEnd: false, onScroll: function onScroll(x, y) {
+							{ enablePreventDefaultOnEnd: false, overflowX: 'hidden', onScroll: function onScroll(x, y) {
 									return console.log(x, y);
 								}, onVScrollStart: function onVScrollStart() {
 									return console.log('//////////////');
@@ -158,7 +159,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							} },
 						_react2['default'].createElement(
 							_rnexui.ScrollView,
-							{ wheelDir: 'x', onHScrollStart: function onHScrollStart() {
+							{ wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
 									return console.log('//////////////');
 								}, onHScrollEnd: function onHScrollEnd() {
 									return console.log('//////////////');

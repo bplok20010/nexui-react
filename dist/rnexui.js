@@ -4,6 +4,8 @@
 	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM));
 }(this, (function (exports,React$1,ReactDOM$1) { 'use strict';
 
+var React = 12;
+
 var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
 var ReactDOM$1__default = 'default' in ReactDOM$1 ? ReactDOM$1['default'] : ReactDOM$1;
 
@@ -3073,6 +3075,51 @@ ListBox.defaultProps = {
 	items: []
 };
 
+function on(el, type, eventHandle) {
+	el.addEventListener(type, eventHandle);
+	return function () {
+		off(el, type, eventHandle);
+	};
+}
+
+function off(el, type, eventHandle) {
+	el.removeEventListener(type, eventHandle);
+}
+
+var selectEventName = "onselectstart" in document.createElement("div") ? "selectstart" : "mousedown";
+function disableSelection(el) {
+	function preventDefault(e) {
+		e.preventDefault();
+	}
+	on(el, selectEventName, preventDefault);
+
+	return function () {
+		off(el, selectEventName, preventDefault);
+	};
+}
+
+function contains$1(parent, child) {
+	if (typeof parent.contains == 'function') {
+		return parent.contains(child);
+	} else if (typeof parent.compareDocumentPosition == 'function') {
+		// 判断浏览器是否有 compareDocumentPosition 方法 且 返回值为16 
+		// https://developer.mozilla.org/en-US/docs/Web/API/Node.compareDocumentPosition
+		return !!(parent.compareDocumentPosition(child) & 16);
+	} else {
+		// 循环查出父节点 是否 等于 wrapNode; 
+		var node = child.parentNode;
+		do {
+			if (node === parent) {
+				return true;
+			} else {
+				node = node.parentNode;
+			}
+		} while (node !== null);
+
+		return false;
+	}
+}
+
 var ScrollViewBody = function (_React$Component) {
 	inherits(ScrollViewBody, _React$Component);
 
@@ -3207,38 +3254,6 @@ var ScrollView = function (_React$Component) {
 			}
 		};
 
-		_this.handleTrackMouseDown = function (e) {
-			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
-
-			var target = e.target;
-			var _this$state = _this.state,
-			    scrollXRatio = _this$state.scrollXRatio,
-			    scrollYRatio = _this$state.scrollYRatio;
-			var _this$refs = _this.refs,
-			    verticalBarThumbEl = _this$refs.verticalBarThumbEl,
-			    horizontalBarThumbEl = _this$refs.horizontalBarThumbEl;
-
-			var rect = target.getBoundingClientRect();
-			var isVertical = dir === 'y';
-			var proto = isVertical ? 'scrollTop' : 'scrollLeft';
-			var trackPos = rect[isVertical ? 'top' : 'left'] + (document.documentElement && document.documentElement[proto] ? document.documentElement[proto] : document.body[proto]);
-			var thumbEl = isVertical ? verticalBarThumbEl : horizontalBarThumbEl;
-
-			var clickPagePos = e[isVertical ? 'pageY' : 'pageX'];
-			var clickPos = clickPagePos - trackPos;
-
-			var thumbPos = parseInt(getComputedStyle(thumbEl)[isVertical ? 'top' : 'left'], 10);
-			var thumbSize = thumbEl[isVertical ? 'offsetHeight' : 'offsetWidth'];
-
-			var ratio = isVertical ? scrollYRatio : scrollXRatio;
-
-			if (clickPos < thumbPos) {
-				_this.scrollTo(dir, (clickPagePos - trackPos) * ratio);
-			} else {
-				_this.scrollTo(dir, (thumbPos + clickPagePos - (thumbPos + thumbSize + trackPos)) * ratio);
-			}
-		};
-
 		_this.state = {
 			shouldComponentUpdate: true,
 			hasScrollX: false,
@@ -3278,6 +3293,76 @@ var ScrollView = function (_React$Component) {
 			if (!this.state.isUpdating) this.updateScrollBarLayoutAndPosition();
 		}
 	}, {
+		key: 'handleTrackMouseDown',
+		value: function handleTrackMouseDown(e) {
+			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
+
+			var target = e.target;
+			var _state = this.state,
+			    scrollXRatio = _state.scrollXRatio,
+			    scrollYRatio = _state.scrollYRatio;
+			var _refs = this.refs,
+			    verticalBarThumbEl = _refs.verticalBarThumbEl,
+			    horizontalBarThumbEl = _refs.horizontalBarThumbEl;
+
+			var rect = target.getBoundingClientRect();
+			var isVertical = dir === 'y';
+			var proto = isVertical ? 'scrollTop' : 'scrollLeft';
+			var trackPos = rect[isVertical ? 'top' : 'left'] + (document.documentElement && document.documentElement[proto] ? document.documentElement[proto] : document.body[proto]);
+			var thumbEl = isVertical ? verticalBarThumbEl : horizontalBarThumbEl;
+
+			var clickPagePos = e[isVertical ? 'pageY' : 'pageX'];
+			var clickPos = clickPagePos - trackPos;
+
+			var thumbPos = parseInt(getComputedStyle(thumbEl)[isVertical ? 'top' : 'left'], 10);
+			var thumbSize = thumbEl[isVertical ? 'offsetHeight' : 'offsetWidth'];
+
+			var ratio = isVertical ? scrollYRatio : scrollXRatio;
+
+			if (clickPos < thumbPos) {
+				this.scrollTo(dir, (clickPagePos - trackPos) * ratio);
+			} else {
+				this.scrollTo(dir, (thumbPos + clickPagePos - (thumbPos + thumbSize + trackPos)) * ratio);
+			}
+		}
+	}, {
+		key: 'handleThumbMouseDown',
+		value: function handleThumbMouseDown(e) {
+			var _this2 = this;
+
+			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
+
+			var doc = document;
+			var state = this.state;
+			var startY = e.pageY;
+			var startX = e.pageX;
+			var start = this.getScrollPos(dir);
+			var ratio = state[dir === 'y' ? 'scrollYRatio' : 'scrollXRatio'];
+
+			var moveOff = void 0,
+			    upOff = void 0,
+			    cursor = void 0;
+
+			cursor = doc.body.style.cursor;
+
+			doc.body.style.cursor = 'default';
+
+			var enableSelection = disableSelection(doc.body);
+
+			upOff = on(doc, 'mouseup', function (e) {
+				enableSelection();
+				upOff();
+				moveOff();
+				doc.body.style.cursor = cursor;
+			});
+
+			moveOff = on(doc, 'mousemove', function (e) {
+				var moveDist = dir === 'y' ? e.pageY - startY : e.pageX - startX;
+				var sPos = start + moveDist * ratio;
+				_this2.scrollTo(dir, sPos);
+			});
+		}
+	}, {
 		key: 'scrollTo',
 		value: function scrollTo() {
 			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
@@ -3299,8 +3384,31 @@ var ScrollView = function (_React$Component) {
 		}
 	}, {
 		key: 'scrollY',
-		value: function scrollY() {
+		value: function scrollY(sTop) {
 			this.scrollTo('y', sTop);
+		}
+	}, {
+		key: 'scrollEnd',
+		value: function scrollEnd() {
+			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
+
+			var scrollview = this.getScrollViewBody();
+			var proto = dir === 'y' ? 'Height' : 'Width';
+
+			var c = scrollview['client' + proto];
+			var s = scrollview['scroll' + proto];
+
+			if (s <= c) {
+				return;
+			}
+
+			this.scrollTo(dir, s - c);
+		}
+	}, {
+		key: 'scrollIntoView',
+		value: function scrollIntoView(el) {
+			var scrollview = this.getScrollViewBody();
+			if (!contains$1(scrollview, el)) return;
 		}
 	}, {
 		key: 'setThumbPos',
@@ -3311,10 +3419,10 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'setThumbYPos',
 		value: function setThumbYPos() {
-			var _state = this.state,
-			    hasScrollY = _state.hasScrollY,
-			    scrollYRatio = _state.scrollYRatio,
-			    scrollTop = _state.scrollTop;
+			var _state2 = this.state,
+			    hasScrollY = _state2.hasScrollY,
+			    scrollYRatio = _state2.scrollYRatio,
+			    scrollTop = _state2.scrollTop;
 
 			if (!hasScrollY) return;
 
@@ -3323,10 +3431,10 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'setThumbXPos',
 		value: function setThumbXPos() {
-			var _state2 = this.state,
-			    hasScrollX = _state2.hasScrollX,
-			    scrollXRatio = _state2.scrollXRatio,
-			    scrollLeft = _state2.scrollLeft;
+			var _state3 = this.state,
+			    hasScrollX = _state3.hasScrollX,
+			    scrollXRatio = _state3.scrollXRatio,
+			    scrollLeft = _state3.scrollLeft;
 
 			if (!hasScrollX) return;
 
@@ -3345,9 +3453,9 @@ var ScrollView = function (_React$Component) {
 			    thumbSize = _props.thumbSize,
 			    thumbMinSize = _props.thumbMinSize,
 			    thumbMaxSize = _props.thumbMaxSize;
-			var _refs = this.refs,
-			    verticalBarWrapEl = _refs.verticalBarWrapEl,
-			    horizontalBarWrapEl = _refs.horizontalBarWrapEl;
+			var _refs2 = this.refs,
+			    verticalBarWrapEl = _refs2.verticalBarWrapEl,
+			    horizontalBarWrapEl = _refs2.horizontalBarWrapEl;
 
 			var scrollview = this.getScrollViewBody();
 			var isVertical = dir === 'y';
@@ -3444,7 +3552,7 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'updateScrollBarLayoutAndPosition',
 		value: function updateScrollBarLayoutAndPosition() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var hasScrollX = this.hasScroll('x'),
 			    hasScrollY = this.hasScroll('y');
@@ -3457,22 +3565,22 @@ var ScrollView = function (_React$Component) {
 				hasScrollY: hasScrollY
 			}, function () {
 
-				_this2.updateScrollBarLayout();
-				_this2.updateScrollBarPosition();
+				_this3.updateScrollBarLayout();
+				_this3.updateScrollBarPosition();
 
-				_this2.state.isUpdating = false;
+				_this3.state.isUpdating = false;
 			});
 		}
 	}, {
 		key: 'updateScrollBarLayout',
 		value: function updateScrollBarLayout() {
-			var _refs2 = this.refs,
-			    verticalBarEl = _refs2.verticalBarEl,
-			    horizontalBarEl = _refs2.horizontalBarEl,
-			    verticalBarWrapEl = _refs2.verticalBarWrapEl,
-			    horizontalBarWrapEl = _refs2.horizontalBarWrapEl,
-			    verticalBarThumbEl = _refs2.verticalBarThumbEl,
-			    horizontalBarThumbEl = _refs2.horizontalBarThumbEl;
+			var _refs3 = this.refs,
+			    verticalBarEl = _refs3.verticalBarEl,
+			    horizontalBarEl = _refs3.horizontalBarEl,
+			    verticalBarWrapEl = _refs3.verticalBarWrapEl,
+			    horizontalBarWrapEl = _refs3.horizontalBarWrapEl,
+			    verticalBarThumbEl = _refs3.verticalBarThumbEl,
+			    horizontalBarThumbEl = _refs3.horizontalBarThumbEl;
 
 			var scrollview = this.getScrollViewBody();
 			var state = this.state;
@@ -3505,7 +3613,7 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'getScrollBar',
 		value: function getScrollBar() {
-			var _this3 = this,
+			var _this4 = this,
 			    _classNames,
 			    _classNames2;
 
@@ -3520,7 +3628,7 @@ var ScrollView = function (_React$Component) {
 			var dirCls = prefixCls + '-bar-' + (isVertical ? 'vertical' : 'horizontal');
 
 			var ScrollbarRef = function ScrollbarRef(el) {
-				_this3.refs[isVertical ? 'verticalBarEl' : 'horizontalBarEl'] = el;
+				_this4.refs[isVertical ? 'verticalBarEl' : 'horizontalBarEl'] = el;
 			};
 
 			var scrollbarRef = isVertical ? 'verticalBarEl' : 'horizontalBarEl',
@@ -3538,10 +3646,16 @@ var ScrollView = function (_React$Component) {
 						ref: scrollbarTrackRef,
 						className: index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-bar-track', true), defineProperty(_classNames, trackCls, trackCls), _classNames)),
 						onMouseDown: function onMouseDown(e) {
-							return _this3.handleTrackMouseDown(e, dir);
+							return _this4.handleTrackMouseDown(e, dir);
 						}
 					}) : null,
-					React$1__default.createElement('div', { ref: scrollbarThumbRef, className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-bar-thumb', true), defineProperty(_classNames2, thumbCls, thumbCls), _classNames2)) })
+					React$1__default.createElement('div', {
+						ref: scrollbarThumbRef,
+						className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-bar-thumb', true), defineProperty(_classNames2, thumbCls, thumbCls), _classNames2)),
+						onMouseDown: function onMouseDown(e) {
+							return _this4.handleThumbMouseDown(e, dir);
+						}
+					})
 				)
 			);
 		}
@@ -3562,10 +3676,10 @@ var ScrollView = function (_React$Component) {
 			    scrollViewBodyStyle = _props5$scrollViewBod === undefined ? {} : _props5$scrollViewBod,
 			    children = _props5.children,
 			    others = objectWithoutProperties(_props5, ['prefixCls', 'className', 'scrollViewBodyCls', 'style', 'component', 'scrollViewBodyStyle', 'children']);
-			var _state3 = this.state,
-			    shouldComponentUpdate = _state3.shouldComponentUpdate,
-			    hasScrollX = _state3.hasScrollX,
-			    hasScrollY = _state3.hasScrollY;
+			var _state4 = this.state,
+			    shouldComponentUpdate = _state4.shouldComponentUpdate,
+			    hasScrollX = _state4.hasScrollX,
+			    hasScrollY = _state4.hasScrollY;
 
 
 			var classes = index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-view', true), defineProperty(_classNames3, '' + className, className), _classNames3));

@@ -22,7 +22,8 @@ class List extends React.Component {
 			}
 			
 			this.setState({}, ()=>{
-				this.context.ScrollView.updateScrollBarLayoutAndPosition();	
+				this.context.ScrollView.refreshScrollBar();	
+				this.context.ScrollView.scrollEnd('y');
 			})
 		}, 300)	
 	}
@@ -49,7 +50,7 @@ class App extends React.Component {
 			width : 200,
 			height: 200	
 		}}>
-			<ScrollView enablePreventDefaultOnEnd={false} onScroll={(x, y)=>console.log(x, y)} onVScrollStart={()=>console.log('//////////////')} wheelDir='y' style={{border: '1px solid #f2f2f2', padding: 10}}>
+			<ScrollView enablePreventDefaultOnEnd={false} overflowX="hidden" onScroll={(x, y)=>console.log(x, y)} onVScrollStart={()=>console.log('//////////////')} wheelDir='y' style={{border: '1px solid #f2f2f2', padding: 10}}>
 				<List />
 			</ScrollView>
 		</div>
@@ -57,7 +58,7 @@ class App extends React.Component {
 			width : 200,
 			height: 200	
 		}}>
-			<ScrollView wheelDir='x' onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '1px solid #f2f2f2', padding: 10}}>
+			<ScrollView wheelDir='x' overflowY="hidden"  onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '1px solid #f2f2f2', padding: 10}}>
 				<div >
 				start...
 				<div>123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div>
