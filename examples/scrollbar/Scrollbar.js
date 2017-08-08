@@ -159,7 +159,9 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							} },
 						_react2['default'].createElement(
 							_rnexui.ScrollView,
-							{ wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
+							{ ref: function ref(o) {
+									return window.sview = o;
+								}, wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
 									return console.log('//////////////');
 								}, onHScrollEnd: function onHScrollEnd() {
 									return console.log('//////////////');
@@ -261,6 +263,11 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 								_react2['default'].createElement(
 									'div',
 									null,
+									'123456789'
+								),
+								_react2['default'].createElement(
+									'div',
+									{ id: 'sv' },
 									'123456789'
 								),
 								'end...'

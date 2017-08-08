@@ -33,7 +33,7 @@ export function contains(parent, child) {
 		return !!( parent.compareDocumentPosition(child) & 16 );
 	}else{
 		// 循环查出父节点 是否 等于 wrapNode; 
-		var node = child.parentNode;
+		let node = child.parentNode;
 		do {
 			if (node === parent) {
 				return true;
@@ -46,16 +46,16 @@ export function contains(parent, child) {
 	}
 }
 
-export getStyle(el, proto){
+export function getStyle(el, proto){
 	const style = getComputedStyle ? getComputedStyle(el) : el.currentStyle;
 	return style[proto];	
 }
 
-export setStyle(el, pro, value){
+export function setStyle(el, pro, value){
 	el.style[pro] = value;
 }
 
-export function offset(el){
+export function getOffset(el){
 	const rect = el.getBoundingClientRect();
 	const docEl = document.documentElement;
 	const bd = document.body;
@@ -66,14 +66,14 @@ export function offset(el){
 	}	
 }
 
-export function position({offsetLeft, offsetTop}){
+export function getPosition({offsetLeft, offsetTop}){
 	return {
 		left: offsetLeft,
 		top: offsetTop	
 	}	
 }
 
-export function positionOfViewport(el){
+export function getPositionOfViewport(el){
 	return el.getBoundingClientRect();
 }
 
@@ -89,9 +89,25 @@ export function getHeight(el) {
 * @param margin {boolean} 是否包含margin
 */
 export function getOuterWidth(el, margin){
-	const w = el.offsetWidth;	
 }
 
 export function getOuterHeight(el, margin){
 		
+}
+
+export function isVisible(el){
+	let node = el;
+	do {
+		let display = getStyle(node, 'display');
+		if (display === 'none') {
+			return false;
+		} else {
+			node = node.parentNode;
+			if( node === document.body ) {
+				return true;
+			}
+		}
+	} while(node !== null);
+	
+	return true;
 }

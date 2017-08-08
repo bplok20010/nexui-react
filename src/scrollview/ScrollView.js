@@ -1,4 +1,4 @@
-import {disableSelection, on, contains} from '../shared/dom';
+import {disableSelection, on, contains, getOffset, isVisible} from '../shared/dom';
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
@@ -263,9 +263,34 @@ export default class ScrollView extends React.Component {
 	
 	scrollIntoView(el){
 		const scrollview = this.getScrollViewBody();
-		if( !contains(scrollview, el) ) return;
+		if( !contains(scrollview, el) || !isVisible(el) ) return;
 		
+		const pOffset = getOffset(scrollview);
+		const tOffset = getOffset(el);
 		
+		const pTop = pOffset.top,
+			  pLeft = pOffset.left,
+			  pBottom = pOffset.top + scrollview.offsetHeight,
+			  pRight = pOffset.left + scrollview.offsetWidth,
+			  tTop = tOffset.top,
+			  tLeft = tOffset.left,
+			  tBottom = tOffset.top + el.offsetHeight,
+			  tRight = tOffset.left + el.offsetWidth;
+			  
+		const sTop = scrollview.scrollTop,
+			  sLeft = scrollview.scrollLeft;
+		
+		if( pTop > tTop ) {
+			scrollview.scrollTop = sTop - (pTop - tTop);
+		} else if( pBottom < tTop ) {
+			scrollview.scrollTop = sTop + tTop - pBottom + el.offsetHeight;
+		}
+		
+		if( pLeft > tLeft ) {
+			scrollview.scrollLeft = sLeft - (pLeft - tLeft);
+		} else if( pRight < tLeft ) {
+			scrollview.scrollLeft = sLeft + tLeft - pRight + el.offsetWidth;
+		}
 	}
 	
 	setThumbPos(){

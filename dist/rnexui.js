@@ -3120,6 +3120,56 @@ function contains$1(parent, child) {
 	}
 }
 
+function getStyle(el, proto) {
+	var style = getComputedStyle ? getComputedStyle(el) : el.currentStyle;
+	return style[proto];
+}
+
+
+
+function getOffset(el) {
+	var rect = el.getBoundingClientRect();
+	var docEl = document.documentElement;
+	var bd = document.body;
+
+	return {
+		top: rect.top + (docEl && docEl.scrollTop ? docEl.scrollTop : bd.scrollTop),
+		left: rect.left + (docEl && docEl.scrollLeft ? docEl.scrollLeft : bd.scrollLeft)
+	};
+}
+
+
+
+
+
+
+
+
+
+/**
+* @param margin {boolean} 是否包含margin
+*/
+
+
+
+
+function isVisible(el) {
+	var node = el;
+	do {
+		var display = getStyle(node, 'display');
+		if (display === 'none') {
+			return false;
+		} else {
+			node = node.parentNode;
+			if (node === document.body) {
+				return true;
+			}
+		}
+	} while (node !== null);
+
+	return true;
+}
+
 var ScrollViewBody = function (_React$Component) {
 	inherits(ScrollViewBody, _React$Component);
 
@@ -3408,7 +3458,34 @@ var ScrollView = function (_React$Component) {
 		key: 'scrollIntoView',
 		value: function scrollIntoView(el) {
 			var scrollview = this.getScrollViewBody();
-			if (!contains$1(scrollview, el)) return;
+			if (!contains$1(scrollview, el) || !isVisible(el)) return;
+
+			var pOffset = getOffset(scrollview);
+			var tOffset = getOffset(el);
+
+			var pTop = pOffset.top,
+			    pLeft = pOffset.left,
+			    pBottom = pOffset.top + scrollview.offsetHeight,
+			    pRight = pOffset.left + scrollview.offsetWidth,
+			    tTop = tOffset.top,
+			    tLeft = tOffset.left,
+			    tBottom = tOffset.top + el.offsetHeight,
+			    tRight = tOffset.left + el.offsetWidth;
+
+			var sTop = scrollview.scrollTop,
+			    sLeft = scrollview.scrollLeft;
+
+			if (pTop > tTop) {
+				scrollview.scrollTop = sTop - (pTop - tTop);
+			} else if (pBottom < tTop) {
+				scrollview.scrollTop = sTop + tTop - pBottom + el.offsetHeight;
+			}
+
+			if (pLeft > tLeft) {
+				scrollview.scrollLeft = sLeft - (pLeft - tLeft);
+			} else if (pRight < tLeft) {
+				scrollview.scrollLeft = sLeft + tLeft - pRight + el.offsetWidth;
+			}
 		}
 	}, {
 		key: 'setThumbPos',
