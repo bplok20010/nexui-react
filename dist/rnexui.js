@@ -3571,7 +3571,6 @@ var ScrollView = function (_React$Component) {
 			var _props2 = this.props,
 			    overflow = _props2.overflow,
 			    overflowY = _props2.overflowY;
-			//const {scrollview} = this.refs;
 
 			var scrollview = this.getScrollViewBody();
 
@@ -3597,7 +3596,6 @@ var ScrollView = function (_React$Component) {
 			var _props3 = this.props,
 			    overflow = _props3.overflow,
 			    overflowX = _props3.overflowX;
-			//const {scrollview} = this.refs;
 
 			var scrollview = this.getScrollViewBody();
 
@@ -3620,7 +3618,6 @@ var ScrollView = function (_React$Component) {
 		value: function isScrollEnd() {
 			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
 
-			//const {scrollview} = this.refs;
 			var scrollview = this.getScrollViewBody();
 
 			return dir === 'y' ? scrollview.scrollTop >= scrollview.scrollHeight - scrollview.clientHeight : scrollview.scrollLeft >= scrollview.scrollWidth - scrollview.clientWidth;
