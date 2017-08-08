@@ -32,8 +32,10 @@ class App extends React.Component{
 			<ListBox
 					style={{
 						width: 250,
+						padding: 10,
+						height: 200,
 						minHeight: 26,
-						maxHeight: 150	
+						maxHeight: 250	
 					}}
 					
 					value={this.state.value}
