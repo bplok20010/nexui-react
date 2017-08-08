@@ -161,7 +161,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							_rnexui.ScrollView,
 							{ ref: function ref(o) {
 									return window.sview = o;
-								}, wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
+								}, wheelDir: 'y', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
 									return console.log('//////////////');
 								}, onHScrollEnd: function onHScrollEnd() {
 									return console.log('//////////////');

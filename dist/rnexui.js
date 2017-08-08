@@ -3245,6 +3245,12 @@ var ScrollView = function (_React$Component) {
 					nextEnd = defNoop;
 				}
 
+				if (!state.hasScrollY && wheelDir === 'y') {
+					return;
+				} else if (!state.hasScrollX && wheelDir === 'x') {
+					return;
+				}
+
 				_this.scrollTo(wheelDir, deltaY > 0 ? _this.getScrollPos(wheelDir) + wheelStep : _this.getScrollPos(wheelDir) - wheelStep);
 
 				if (enablePreventDefaultOnEnd /* && wheelDir !== 'x' */) {
@@ -3308,6 +3314,8 @@ var ScrollView = function (_React$Component) {
 			shouldComponentUpdate: true,
 			hasScrollX: false,
 			hasScrollY: false,
+			thumbXSize: null,
+			thumbYSize: null,
 			isUpdating: false,
 			scrollXRatio: null,
 			scrollYRatio: null,
@@ -3478,13 +3486,13 @@ var ScrollView = function (_React$Component) {
 			if (pTop > tTop) {
 				scrollview.scrollTop = sTop - (pTop - tTop);
 			} else if (pBottom < tTop) {
-				scrollview.scrollTop = sTop + tTop - pBottom + el.offsetHeight;
+				scrollview.scrollTop = sTop + tTop - pBottom + Math.min(el.offsetHeight, scrollview.clientHeight);
 			}
 
 			if (pLeft > tLeft) {
 				scrollview.scrollLeft = sLeft - (pLeft - tLeft);
 			} else if (pRight < tLeft) {
-				scrollview.scrollLeft = sLeft + tLeft - pRight + el.offsetWidth;
+				scrollview.scrollLeft = sLeft + tLeft - pRight + Math.min(el.offsetWidth, scrollview.clientWidth);
 			}
 		}
 	}, {
@@ -3499,11 +3507,17 @@ var ScrollView = function (_React$Component) {
 			var _state2 = this.state,
 			    hasScrollY = _state2.hasScrollY,
 			    scrollYRatio = _state2.scrollYRatio,
-			    scrollTop = _state2.scrollTop;
+			    scrollTop = _state2.scrollTop,
+			    thumbYSize = _state2.thumbYSize;
 
 			if (!hasScrollY) return;
 
-			this.refs.verticalBarThumbEl.style.top = scrollTop / scrollYRatio + 'px';
+			var verticalBarWrapEl = this.refs.verticalBarWrapEl;
+
+			var minTop = 0;
+			var maxTop = verticalBarWrapEl.clientHeight - thumbYSize;
+
+			this.refs.verticalBarThumbEl.style.top = Math.min(Math.max(scrollTop / scrollYRatio, minTop), maxTop) + 'px';
 		}
 	}, {
 		key: 'setThumbXPos',
@@ -3511,11 +3525,17 @@ var ScrollView = function (_React$Component) {
 			var _state3 = this.state,
 			    hasScrollX = _state3.hasScrollX,
 			    scrollXRatio = _state3.scrollXRatio,
-			    scrollLeft = _state3.scrollLeft;
+			    scrollLeft = _state3.scrollLeft,
+			    thumbXSize = _state3.thumbXSize;
 
 			if (!hasScrollX) return;
 
-			this.refs.horizontalBarThumbEl.style.left = scrollLeft / scrollXRatio + 'px';
+			var horizontalBarWrapEl = this.refs.horizontalBarWrapEl;
+
+			var minLeft = 0;
+			var maxLeft = horizontalBarWrapEl.clientWidth - thumbXSize;
+
+			this.refs.horizontalBarThumbEl.style.left = Math.max(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';
 		}
 	}, {
 		key: 'getScrollViewBody',
@@ -3672,12 +3692,14 @@ var ScrollView = function (_React$Component) {
 
 			if (hasScrollY) {
 				var thumbSize = this.getThumbSize('y');
+				state.thumbYSize = thumbSize;
 				verticalBarThumbEl.style.height = thumbSize + 'px';
 				state.scrollYRatio = (scrollview.scrollHeight - scrollview.clientHeight) / (verticalBarWrapEl.clientHeight - thumbSize);
 			}
 
 			if (hasScrollX) {
 				var _thumbSize = this.getThumbSize('x');
+				state.thumbXSize = _thumbSize;
 				horizontalBarThumbEl.style.width = _thumbSize + 'px';
 				state.scrollXRatio = (scrollview.scrollWidth - scrollview.clientWidth) / (horizontalBarWrapEl.clientWidth - _thumbSize);
 			}
@@ -3808,6 +3830,9 @@ ScrollView.defaultProps = {
 	prefixCls: 'nex-scroll',
 	className: '',
 	scrollViewBodyCls: '',
+	overflow: 'auto',
+	overflowX: 'auto',
+	overflowY: 'auto',
 	wheelDir: 'y',
 	thumbCls: '',
 	trackCls: '',

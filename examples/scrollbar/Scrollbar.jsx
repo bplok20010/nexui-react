@@ -58,7 +58,7 @@ class App extends React.Component {
 			width : 200,
 			height: 200	
 		}}>
-			<ScrollView ref={(o) => window.sview = o} wheelDir='x' overflowY="hidden"  onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '1px solid #f2f2f2', padding: 10}}>
+			<ScrollView ref={(o) => window.sview = o} wheelDir='y' overflowY="hidden"  onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '1px solid #f2f2f2', padding: 10}}>
 				<div >
 				start...
 				<div>123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div>
