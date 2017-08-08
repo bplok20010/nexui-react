@@ -4,8 +4,6 @@
 	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM));
 }(this, (function (exports,React$1,ReactDOM$1) { 'use strict';
 
-var React = 12;
-
 var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
 var ReactDOM$1__default = 'default' in ReactDOM$1 ? ReactDOM$1['default'] : ReactDOM$1;
 
@@ -2832,249 +2830,6 @@ Select.defaultProps = {
 	textField: 'text'
 };
 
-var ListItem = function (_React$Component) {
-	inherits(ListItem, _React$Component);
-
-	function ListItem() {
-		var _ref;
-
-		var _temp, _this, _ret;
-
-		classCallCheck(this, ListItem);
-
-		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-			args[_key] = arguments[_key];
-		}
-
-		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function () {
-			var _this$props = _this.props,
-			    onSelect = _this$props.onSelect,
-			    onDeselect = _this$props.onDeselect,
-			    selected = _this$props.selected,
-			    disabled = _this$props.disabled;
-
-			if (disabled) return;
-			if (!selected) {
-				onSelect && onSelect();
-			} else {
-				onDeselect && onDeselect();
-			}
-		}, _temp), possibleConstructorReturn(_this, _ret);
-	}
-
-	createClass(ListItem, [{
-		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
-			return !index$2(this.props, nextProps) || !index$2(this.state, nextState);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _classNames;
-
-			var _props = this.props,
-			    value = _props.value,
-			    prefixCls = _props.prefixCls,
-			    disabled = _props.disabled,
-			    selected = _props.selected,
-			    children = _props.children;
-
-			var classes = index$1((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-selected', selected), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
-
-			return React$1__default.createElement(
-				'div',
-				{ className: classes, onClick: this.handleItemClick },
-				children
-			);
-		}
-	}]);
-	return ListItem;
-}(React$1__default.Component);
-
-ListItem.defaultProps = {
-	prefixCls: 'nex-listbox-item',
-	value: '',
-	selected: false,
-	disabled: false
-};
-
-function copy(data) {
-	return isArray(data) ? [].concat(data) : data;
-}
-
-var ListBox = function (_React$Component) {
-	inherits(ListBox, _React$Component);
-
-	function ListBox(props) {
-		classCallCheck(this, ListBox);
-
-		var _this = possibleConstructorReturn(this, (ListBox.__proto__ || Object.getPrototypeOf(ListBox)).call(this, props));
-
-		_this.state = {
-			value: props.value || props.defaultValue
-		};
-		return _this;
-	}
-
-	createClass(ListBox, [{
-		key: 'onSelect',
-		value: function onSelect(item) {
-			var props = this.props;
-			var state = this.state;
-			var multiple = props.multiple;
-
-			var v = copy(state.value);
-
-			if (multiple) {
-				if (!isArray(v)) {
-					v = [v];
-				}
-				v.push(item[props.valueField]);
-			} else {
-				//if( isArray(v) ) {
-				//	v = v[0]
-				//}	
-				v = item[props.valueField];
-			}
-
-			if (!('value' in props)) {
-				this.setState({
-					value: v
-				});
-			}
-
-			if (props.onChange) {
-				props.onChange(v);
-			}
-		}
-	}, {
-		key: 'onDeselect',
-		value: function onDeselect(item) {
-			var _props = this.props,
-			    textField = _props.textField,
-			    valueField = _props.valueField,
-			    multiple = _props.multiple,
-			    onChange = _props.onChange;
-
-			var state = this.state;
-			if (!multiple) return;
-			var v = copy(state.value);
-			if (!isArray(v)) {
-				v = [v];
-			}
-
-			var idx = v.indexOf(item[valueField]);
-
-			if (idx >= 0) v.splice(idx, 1);
-
-			if (!('value' in this.props)) {
-				this.setState({
-					value: v
-				});
-			}
-
-			if (onChange) {
-				onChange(v);
-			}
-		}
-	}, {
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(_ref) {
-			var value = _ref.value;
-
-			this.setState({
-				value: value
-			});
-		}
-	}, {
-		key: 'getListItem',
-		value: function getListItem(item) {
-			var _this2 = this;
-
-			var _props2 = this.props,
-			    textField = _props2.textField,
-			    valueField = _props2.valueField,
-			    prefixCls = _props2.prefixCls,
-			    multiple = _props2.multiple;
-			var value = this.state.value;
-
-
-			var markMap = {};
-
-			if (isArray(value)) {
-				value.forEach(function (v) {
-					return markMap[v] = true;
-				});
-			} else {
-				markMap[value] = true;
-			}
-
-			return React$1__default.createElement(
-				ListItem,
-				{
-					key: item[valueField],
-					value: item[valueField],
-					prefixCls: prefixCls + '-item',
-					selected: markMap[item[valueField]],
-					disabled: item.disabled,
-					onSelect: function onSelect() {
-						return _this2.onSelect(item);
-					},
-					onDeselect: function onDeselect() {
-						return _this2.onDeselect(item);
-					}
-				},
-				item[textField]
-			);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _this3 = this;
-
-			var _props3 = this.props,
-			    filter$$1 = _props3.filter,
-			    className = _props3.className,
-			    value = _props3.value,
-			    prefixCls = _props3.prefixCls,
-			    items = _props3.items,
-			    width = _props3.width,
-			    height = _props3.height,
-			    _props3$style = _props3.style,
-			    style = _props3$style === undefined ? {} : _props3$style;
-
-
-			return React$1__default.createElement(
-				'div',
-				{ ref: 'listbox', className: index$1('' + prefixCls, className), style: style },
-				React$1__default.createElement(
-					'div',
-					{ className: prefixCls + '-body' },
-					items.map(function (item, i) {
-						return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
-					})
-				)
-			);
-		}
-	}]);
-	return ListBox;
-}(React$1__default.Component);
-
-ListBox.propTypes = {
-	className: React$1.PropTypes.string,
-	style: React$1.PropTypes.object,
-	prefixCls: React$1.PropTypes.string,
-	items: React$1.PropTypes.array,
-	filter: React$1.PropTypes.func,
-	multiple: React$1.PropTypes.bool
-};
-ListBox.defaultProps = {
-	prefixCls: 'nex-listbox',
-	valueField: 'value',
-	textField: 'text',
-	items: []
-};
-
 function on(el, type, eventHandle) {
 	el.addEventListener(type, eventHandle);
 	return function () {
@@ -3320,7 +3075,9 @@ var ScrollView = function (_React$Component) {
 			scrollXRatio: null,
 			scrollYRatio: null,
 			scrollTop: 0,
-			scrollLeft: 0
+			scrollLeft: 0,
+			lastScrollBarRight: null,
+			lastScrollBarBottom: null
 		};
 		return _this;
 	}
@@ -3355,6 +3112,9 @@ var ScrollView = function (_React$Component) {
 		value: function handleTrackMouseDown(e) {
 			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
 
+			if (e.button !== 0) {
+				return;
+			}
 			var target = e.target;
 			var _state = this.state,
 			    scrollXRatio = _state.scrollXRatio,
@@ -3372,7 +3132,7 @@ var ScrollView = function (_React$Component) {
 			var clickPagePos = e[isVertical ? 'pageY' : 'pageX'];
 			var clickPos = clickPagePos - trackPos;
 
-			var thumbPos = parseInt(getComputedStyle(thumbEl)[isVertical ? 'top' : 'left'], 10);
+			var thumbPos = parseInt(getStyle(thumbEl, isVertical ? 'top' : 'left'), 10);
 			var thumbSize = thumbEl[isVertical ? 'offsetHeight' : 'offsetWidth'];
 
 			var ratio = isVertical ? scrollYRatio : scrollXRatio;
@@ -3535,7 +3295,7 @@ var ScrollView = function (_React$Component) {
 			var minLeft = 0;
 			var maxLeft = horizontalBarWrapEl.clientWidth - thumbXSize;
 
-			this.refs.horizontalBarThumbEl.style.left = Math.max(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';
+			this.refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';
 		}
 	}, {
 		key: 'getScrollViewBody',
@@ -3668,6 +3428,7 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'updateScrollBarLayout',
 		value: function updateScrollBarLayout() {
+			var autoSetScrollBarPadding = this.props.autoSetScrollBarPadding;
 			var _refs3 = this.refs,
 			    verticalBarEl = _refs3.verticalBarEl,
 			    horizontalBarEl = _refs3.horizontalBarEl,
@@ -3676,6 +3437,7 @@ var ScrollView = function (_React$Component) {
 			    verticalBarThumbEl = _refs3.verticalBarThumbEl,
 			    horizontalBarThumbEl = _refs3.horizontalBarThumbEl;
 
+			var container = this.refs.scrollview;
 			var scrollview = this.getScrollViewBody();
 			var state = this.state;
 			var hasScrollX = state.hasScrollX,
@@ -3683,8 +3445,16 @@ var ScrollView = function (_React$Component) {
 
 
 			if (hasScrollX && hasScrollY) {
-				verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + (parseInt(getComputedStyle(horizontalBarEl)['bottom'], 10) || 0) + 'px';
-				horizontalBarEl.style.right = verticalBarEl.offsetWidth + (parseInt(getComputedStyle(verticalBarEl)['right'], 10) || 0) + 'px';
+				verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + (parseInt(getStyle(horizontalBarEl, 'bottom'), 10) || 0) + 'px';
+				horizontalBarEl.style.right = verticalBarEl.offsetWidth + (parseInt(getStyle(verticalBarEl, 'right'), 10) || 0) + 'px';
+			}
+
+			if (state.lastScrollBarRight === null && verticalBarEl) {
+				state.lastScrollBarRight = getStyle(verticalBarEl, 'right');
+			}
+
+			if (state.lastScrollBarBottom === null && horizontalBarEl) {
+				state.lastScrollBarBottom = getStyle(horizontalBarEl, 'bottom');
 			}
 
 			if (hasScrollY) {
@@ -3692,6 +3462,11 @@ var ScrollView = function (_React$Component) {
 				state.thumbYSize = thumbSize;
 				verticalBarThumbEl.style.height = thumbSize + 'px';
 				state.scrollYRatio = (scrollview.scrollHeight - scrollview.clientHeight) / (verticalBarWrapEl.clientHeight - thumbSize);
+				if (autoSetScrollBarPadding) {
+					container.style.paddingRight = verticalBarEl.offsetWidth + (parseInt(state.lastScrollBarRight) || 0) * 2 + 'px';
+				}
+			} else {
+				container.style.paddingRight = state.lastScrollBarRight;
 			}
 
 			if (hasScrollX) {
@@ -3699,6 +3474,11 @@ var ScrollView = function (_React$Component) {
 				state.thumbXSize = _thumbSize;
 				horizontalBarThumbEl.style.width = _thumbSize + 'px';
 				state.scrollXRatio = (scrollview.scrollWidth - scrollview.clientWidth) / (horizontalBarWrapEl.clientWidth - _thumbSize);
+				if (autoSetScrollBarPadding) {
+					container.style.paddingBottom = horizontalBarEl.offsetHeight + (parseInt(state.lastScrollBarBottom) || 0) * 2 + 'px';
+				}
+			} else {
+				container.style.paddingBottom = state.lastScrollBarBottom;
 			}
 		}
 	}, {
@@ -3817,6 +3597,7 @@ ScrollView.propTypes = {
 	showTrack: index.bool,
 	wheelStep: index.number,
 	enablePreventDefaultOnEnd: index.bool,
+	autoSetScrollBarPadding: index.bool,
 	onScroll: index.func,
 	onHScrollEnd: index.func,
 	onVScrollEnd: index.func,
@@ -3839,6 +3620,7 @@ ScrollView.defaultProps = {
 	showTrack: true,
 	wheelStep: 20,
 	enablePreventDefaultOnEnd: true,
+	autoSetScrollBarPadding: false,
 	onScroll: null,
 	onHScrollEnd: null,
 	onVScrollEnd: null,
@@ -3847,6 +3629,249 @@ ScrollView.defaultProps = {
 };
 ScrollView.childContextTypes = {
 	ScrollView: index.object
+};
+
+var ListItem = function (_React$Component) {
+	inherits(ListItem, _React$Component);
+
+	function ListItem() {
+		var _ref;
+
+		var _temp, _this, _ret;
+
+		classCallCheck(this, ListItem);
+
+		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+			args[_key] = arguments[_key];
+		}
+
+		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function () {
+			var _this$props = _this.props,
+			    onSelect = _this$props.onSelect,
+			    onDeselect = _this$props.onDeselect,
+			    selected = _this$props.selected,
+			    disabled = _this$props.disabled;
+
+			if (disabled) return;
+			if (!selected) {
+				onSelect && onSelect();
+			} else {
+				onDeselect && onDeselect();
+			}
+		}, _temp), possibleConstructorReturn(_this, _ret);
+	}
+
+	createClass(ListItem, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
+			return !index$2(this.props, nextProps) || !index$2(this.state, nextState);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames;
+
+			var _props = this.props,
+			    value = _props.value,
+			    prefixCls = _props.prefixCls,
+			    disabled = _props.disabled,
+			    selected = _props.selected,
+			    children = _props.children;
+
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-selected', selected), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+
+			return React$1__default.createElement(
+				'div',
+				{ className: classes, onClick: this.handleItemClick },
+				children
+			);
+		}
+	}]);
+	return ListItem;
+}(React$1__default.Component);
+
+ListItem.defaultProps = {
+	prefixCls: 'nex-listbox-item',
+	value: '',
+	selected: false,
+	disabled: false
+};
+
+function copy(data) {
+	return isArray(data) ? [].concat(data) : data;
+}
+
+var ListBox = function (_React$Component) {
+	inherits(ListBox, _React$Component);
+
+	function ListBox(props) {
+		classCallCheck(this, ListBox);
+
+		var _this = possibleConstructorReturn(this, (ListBox.__proto__ || Object.getPrototypeOf(ListBox)).call(this, props));
+
+		_this.state = {
+			value: props.value || props.defaultValue
+		};
+		return _this;
+	}
+
+	createClass(ListBox, [{
+		key: 'onSelect',
+		value: function onSelect(item) {
+			var props = this.props;
+			var state = this.state;
+			var multiple = props.multiple;
+
+			var v = copy(state.value);
+
+			if (multiple) {
+				if (!isArray(v)) {
+					v = [v];
+				}
+				v.push(item[props.valueField]);
+			} else {
+				//if( isArray(v) ) {
+				//	v = v[0]
+				//}	
+				v = item[props.valueField];
+			}
+
+			if (!('value' in props)) {
+				this.setState({
+					value: v
+				});
+			}
+
+			if (props.onChange) {
+				props.onChange(v);
+			}
+		}
+	}, {
+		key: 'onDeselect',
+		value: function onDeselect(item) {
+			var _props = this.props,
+			    textField = _props.textField,
+			    valueField = _props.valueField,
+			    multiple = _props.multiple,
+			    onChange = _props.onChange;
+
+			var state = this.state;
+			if (!multiple) return;
+			var v = copy(state.value);
+			if (!isArray(v)) {
+				v = [v];
+			}
+
+			var idx = v.indexOf(item[valueField]);
+
+			if (idx >= 0) v.splice(idx, 1);
+
+			if (!('value' in this.props)) {
+				this.setState({
+					value: v
+				});
+			}
+
+			if (onChange) {
+				onChange(v);
+			}
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(_ref) {
+			var value = _ref.value;
+
+			this.setState({
+				value: value
+			});
+		}
+	}, {
+		key: 'getListItem',
+		value: function getListItem(item) {
+			var _this2 = this;
+
+			var _props2 = this.props,
+			    textField = _props2.textField,
+			    valueField = _props2.valueField,
+			    prefixCls = _props2.prefixCls,
+			    multiple = _props2.multiple;
+			var value = this.state.value;
+
+
+			var markMap = {};
+
+			if (isArray(value)) {
+				value.forEach(function (v) {
+					return markMap[v] = true;
+				});
+			} else {
+				markMap[value] = true;
+			}
+
+			return React$1__default.createElement(
+				ListItem,
+				{
+					key: item[valueField],
+					value: item[valueField],
+					prefixCls: prefixCls + '-item',
+					selected: markMap[item[valueField]],
+					disabled: item.disabled,
+					onSelect: function onSelect() {
+						return _this2.onSelect(item);
+					},
+					onDeselect: function onDeselect() {
+						return _this2.onDeselect(item);
+					}
+				},
+				item[textField]
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this3 = this;
+
+			var _props3 = this.props,
+			    filter$$1 = _props3.filter,
+			    className = _props3.className,
+			    value = _props3.value,
+			    prefixCls = _props3.prefixCls,
+			    items = _props3.items,
+			    width = _props3.width,
+			    height = _props3.height,
+			    _props3$style = _props3.style,
+			    style = _props3$style === undefined ? {} : _props3$style;
+
+
+			return React$1__default.createElement(
+				'div',
+				{ ref: 'listbox', className: index$1('' + prefixCls, className), style: style },
+				React$1__default.createElement(
+					ScrollView,
+					{ scrollViewBodyCls: prefixCls + '-body' },
+					items.map(function (item, i) {
+						return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
+					})
+				)
+			);
+		}
+	}]);
+	return ListBox;
+}(React$1__default.Component);
+
+ListBox.propTypes = {
+	className: React$1.PropTypes.string,
+	style: React$1.PropTypes.object,
+	prefixCls: React$1.PropTypes.string,
+	items: React$1.PropTypes.array,
+	filter: React$1.PropTypes.func,
+	multiple: React$1.PropTypes.bool
+};
+ListBox.defaultProps = {
+	prefixCls: 'nex-listbox',
+	valueField: 'value',
+	textField: 'text',
+	items: []
 };
 
 exports.Button = Button;

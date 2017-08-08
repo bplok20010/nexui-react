@@ -1,3 +1,3 @@
-import Scrollbar from './Scrollbar';
+import ScrollView from './ScrollView';
 
-export default Scrollbar;
+export default ScrollView;

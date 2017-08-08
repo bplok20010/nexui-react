@@ -104,7 +104,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					this.list.map(function (v, i) {
 						return _react2['default'].createElement(
 							'div',
-							null,
+							{ style: { padding: '2px 5px' } },
 							v
 						);
 					}),
@@ -143,11 +143,9 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							} },
 						_react2['default'].createElement(
 							_rnexui.ScrollView,
-							{ enablePreventDefaultOnEnd: false, overflowX: 'hidden', onScroll: function onScroll(x, y) {
-									return console.log(x, y);
-								}, onVScrollStart: function onVScrollStart() {
+							{ enablePreventDefaultOnEnd: false, overflowX: 'auto', onVScrollStart: function onVScrollStart() {
 									return console.log('//////////////');
-								}, wheelDir: 'y', style: { border: '1px solid #f2f2f2', padding: 10 } },
+								}, wheelDir: 'y', autoSetScrollBarPadding: true, style: { border: '1px solid #f2f2f2' } },
 							_react2['default'].createElement(List, null)
 						)
 					),
@@ -161,7 +159,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							_rnexui.ScrollView,
 							{ ref: function ref(o) {
 									return window.sview = o;
-								}, wheelDir: 'y', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
+								}, wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
 									return console.log('//////////////');
 								}, onHScrollEnd: function onHScrollEnd() {
 									return console.log('//////////////');

@@ -60,7 +60,7 @@ gulp.task('rollup',async function () {
 			'react': 'React',
 			'react-dom': 'ReactDOM'
 		},
-		intro: 'var React = 12;',
+		//intro: 'var React = 12;',
         dest: './dist/rnexui.js',
         //sourceMap: true
     });

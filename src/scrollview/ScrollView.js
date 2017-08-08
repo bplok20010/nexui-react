@@ -1,4 +1,4 @@
-import {disableSelection, on, contains, getOffset, isVisible} from '../shared/dom';
+import {disableSelection, on, contains, getOffset, isVisible, getStyle} from '../shared/dom';
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
@@ -24,6 +24,7 @@ export default class ScrollView extends React.Component {
 		showTrack: PropTypes.bool,
 		wheelStep: PropTypes.number,
 		enablePreventDefaultOnEnd: PropTypes.bool,
+		autoSetScrollBarPadding: PropTypes.bool,
 		onScroll: PropTypes.func,
 		onHScrollEnd: PropTypes.func,
 		onVScrollEnd: PropTypes.func,
@@ -47,6 +48,7 @@ export default class ScrollView extends React.Component {
 		showTrack: true,
 		wheelStep: 20,
 		enablePreventDefaultOnEnd: true,
+		autoSetScrollBarPadding: false,
 		onScroll: null,
 		onHScrollEnd: null,
 		onVScrollEnd: null,
@@ -72,6 +74,8 @@ export default class ScrollView extends React.Component {
 			scrollYRatio: null,
 			scrollTop: 0,
 			scrollLeft: 0,
+			lastScrollBarRight: null,
+			lastScrollBarBottom: null,
 		};
 	}
 	
@@ -183,6 +187,9 @@ export default class ScrollView extends React.Component {
 	}
 	
 	handleTrackMouseDown(e, dir = 'y'){
+		if(e.button !== 0) {
+			return;	
+		}
 		const target = e.target;
 		const {scrollXRatio, scrollYRatio} = this.state;
 		const {verticalBarThumbEl, horizontalBarThumbEl} = this.refs;
@@ -197,7 +204,7 @@ export default class ScrollView extends React.Component {
 		const clickPagePos = e[isVertical ? 'pageY' : 'pageX'];  
 		const clickPos = clickPagePos - trackPos;	
 					 
-		const thumbPos = parseInt(getComputedStyle(thumbEl)[isVertical ? 'top' : 'left'], 10);
+		const thumbPos = parseInt(getStyle(thumbEl, isVertical ? 'top' : 'left'), 10);
 		const thumbSize = thumbEl[isVertical ? 'offsetHeight' : 'offsetWidth'];
 		
 		const ratio = isVertical ? scrollYRatio : scrollXRatio;
@@ -328,7 +335,7 @@ export default class ScrollView extends React.Component {
 		const minLeft = 0;
 		const maxLeft = horizontalBarWrapEl.clientWidth - thumbXSize;
 
-		this.refs.horizontalBarThumbEl.style.left = Math.max(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';	
+		this.refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';	
 	}
 	
 	getScrollViewBody(){
@@ -431,14 +438,24 @@ export default class ScrollView extends React.Component {
 	}
 	
 	updateScrollBarLayout(){
+		const {autoSetScrollBarPadding} = this.props;
 		const {verticalBarEl, horizontalBarEl, verticalBarWrapEl, horizontalBarWrapEl, verticalBarThumbEl, horizontalBarThumbEl} = this.refs;
+		const container = this.refs.scrollview;
 		const scrollview = this.getScrollViewBody();
 		const state = this.state;
 		const {hasScrollX, hasScrollY} = state;
 		
 		if( hasScrollX && hasScrollY ) {
-			verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + ((parseInt(getComputedStyle(horizontalBarEl)['bottom'], 10) || 0)) + 'px';
-			horizontalBarEl.style.right = verticalBarEl.offsetWidth + ((parseInt(getComputedStyle(verticalBarEl)['right'], 10) || 0)) + 'px';
+			verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + ((parseInt(getStyle(horizontalBarEl, 'bottom'), 10) || 0)) + 'px';
+			horizontalBarEl.style.right = verticalBarEl.offsetWidth + ((parseInt(getStyle(verticalBarEl, 'right'), 10) || 0)) + 'px';
+		}
+		
+		if( state.lastScrollBarRight === null && verticalBarEl) {
+			state.lastScrollBarRight = getStyle(verticalBarEl, 'right');
+		}
+		
+		if( state.lastScrollBarBottom === null && horizontalBarEl) {
+			state.lastScrollBarBottom = getStyle(horizontalBarEl, 'bottom');
 		}
 		
 		if( hasScrollY ) {
@@ -446,6 +463,11 @@ export default class ScrollView extends React.Component {
 			state.thumbYSize = thumbSize;
 			verticalBarThumbEl.style.height = thumbSize + 'px';
 			state.scrollYRatio = (scrollview.scrollHeight - scrollview.clientHeight) / (verticalBarWrapEl.clientHeight - thumbSize);
+			if( autoSetScrollBarPadding ) {
+				container.style.paddingRight = verticalBarEl.offsetWidth +( parseInt(state.lastScrollBarRight) || 0 ) * 2 + 'px';
+			}
+		} else {
+			container.style.paddingRight = state.lastScrollBarRight;
 		}
 		
 		if( hasScrollX ) {
@@ -453,6 +475,11 @@ export default class ScrollView extends React.Component {
 			state.thumbXSize = thumbSize;
 			horizontalBarThumbEl.style.width = thumbSize + 'px';	
 			state.scrollXRatio = (scrollview.scrollWidth - scrollview.clientWidth) / (horizontalBarWrapEl.clientWidth - thumbSize);
+			if( autoSetScrollBarPadding ) {
+				container.style.paddingBottom = horizontalBarEl.offsetHeight +( parseInt(state.lastScrollBarBottom) || 0 ) * 2 + 'px';
+			}
+		} else {
+			container.style.paddingBottom = state.lastScrollBarBottom;	
 		}
 	}
 	

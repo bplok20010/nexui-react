@@ -2,6 +2,7 @@ import React, {PureComponent, PropTypes} from 'react';
 import classNames from 'classnames';
 import omit from 'omit.js';
 import _assign from 'object-assign';
+import ScrollView from '../scrollview/ScrollView';
 import ListItem from './ListItem';
 import {isArray} from '../shared/util';
 
@@ -129,11 +130,11 @@ export default class ListBox extends React.Component{
 		
 		return (
 			<div ref="listbox" className={classNames(`${prefixCls}`, className)} style={style}>
-				<div className={`${prefixCls}-body`}>
+				<ScrollView scrollViewBodyCls={`${prefixCls}-body`}>
 					{items.map((item, i) => {
 						return (filter ? filter(item, i) : true) ? this.getListItem(item) : null;	
 					})}
-				</div>
+				</ScrollView>
 			</div>
 		);
 	}
