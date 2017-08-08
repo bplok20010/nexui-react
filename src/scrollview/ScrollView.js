@@ -351,7 +351,6 @@ export default class ScrollView extends React.Component {
 	//判断是否创建滚动条
 	hasVerticalScrollBar(){
 		const {overflow, overflowY} = this.props;
-		//const {scrollview} = this.refs;
 		const scrollview = this.getScrollViewBody();
 		
 		if( !overflowY && (overflow === 'hidden' || overflow === 'visible') ) {
@@ -371,7 +370,6 @@ export default class ScrollView extends React.Component {
 	//判断是否创建滚动条
 	hasHorizontalScrollBar(){
 		const {overflow, overflowX} = this.props;
-		//const {scrollview} = this.refs;
 		const scrollview = this.getScrollViewBody();
 		
 		if( !overflowX && (overflow === 'hidden' || overflow === 'visible') ) {
@@ -390,7 +388,6 @@ export default class ScrollView extends React.Component {
 	}
 	
 	isScrollEnd(dir='y'){
-		//const {scrollview} = this.refs;
 		const scrollview = this.getScrollViewBody();
 		
 		return dir === 'y' ? 
