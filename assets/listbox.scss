@@ -1,35 +1,51 @@
+$listboxItemPadding: 0 10px;
+$listboxItemHeight: 26px;
+
 .nex-listbox {
-	border:1px solid #26A0DA;
 	background:#FFF;
-	overflow:auto;
+	overflow: hidden;
 	.nex-listbox-body {
-	
-		> .nex-listbox-item {
+		border:1px solid #26A0DA;
+		.nex-listbox-item-group-title,
+		.nex-listbox-item {
 			list-style:none;
-			padding:0 5px;
+			padding:$listboxItemPadding;
 			cursor: pointer;
-			line-height:26px;
-			height:26px;
+			line-height:$listboxItemHeight;
+			height:$listboxItemHeight;
 			white-space: nowrap;
 			overflow:hidden;
-			&:hover {
-				background: #30bde0;
-				color: #FFF;
-			}
 		}
 		
-		> .nex-listbox-item-selected {
-			background: #30bde0;
+		.nex-listbox-item:hover {
+			background: #e4e8f1;
+		}
+		
+		.nex-listbox-item-selected {
+			background: #20a0ff;
 			color: #FFF;
 		}
+		.nex-listbox-item-selected:hover {
+			background: #1c8de0;
+		}
 		
-		> .nex-listbox-item-disabled {
+		.nex-listbox-item-disabled {
 			opacity: .5;
 			cursor: default;
 			&:hover {
 				background: none;
 				color: rgba(0,0,0,.25);
 			}	
+		}
+		
+		.nex-listbox-item-group-title {
+			padding:$listboxItemPadding;
+			cursor:default;
+			color: #999;
+		}
+		
+		.nex-listbox-item-group-list .nex-listbox-item {
+			padding-left:20px;	
 		}
 	
 	}

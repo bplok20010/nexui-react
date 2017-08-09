@@ -31,13 +31,9 @@ class App extends React.Component{
 			<Input placeholder="搜素..." onChange={this.search} />
 			<ListBox
 					style={{
-						width: 250,
-						padding: 10,
-						height: 200,
-						minHeight: 26,
-						maxHeight: 250	
+						maxWidth: 300,
+						maxHeight: 400,	
 					}}
-					
 					value={this.state.value}
 					onChange={this.handleChange}
 					items={data}

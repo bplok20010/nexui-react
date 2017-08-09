@@ -3076,8 +3076,10 @@ var ScrollView = function (_React$Component) {
 			scrollYRatio: null,
 			scrollTop: 0,
 			scrollLeft: 0,
-			lastScrollBarRight: null,
-			lastScrollBarBottom: null
+			origScrollViewPaddingRight: null,
+			origScrollViewPaddingBottom: null,
+			lastScrollViewPaddingRight: null,
+			lastScrollViewPaddingBottom: null
 		};
 		return _this;
 	}
@@ -3098,6 +3100,12 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps() {
+			var state = this.state;
+			state.origScrollViewPaddingRight = null;
+			state.lastScrollViewPaddingRight = null;
+			state.origScrollViewPaddingBottom = null;
+			state.lastScrollViewPaddingBottom = null;
+
 			this.setState({
 				shouldComponentUpdate: true
 			});
@@ -3346,7 +3354,7 @@ var ScrollView = function (_React$Component) {
 				return true;
 			}
 
-			return scrollview.scrollHeight > scrollview.clientHeight;
+			return scrollview.scrollHeight - scrollview.clientHeight > 1;
 		}
 		//判断是否创建滚动条
 
@@ -3371,7 +3379,7 @@ var ScrollView = function (_React$Component) {
 				return true;
 			}
 
-			return scrollview.scrollWidth > scrollview.clientWidth;
+			return scrollview.scrollWidth - scrollview.clientWidth > 1;
 		}
 	}, {
 		key: 'isScrollEnd',
@@ -3428,7 +3436,10 @@ var ScrollView = function (_React$Component) {
 	}, {
 		key: 'updateScrollBarLayout',
 		value: function updateScrollBarLayout() {
-			var autoSetScrollBarPadding = this.props.autoSetScrollBarPadding;
+			var _props4 = this.props,
+			    scrollBarSize = _props4.scrollBarSize,
+			    scrollBarOffsetTopOrLeft = _props4.scrollBarOffsetTopOrLeft,
+			    scrollBarOffsetRightOrBottom = _props4.scrollBarOffsetRightOrBottom;
 			var _refs3 = this.refs,
 			    verticalBarEl = _refs3.verticalBarEl,
 			    horizontalBarEl = _refs3.horizontalBarEl,
@@ -3444,17 +3455,18 @@ var ScrollView = function (_React$Component) {
 			    hasScrollY = state.hasScrollY;
 
 
-			if (hasScrollX && hasScrollY) {
-				verticalBarEl.style.bottom = horizontalBarEl.offsetHeight + (parseInt(getStyle(horizontalBarEl, 'bottom'), 10) || 0) + 'px';
-				horizontalBarEl.style.right = verticalBarEl.offsetWidth + (parseInt(getStyle(verticalBarEl, 'right'), 10) || 0) + 'px';
-			}
+			if (hasScrollX || hasScrollY) {
+				if (hasScrollY) {
+					verticalBarEl.style.top = scrollBarOffsetTopOrLeft + 'px';
+					verticalBarEl.style.right = scrollBarOffsetRightOrBottom + 'px';
+					verticalBarEl.style.bottom = scrollBarOffsetTopOrLeft + (hasScrollX ? scrollBarSize + scrollBarOffsetRightOrBottom : 0) + 'px';
+				}
 
-			if (state.lastScrollBarRight === null && verticalBarEl) {
-				state.lastScrollBarRight = getStyle(verticalBarEl, 'right');
-			}
-
-			if (state.lastScrollBarBottom === null && horizontalBarEl) {
-				state.lastScrollBarBottom = getStyle(horizontalBarEl, 'bottom');
+				if (hasScrollX) {
+					horizontalBarEl.style.left = scrollBarOffsetTopOrLeft + 'px';
+					horizontalBarEl.style.bottom = scrollBarOffsetRightOrBottom + 'px';
+					horizontalBarEl.style.right = scrollBarOffsetTopOrLeft + (hasScrollY ? scrollBarSize + scrollBarOffsetRightOrBottom : 0) + 'px';
+				}
 			}
 
 			if (hasScrollY) {
@@ -3462,11 +3474,6 @@ var ScrollView = function (_React$Component) {
 				state.thumbYSize = thumbSize;
 				verticalBarThumbEl.style.height = thumbSize + 'px';
 				state.scrollYRatio = (scrollview.scrollHeight - scrollview.clientHeight) / (verticalBarWrapEl.clientHeight - thumbSize);
-				if (autoSetScrollBarPadding) {
-					container.style.paddingRight = verticalBarEl.offsetWidth + (parseInt(state.lastScrollBarRight) || 0) * 2 + 'px';
-				}
-			} else {
-				container.style.paddingRight = state.lastScrollBarRight;
 			}
 
 			if (hasScrollX) {
@@ -3474,11 +3481,6 @@ var ScrollView = function (_React$Component) {
 				state.thumbXSize = _thumbSize;
 				horizontalBarThumbEl.style.width = _thumbSize + 'px';
 				state.scrollXRatio = (scrollview.scrollWidth - scrollview.clientWidth) / (horizontalBarWrapEl.clientWidth - _thumbSize);
-				if (autoSetScrollBarPadding) {
-					container.style.paddingBottom = horizontalBarEl.offsetHeight + (parseInt(state.lastScrollBarBottom) || 0) * 2 + 'px';
-				}
-			} else {
-				container.style.paddingBottom = state.lastScrollBarBottom;
 			}
 		}
 	}, {
@@ -3494,11 +3496,11 @@ var ScrollView = function (_React$Component) {
 			    _classNames2;
 
 			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
-			var _props4 = this.props,
-			    prefixCls = _props4.prefixCls,
-			    showTrack = _props4.showTrack,
-			    thumbCls = _props4.thumbCls,
-			    trackCls = _props4.trackCls;
+			var _props5 = this.props,
+			    prefixCls = _props5.prefixCls,
+			    showTrack = _props5.showTrack,
+			    thumbCls = _props5.thumbCls,
+			    trackCls = _props5.trackCls;
 
 			var isVertical = dir === 'y';
 			var dirCls = prefixCls + '-bar-' + (isVertical ? 'vertical' : 'horizontal');
@@ -3540,18 +3542,18 @@ var ScrollView = function (_React$Component) {
 		value: function render() {
 			var _classNames3, _classNames4;
 
-			var _props5 = this.props,
-			    prefixCls = _props5.prefixCls,
-			    className = _props5.className,
-			    scrollViewBodyCls = _props5.scrollViewBodyCls,
-			    _props5$style = _props5.style,
-			    style = _props5$style === undefined ? {} : _props5$style,
-			    _props5$component = _props5.component,
-			    component = _props5$component === undefined ? 'div' : _props5$component,
-			    _props5$scrollViewBod = _props5.scrollViewBodyStyle,
-			    scrollViewBodyStyle = _props5$scrollViewBod === undefined ? {} : _props5$scrollViewBod,
-			    children = _props5.children,
-			    others = objectWithoutProperties(_props5, ['prefixCls', 'className', 'scrollViewBodyCls', 'style', 'component', 'scrollViewBodyStyle', 'children']);
+			var _props6 = this.props,
+			    prefixCls = _props6.prefixCls,
+			    className = _props6.className,
+			    scrollViewBodyCls = _props6.scrollViewBodyCls,
+			    _props6$style = _props6.style,
+			    style = _props6$style === undefined ? {} : _props6$style,
+			    _props6$component = _props6.component,
+			    component = _props6$component === undefined ? 'div' : _props6$component,
+			    _props6$scrollViewBod = _props6.scrollViewBodyStyle,
+			    scrollViewBodyStyle = _props6$scrollViewBod === undefined ? {} : _props6$scrollViewBod,
+			    children = _props6.children,
+			    others = objectWithoutProperties(_props6, ['prefixCls', 'className', 'scrollViewBodyCls', 'style', 'component', 'scrollViewBodyStyle', 'children']);
 			var _state4 = this.state,
 			    shouldComponentUpdate = _state4.shouldComponentUpdate,
 			    hasScrollX = _state4.hasScrollX,
@@ -3569,7 +3571,7 @@ var ScrollView = function (_React$Component) {
 				_extends({}, otherProps, { ref: 'scrollview', className: classes, style: style, onWheel: this.handleWheel }),
 				React$1__default.createElement(
 					ScrollViewBody,
-					{ ref: 'scrollviewBody', component: component, onScroll: this.handleScroll, style: scrollViewBodyStyle, className: bodyClasses, shouldComponentUpdate: shouldComponentUpdate },
+					{ ref: 'scrollviewBody', className: bodyClasses, style: scrollViewBodyStyle, component: component, onScroll: this.handleScroll, shouldComponentUpdate: shouldComponentUpdate },
 					children
 				),
 				hasScrollX ? this.getScrollBar('x') : null,
@@ -3591,13 +3593,15 @@ ScrollView.propTypes = {
 	wheelDir: index.oneOfType(['x', 'y']),
 	thumbCls: index.string,
 	trackCls: index.string,
+	scrollBarSize: index.number,
 	thumbSize: index.number,
 	thumbMinSize: index.number,
 	thumbMaxSize: index.number,
 	showTrack: index.bool,
+	scrollBarOffsetTopOrLeft: index.number,
+	scrollBarOffsetRightOrBottom: index.number,
 	wheelStep: index.number,
 	enablePreventDefaultOnEnd: index.bool,
-	autoSetScrollBarPadding: index.bool,
 	onScroll: index.func,
 	onHScrollEnd: index.func,
 	onVScrollEnd: index.func,
@@ -3611,6 +3615,9 @@ ScrollView.defaultProps = {
 	overflow: 'auto',
 	overflowX: 'auto',
 	overflowY: 'auto',
+	scrollBarSize: 7,
+	scrollBarOffsetTopOrLeft: 2,
+	scrollBarOffsetRightOrBottom: 0,
 	wheelDir: 'y',
 	thumbCls: '',
 	trackCls: '',
@@ -3620,7 +3627,6 @@ ScrollView.defaultProps = {
 	showTrack: true,
 	wheelStep: 20,
 	enablePreventDefaultOnEnd: true,
-	autoSetScrollBarPadding: false,
 	onScroll: null,
 	onHScrollEnd: null,
 	onVScrollEnd: null,
@@ -3695,6 +3701,46 @@ ListItem.defaultProps = {
 	value: '',
 	selected: false,
 	disabled: false
+};
+
+var ItemGroup = function (_React$Component) {
+	inherits(ItemGroup, _React$Component);
+
+	function ItemGroup() {
+		classCallCheck(this, ItemGroup);
+		return possibleConstructorReturn(this, (ItemGroup.__proto__ || Object.getPrototypeOf(ItemGroup)).apply(this, arguments));
+	}
+
+	createClass(ItemGroup, [{
+		key: 'render',
+		value: function render() {
+			var _props = this.props,
+			    prefixCls = _props.prefixCls,
+			    label = _props.label,
+			    children = _props.children;
+
+			return React$1__default.createElement(
+				'div',
+				{ className: prefixCls },
+				React$1__default.createElement(
+					'div',
+					{ className: prefixCls + '-title' },
+					label
+				),
+				React$1__default.createElement(
+					'div',
+					{ className: prefixCls + '-list' },
+					children
+				)
+			);
+		}
+	}]);
+	return ItemGroup;
+}(React$1__default.Component);
+
+ItemGroup.defaultProps = {
+	prefixCls: 'nex-listbox-item-group',
+	label: ''
 };
 
 function copy(data) {
@@ -3786,8 +3832,8 @@ var ListBox = function (_React$Component) {
 			});
 		}
 	}, {
-		key: 'getListItem',
-		value: function getListItem(item) {
+		key: 'getItems',
+		value: function getItems(item) {
 			var _this2 = this;
 
 			var _props2 = this.props,
@@ -3843,16 +3889,22 @@ var ListBox = function (_React$Component) {
 			    style = _props3$style === undefined ? {} : _props3$style;
 
 
+			if (width) {
+				style.width = width;
+			}
+			if (height) {
+				style.height = height;
+			}
+
 			return React$1__default.createElement(
-				'div',
-				{ ref: 'listbox', className: index$1('' + prefixCls, className), style: style },
-				React$1__default.createElement(
-					ScrollView,
-					{ scrollViewBodyCls: prefixCls + '-body' },
-					items.map(function (item, i) {
-						return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
-					})
-				)
+				ScrollView,
+				{ ref: 'listbox', scrollViewBodyCls: prefixCls + '-body', className: index$1('' + prefixCls, className), style: style },
+				'/*',
+				items.map(function (item, i) {
+					return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
+				}),
+				'*/',
+				this.getItems()
 			);
 		}
 	}]);
@@ -3865,7 +3917,9 @@ ListBox.propTypes = {
 	prefixCls: React$1.PropTypes.string,
 	items: React$1.PropTypes.array,
 	filter: React$1.PropTypes.func,
-	multiple: React$1.PropTypes.bool
+	multiple: React$1.PropTypes.bool,
+	width: React$1.PropTypes.oneOfType([React$1.PropTypes.string, React$1.PropTypes.number]),
+	height: React$1.PropTypes.oneOfType([React$1.PropTypes.string, React$1.PropTypes.number])
 };
 ListBox.defaultProps = {
 	prefixCls: 'nex-listbox',

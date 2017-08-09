@@ -1,16 +1,11 @@
 import React, {PureComponent, PropTypes} from 'react';
 import classNames from 'classnames';
 import omit from 'omit.js';
-import Popup from '../popup/Popup';
 
-export default class Select extends React.Component{
+export default class OptGroup extends React.Component{
 
 	static defaultProps = {
-		disabled: false,
-		readOnly: false,
-		block: false,
-		tabIndex: 0,
-		prefixCls: 'nex-select',
+		prefixCls: 'nex-select-item-group',
 		arrowCls: 'fa fa-caret-down',
 		valueField: 'value',
 		textField: 'text'
@@ -49,7 +44,15 @@ export default class Select extends React.Component{
 	}
 	
 	render(){
-		return this.renderSelect();
+		const {prefixCls, children} = this.props;
+		return (
+			<div className={prefixCls}>
+				<div className={`${prefixCls}-title`}>{children}</div>
+				<div className={`${prefixCls}-list`}>
+					
+				</div>
+			</div>
+		);
 	}
 		
 }

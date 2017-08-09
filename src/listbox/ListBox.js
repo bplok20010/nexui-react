@@ -3,7 +3,8 @@ import classNames from 'classnames';
 import omit from 'omit.js';
 import _assign from 'object-assign';
 import ScrollView from '../scrollview/ScrollView';
-import ListItem from './ListItem';
+import Item from './Item';
+import ItemGroup from './ItemGroup';
 import {isArray} from '../shared/util';
 
 function copy(data){
@@ -19,13 +20,15 @@ export default class ListBox extends React.Component{
 		items: PropTypes.array,
 		filter: PropTypes.func,
 		multiple: PropTypes.bool,
+		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	};
 
 	static defaultProps = {
 		prefixCls: 'nex-listbox',
 		valueField: 'value',
 		textField: 'text',
-		items: []
+		items: [],
 	};
 	
 	constructor(props){
@@ -98,7 +101,7 @@ export default class ListBox extends React.Component{
 		})
 	}
 	
-	getListItem(item){
+	getItems(item){
 		const {textField, valueField, prefixCls, multiple} = this.props;
 		const {value} = this.state;
 		
@@ -111,7 +114,7 @@ export default class ListBox extends React.Component{
 		}
 		
 		return (
-			<ListItem 
+			<Item 
 				key={item[valueField]}
 				value={item[valueField]}
 				prefixCls={`${prefixCls}-item`}
@@ -121,21 +124,27 @@ export default class ListBox extends React.Component{
 				onDeselect={()=>this.onDeselect(item)}
 			>
 				{item[textField]}
-			</ListItem>
+			</Item>
 		);
 	}
 	
 	render(){
 		const {filter, className, value, prefixCls, items, width, height, style={}} = this.props;
 		
+		if( width ) {
+			style.width = width;
+		}
+		if( height ) {
+			style.height = height;
+		}
+		
 		return (
-			<div ref="listbox" className={classNames(`${prefixCls}`, className)} style={style}>
-				<ScrollView scrollViewBodyCls={`${prefixCls}-body`}>
-					{items.map((item, i) => {
-						return (filter ? filter(item, i) : true) ? this.getListItem(item) : null;	
-					})}
-				</ScrollView>
-			</div>
+			<ScrollView ref="listbox" scrollViewBodyCls={`${prefixCls}-body`} className={classNames(`${prefixCls}`, className)} style={style}>
+				/*{items.map((item, i) => {
+					return (filter ? filter(item, i) : true) ? this.getListItem(item) : null;	
+				})}*/
+				{this.getItems()}
+			</ScrollView>
 		);
 	}
 		

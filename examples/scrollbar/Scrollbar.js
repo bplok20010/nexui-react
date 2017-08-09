@@ -71,7 +71,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 				args[_key] = arguments[_key];
 			}
 
-			return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = List.__proto__ || Object.getPrototypeOf(List)).call.apply(_ref, [this].concat(args))), _this), _this.list = [''], _this.idx = 1, _temp), _possibleConstructorReturn(_this, _ret);
+			return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = List.__proto__ || Object.getPrototypeOf(List)).call.apply(_ref, [this].concat(args))), _this), _this.list = ['1'], _this.idx = 1, _temp), _possibleConstructorReturn(_this, _ret);
 		}
 
 		_createClass(List, [{
@@ -138,14 +138,16 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					_react2['default'].createElement(
 						'div',
 						{ style: {
-								width: 200,
-								height: 200
+								width: 300,
+								height: 300,
+								border: '1px solid #000',
+								padding: 5
 							} },
 						_react2['default'].createElement(
 							_rnexui.ScrollView,
 							{ enablePreventDefaultOnEnd: false, overflowX: 'auto', onVScrollStart: function onVScrollStart() {
 									return console.log('//////////////');
-								}, wheelDir: 'y', autoSetScrollBarPadding: true, style: { border: '1px solid #f2f2f2' } },
+								}, autoSetScrollBarPadding: false, wheelDir: 'y', style: {} },
 							_react2['default'].createElement(List, null)
 						)
 					),
@@ -159,11 +161,11 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							_rnexui.ScrollView,
 							{ ref: function ref(o) {
 									return window.sview = o;
-								}, wheelDir: 'x', overflowY: 'hidden', onHScrollStart: function onHScrollStart() {
+								}, wheelDir: 'x', overflowY: 'auto', onHScrollStart: function onHScrollStart() {
 									return console.log('//////////////');
 								}, onHScrollEnd: function onHScrollEnd() {
 									return console.log('//////////////');
-								}, style: { border: '1px solid #f2f2f2', padding: 10 } },
+								}, style: { border: '10px solid #000', padding: 10 } },
 							_react2['default'].createElement(
 								'div',
 								null,

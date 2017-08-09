@@ -1,24 +1,33 @@
 .nex-listbox {
-  border: 1px solid #26A0DA;
   background: #FFF;
-  overflow: auto; }
-  .nex-listbox .nex-listbox-body > .nex-listbox-item {
-    list-style: none;
-    padding: 0 5px;
-    cursor: pointer;
-    line-height: 26px;
-    height: 26px;
-    white-space: nowrap;
-    overflow: hidden; }
-    .nex-listbox .nex-listbox-body > .nex-listbox-item:hover {
-      background: #30bde0;
+  overflow: hidden; }
+  .nex-listbox .nex-listbox-body {
+    border: 1px solid #26A0DA; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-group-title,
+    .nex-listbox .nex-listbox-body .nex-listbox-item {
+      list-style: none;
+      padding: 0 10px;
+      cursor: pointer;
+      line-height: 26px;
+      height: 26px;
+      white-space: nowrap;
+      overflow: hidden; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item:hover {
+      background: #e4e8f1; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-selected {
+      background: #20a0ff;
       color: #FFF; }
-  .nex-listbox .nex-listbox-body > .nex-listbox-item-selected {
-    background: #30bde0;
-    color: #FFF; }
-  .nex-listbox .nex-listbox-body > .nex-listbox-item-disabled {
-    opacity: .5;
-    cursor: default; }
-    .nex-listbox .nex-listbox-body > .nex-listbox-item-disabled:hover {
-      background: none;
-      color: rgba(0, 0, 0, 0.25); }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-selected:hover {
+      background: #1c8de0; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-disabled {
+      opacity: .5;
+      cursor: default; }
+      .nex-listbox .nex-listbox-body .nex-listbox-item-disabled:hover {
+        background: none;
+        color: rgba(0, 0, 0, 0.25); }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-group-title {
+      padding: 0 10px;
+      cursor: default;
+      color: #999; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-group-list .nex-listbox-item {
+      padding-left: 20px; }

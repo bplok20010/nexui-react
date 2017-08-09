@@ -3,7 +3,7 @@ import React from 'react';
 import {findDOMNode} from 'react-dom';
 
 class List extends React.Component {
-	list = ['']
+	list = ['1']
 	
 	idx = 1
 	
@@ -47,10 +47,12 @@ class App extends React.Component {
     return (
 		<div>
 		<div style={{
-			width : 200,
-			height: 200	
+			width : 300,
+			height: 300,
+			border: '1px solid #000',
+			padding: 5	
 		}}>
-			<ScrollView enablePreventDefaultOnEnd={false} overflowX="auto" onVScrollStart={()=>console.log('//////////////')} wheelDir='y' autoSetScrollBarPadding style={{border: '1px solid #f2f2f2'}}>
+			<ScrollView enablePreventDefaultOnEnd={false} overflowX="auto" onVScrollStart={()=>console.log('//////////////')} autoSetScrollBarPadding={false} wheelDir='y' style={{}}>
 				<List />
 			</ScrollView>
 		</div>
@@ -58,7 +60,7 @@ class App extends React.Component {
 			width : 200,
 			height: 200	
 		}}>
-			<ScrollView ref={(o) => window.sview = o} wheelDir='x' overflowY="hidden"  onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '1px solid #f2f2f2', padding: 10}}>
+			<ScrollView ref={(o) => window.sview = o} wheelDir='x' overflowY="auto"  onHScrollStart={()=>console.log('//////////////')} onHScrollEnd={()=>console.log('//////////////')} style={{border: '10px solid #000', padding: 10}}>
 				<div >
 				start...
 				<div>123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789</div>
