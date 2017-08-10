@@ -148,6 +148,10 @@
      return dest;
  }
 
+export function isEqual(a, b){
+	return String(a) === String(b);	
+}
+
  export function extendIf(dest, sources) {
      var i = 1,
          l = arguments.length,

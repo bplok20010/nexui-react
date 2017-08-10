@@ -309,16 +309,16 @@ export default class ScrollView extends React.Component {
 			  
 		const sTop = scrollview.scrollTop,
 			  sLeft = scrollview.scrollLeft;
-		
+	
 		if( pTop > tTop ) {
 			scrollview.scrollTop = sTop - (pTop - tTop);
-		} else if( pBottom < tTop ) {
+		} else if( pBottom < (tTop + el.offsetHeight) ) {
 			scrollview.scrollTop = sTop + tTop - pBottom + Math.min(el.offsetHeight, scrollview.clientHeight);
 		}
 		
 		if( pLeft > tLeft ) {
 			scrollview.scrollLeft = sLeft - (pLeft - tLeft);
-		} else if( pRight < tLeft ) {
+		} else if( pRight < (tLeft + el.offsetWidth) ) {
 			scrollview.scrollLeft = sLeft + tLeft - pRight + Math.min(el.offsetWidth, scrollview.clientWidth);
 		}
 	}

@@ -30,6 +30,7 @@ class App extends React.Component{
 		return 	<div>
 			<Input placeholder="搜素..." onChange={this.search} />
 			<ListBox
+				multiple
 					style={{
 						maxWidth: 300,
 						maxHeight: 400,	
@@ -49,11 +50,23 @@ const data = [
      //{value: 3, text: '选项三'}
 ];
 
-for( let i=0;i<100;i++ ) {
-	data.push({
-		value: i,
-		text: '选项' + (i+1)
-	})	
+var uuid = 100;
+
+for( let i=0;i<10;i++ ) {
+	const items = [];
+	const d = {
+		items,
+		text: '分组' + (i+1)
+	}
+	data.push(d)
+	
+	for( let j=0;j<400;j++ ) {
+		let d = {
+			value: uuid++,
+			text: '选项' + (j+1)
+		}
+		items.push(d)
+	}
 }
 
 ReactDOM.render(

@@ -89,6 +89,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					null,
 					React.createElement(_rnexui.Input, { placeholder: '\u641C\u7D20...', onChange: this.search }),
 					React.createElement(_rnexui.ListBox, {
+						multiple: true,
 						style: {
 							maxWidth: 300,
 							maxHeight: 400
@@ -113,11 +114,23 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		//{value: 3, text: '选项三'}
 	];
 
-	for (var i = 0; i < 100; i++) {
-		data.push({
-			value: i,
-			text: '选项' + (i + 1)
-		});
+	var uuid = 100;
+
+	for (var i = 0; i < 10; i++) {
+		var items = [];
+		var d = {
+			items: items,
+			text: '分组' + (i + 1)
+		};
+		data.push(d);
+
+		for (var j = 0; j < 400; j++) {
+			var _d = {
+				value: uuid++,
+				text: '选项' + (j + 1)
+			};
+			items.push(_d);
+		}
 	}
 
 	ReactDOM.render(React.createElement(App, { mulitselect: true }), demo);

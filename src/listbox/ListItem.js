@@ -12,13 +12,23 @@ export default class ListItem extends React.Component{
 		disabled: false,
 	};
 	
-	handleItemClick=()=>{
-		const {onSelect, onDeselect, selected, disabled} = this.props;
+	handleItemClick=(e)=>{
+		const {onSelect, onDeselect, onClick, selected, disabled, value, children} = this.props;
 		if( disabled ) return;
+		
+		if( onClick ) {
+			onClick(e);	
+		}
+		
+		const item = {
+			value,
+			text: children	
+		};
+		
 		if( !selected ) {
-			onSelect && onSelect()	
+			onSelect && onSelect(item, this.refs.item)	
 		} else {
-			onDeselect && onDeselect()	
+			onDeselect && onDeselect(item, this.refs.item)	
 		}
 	}
 	
@@ -35,7 +45,7 @@ export default class ListItem extends React.Component{
 			[`${prefixCls}-disabled`]: disabled,
 		});
 
-		return <div className={classes} onClick={this.handleItemClick}>{children}</div>;
+		return <div ref="item" className={classes} onClick={this.handleItemClick}>{children}</div>;
 	}
 		
 }

@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import omit from 'omit.js';
 import _assign from 'object-assign';
 import ScrollView from '../scrollview/ScrollView';
-import Item from './Item';
-import ItemGroup from './ItemGroup';
-import {isArray} from '../shared/util';
+import ListItem from './ListItem';
+import ListItemGroup from './ListItemGroup';
+import {isArray, isUndefined, toArray, isEqual} from '../shared/util';
 
 function copy(data){
 	return isArray(data) ? [].concat(data) : data;
@@ -17,6 +17,9 @@ export default class ListBox extends React.Component{
 		className: PropTypes.string,
 		style: PropTypes.object,
 		prefixCls: PropTypes.string,
+		valueField: PropTypes.string,
+		textField: PropTypes.string,
+		itemsField: PropTypes.string,
 		items: PropTypes.array,
 		filter: PropTypes.func,
 		multiple: PropTypes.bool,
@@ -28,104 +31,125 @@ export default class ListBox extends React.Component{
 		prefixCls: 'nex-listbox',
 		valueField: 'value',
 		textField: 'text',
+		itemsField: 'items',
 		items: [],
 	};
 	
 	constructor(props){
 		super(props);
 		
+		const selectedValue = [];
+		let value;
+		
+		if(!isUndefined(props.value)) {
+			value = isArray(props.value) ? props.value : [props.value];
+		} else if(!isUndefined(props.defaultValue)) {
+			value = isArray(props.defaultValue) ? props.defaultValue : [props.defaultValue];
+		}
+		
+		if( value ) {
+			selectedValue.push(...value);
+		}
+		
 		this.state = {
-			value: props.value || props.defaultValue	
+			selectedValue
 		};	
-	}
-	
-	onSelect(item){
-		const props = this.props;
-		const state = this.state;
-		const multiple = props.multiple;
-		
-		let v = copy(state.value);
-		
-		if( multiple ) {
-			if( !isArray(v) ) {
-				v = [v]	
-			}
-			v.push(item[props.valueField])
-		} else {
-			//if( isArray(v) ) {
-			//	v = v[0]
-			//}	
-			v = item[props.valueField]
-		}
-		
-		if( !('value' in props) ) {
-			this.setState({
-				value: v	
-			})	
-		}
-	
-		if( props.onChange ) {
-			props.onChange(v)	
-		}
-	}
-	
-	onDeselect(item){
-		const {textField, valueField, multiple, onChange} = this.props;
-		const state = this.state;
-		if( !multiple )	return;
-		let v = copy(state.value);
-		if( !isArray(v) ) {
-			v = [v]	
-		}
-		
-		let idx = v.indexOf(item[valueField]);
-		
-		if( idx >= 0 )
-			v.splice(idx , 1);
-		
-		if( !('value' in this.props) ) {
-			this.setState({
-				value: v	
-			})	
-		}
-		
-		if( onChange ) {
-			onChange(v)	
-		}
-		
 	}
 	
 	componentWillReceiveProps({value}){
 		this.setState({
-			value	
+			selectedValue: isUndefined(value) ? [] : isArray(value) ? value : [value]
 		})
 	}
 	
-	getItems(item){
-		const {textField, valueField, prefixCls, multiple} = this.props;
-		const {value} = this.state;
+	onItemClick=(e) => {
+		this.refs.listbox.scrollIntoView(e.target);	
+	}
+	
+	onItemSelect=(item, el) => {
+		const { multiple, onChange } = this.props;
+		const { selectedValue } = this.state;
+		const valueField = 'value';
+		
+		if( !multiple ) {
+			selectedValue.length = 0;	
+		}
+		
+		selectedValue.push(item[valueField]);	
+		
+		if( !('value' in this.props) ) {
+			this.setState({
+				selectedValue	
+			})	
+		}
+	
+		if( onChange ) {
+			onChange(multiple ? copy(selectedValue) : selectedValue[0]);	
+		}
+	}
+	
+	onItemDeselect=(item, el) => {
+		const { multiple, onChange } = this.props;
+		const { selectedValue } = this.state;
+		const valueField = 'value';
+		
+		if( !multiple )	return;
+		
+		let newSelectedValue = selectedValue.filter((d)=> !isEqual(item[valueField], d));
+		
+		if( !('value' in this.props) ) {
+			this.setState({
+				value: newSelectedValue
+			})	
+		}
+		
+		if( onChange ) {
+			onChange(copy(newSelectedValue));	
+		}
+		
+	}
+	
+	renderListItems(items, markMap){
+		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
+		
+		return items.map(item=>{
+			const isGroup = item[itemsField];
+			const itemPrefixCls = `${prefixCls}-item`;
+			
+			return (filter ? filter(item) : true) ? (!isGroup ? (
+				<ListItem 
+					key={item[valueField]}
+					value={item[valueField]}
+					prefixCls={itemPrefixCls}
+					selected={markMap[item[valueField]]}
+					disabled={item.disabled}
+					onClick={this.onItemClick}
+					onSelect={this.onItemSelect}
+					onDeselect={this.onItemDeselect}
+				>
+					{item[textField]}
+				</ListItem>		
+			) : (
+				<ListItemGroup prefixCls={`${itemPrefixCls}-group`} key={item[textField]} label={item[textField]}>
+					{this.renderListItems(item[itemsField] || [], markMap)}
+				</ListItemGroup>
+			)) : null;
+		});
+	}
+	
+	renderListChild(children, markMap){
+			
+	}
+	
+	getListItems(){
+		const {textField, valueField, prefixCls, multiple, items, children} = this.props;
+		const {selectedValue} = this.state;
 		
 		const markMap = {};
 		
-		if( isArray(value) ) {
-			value.forEach( v => markMap[v] = true);	
-		} else {
-			markMap[value] = true;	
-		}
+		selectedValue.forEach( v => markMap[v] = true);	
 		
-		return (
-			<Item 
-				key={item[valueField]}
-				value={item[valueField]}
-				prefixCls={`${prefixCls}-item`}
-				selected={markMap[item[valueField]]}
-				disabled={item.disabled}
-				onSelect={()=>this.onSelect(item)}
-				onDeselect={()=>this.onDeselect(item)}
-			>
-				{item[textField]}
-			</Item>
-		);
+		return items ? this.renderListItems(items, markMap) : renderListChild(children, markMap);
 	}
 	
 	render(){
@@ -140,10 +164,7 @@ export default class ListBox extends React.Component{
 		
 		return (
 			<ScrollView ref="listbox" scrollViewBodyCls={`${prefixCls}-body`} className={classNames(`${prefixCls}`, className)} style={style}>
-				/*{items.map((item, i) => {
-					return (filter ? filter(item, i) : true) ? this.getListItem(item) : null;	
-				})}*/
-				{this.getItems()}
+				{this.getListItems()}
 			</ScrollView>
 		);
 	}

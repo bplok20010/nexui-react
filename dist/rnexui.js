@@ -176,7 +176,9 @@ var isArray = nativeIsArray ? nativeIsArray : function (value) {
 
 
 
-
+function isUndefined(obj) {
+    return obj === undefined;
+}
 
 
 
@@ -231,6 +233,10 @@ function keys(obj) {
 }
 
 
+
+function isEqual(a, b) {
+    return String(a) === String(b);
+}
 
 
 
@@ -3253,13 +3259,13 @@ var ScrollView = function (_React$Component) {
 
 			if (pTop > tTop) {
 				scrollview.scrollTop = sTop - (pTop - tTop);
-			} else if (pBottom < tTop) {
+			} else if (pBottom < tTop + el.offsetHeight) {
 				scrollview.scrollTop = sTop + tTop - pBottom + Math.min(el.offsetHeight, scrollview.clientHeight);
 			}
 
 			if (pLeft > tLeft) {
 				scrollview.scrollLeft = sLeft - (pLeft - tLeft);
-			} else if (pRight < tLeft) {
+			} else if (pRight < tLeft + el.offsetWidth) {
 				scrollview.scrollLeft = sLeft + tLeft - pRight + Math.min(el.offsetWidth, scrollview.clientWidth);
 			}
 		}
@@ -3651,18 +3657,31 @@ var ListItem = function (_React$Component) {
 			args[_key] = arguments[_key];
 		}
 
-		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function () {
+		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ListItem.__proto__ || Object.getPrototypeOf(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function (e) {
 			var _this$props = _this.props,
 			    onSelect = _this$props.onSelect,
 			    onDeselect = _this$props.onDeselect,
+			    onClick = _this$props.onClick,
 			    selected = _this$props.selected,
-			    disabled = _this$props.disabled;
+			    disabled = _this$props.disabled,
+			    value = _this$props.value,
+			    children = _this$props.children;
 
 			if (disabled) return;
+
+			if (onClick) {
+				onClick(e);
+			}
+
+			var item = {
+				value: value,
+				text: children
+			};
+
 			if (!selected) {
-				onSelect && onSelect();
+				onSelect && onSelect(item, _this.refs.item);
 			} else {
-				onDeselect && onDeselect();
+				onDeselect && onDeselect(item, _this.refs.item);
 			}
 		}, _temp), possibleConstructorReturn(_this, _ret);
 	}
@@ -3688,7 +3707,7 @@ var ListItem = function (_React$Component) {
 
 			return React$1__default.createElement(
 				'div',
-				{ className: classes, onClick: this.handleItemClick },
+				{ ref: 'item', className: classes, onClick: this.handleItemClick },
 				children
 			);
 		}
@@ -3755,128 +3774,100 @@ var ListBox = function (_React$Component) {
 
 		var _this = possibleConstructorReturn(this, (ListBox.__proto__ || Object.getPrototypeOf(ListBox)).call(this, props));
 
+		_initialiseProps$1.call(_this);
+
+		var selectedValue = [];
+		var value = void 0;
+
+		if (!isUndefined(props.value)) {
+			value = isArray(props.value) ? props.value : [props.value];
+		} else if (!isUndefined(props.defaultValue)) {
+			value = isArray(props.defaultValue) ? props.defaultValue : [props.defaultValue];
+		}
+
+		if (value) {
+			selectedValue.push.apply(selectedValue, toConsumableArray(value));
+		}
+
 		_this.state = {
-			value: props.value || props.defaultValue
+			selectedValue: selectedValue
 		};
 		return _this;
 	}
 
 	createClass(ListBox, [{
-		key: 'onSelect',
-		value: function onSelect(item) {
-			var props = this.props;
-			var state = this.state;
-			var multiple = props.multiple;
-
-			var v = copy(state.value);
-
-			if (multiple) {
-				if (!isArray(v)) {
-					v = [v];
-				}
-				v.push(item[props.valueField]);
-			} else {
-				//if( isArray(v) ) {
-				//	v = v[0]
-				//}	
-				v = item[props.valueField];
-			}
-
-			if (!('value' in props)) {
-				this.setState({
-					value: v
-				});
-			}
-
-			if (props.onChange) {
-				props.onChange(v);
-			}
-		}
-	}, {
-		key: 'onDeselect',
-		value: function onDeselect(item) {
-			var _props = this.props,
-			    textField = _props.textField,
-			    valueField = _props.valueField,
-			    multiple = _props.multiple,
-			    onChange = _props.onChange;
-
-			var state = this.state;
-			if (!multiple) return;
-			var v = copy(state.value);
-			if (!isArray(v)) {
-				v = [v];
-			}
-
-			var idx = v.indexOf(item[valueField]);
-
-			if (idx >= 0) v.splice(idx, 1);
-
-			if (!('value' in this.props)) {
-				this.setState({
-					value: v
-				});
-			}
-
-			if (onChange) {
-				onChange(v);
-			}
-		}
-	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(_ref) {
 			var value = _ref.value;
 
 			this.setState({
-				value: value
+				selectedValue: isUndefined(value) ? [] : isArray(value) ? value : [value]
 			});
 		}
 	}, {
-		key: 'getItems',
-		value: function getItems(item) {
+		key: 'renderListItems',
+		value: function renderListItems(items, markMap) {
 			var _this2 = this;
 
+			var _props = this.props,
+			    textField = _props.textField,
+			    valueField = _props.valueField,
+			    itemsField = _props.itemsField,
+			    prefixCls = _props.prefixCls,
+			    filter$$1 = _props.filter;
+
+
+			return items.map(function (item) {
+				var isGroup = item[itemsField];
+				var itemPrefixCls = prefixCls + '-item';
+
+				return (filter$$1 ? filter$$1(item) : true) ? !isGroup ? React$1__default.createElement(
+					ListItem,
+					{
+						key: item[valueField],
+						value: item[valueField],
+						prefixCls: itemPrefixCls,
+						selected: markMap[item[valueField]],
+						disabled: item.disabled,
+						onClick: _this2.onItemClick,
+						onSelect: _this2.onItemSelect,
+						onDeselect: _this2.onItemDeselect
+					},
+					item[textField]
+				) : React$1__default.createElement(
+					ItemGroup,
+					{ prefixCls: itemPrefixCls + '-group', key: item[textField], label: item[textField] },
+					_this2.renderListItems(item[itemsField] || [], markMap)
+				) : null;
+			});
+		}
+	}, {
+		key: 'renderListChild',
+		value: function renderListChild(children, markMap) {}
+	}, {
+		key: 'getListItems',
+		value: function getListItems() {
 			var _props2 = this.props,
 			    textField = _props2.textField,
 			    valueField = _props2.valueField,
 			    prefixCls = _props2.prefixCls,
-			    multiple = _props2.multiple;
-			var value = this.state.value;
+			    multiple = _props2.multiple,
+			    items = _props2.items,
+			    children = _props2.children;
+			var selectedValue = this.state.selectedValue;
 
 
 			var markMap = {};
 
-			if (isArray(value)) {
-				value.forEach(function (v) {
-					return markMap[v] = true;
-				});
-			} else {
-				markMap[value] = true;
-			}
+			selectedValue.forEach(function (v) {
+				return markMap[v] = true;
+			});
 
-			return React$1__default.createElement(
-				ListItem,
-				{
-					key: item[valueField],
-					value: item[valueField],
-					prefixCls: prefixCls + '-item',
-					selected: markMap[item[valueField]],
-					disabled: item.disabled,
-					onSelect: function onSelect() {
-						return _this2.onSelect(item);
-					},
-					onDeselect: function onDeselect() {
-						return _this2.onDeselect(item);
-					}
-				},
-				item[textField]
-			);
+			return items ? this.renderListItems(items, markMap) : renderListChild(children, markMap);
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this3 = this;
-
 			var _props3 = this.props,
 			    filter$$1 = _props3.filter,
 			    className = _props3.className,
@@ -3899,12 +3890,7 @@ var ListBox = function (_React$Component) {
 			return React$1__default.createElement(
 				ScrollView,
 				{ ref: 'listbox', scrollViewBodyCls: prefixCls + '-body', className: index$1('' + prefixCls, className), style: style },
-				'/*',
-				items.map(function (item, i) {
-					return (filter$$1 ? filter$$1(item, i) : true) ? _this3.getListItem(item) : null;
-				}),
-				'*/',
-				this.getItems()
+				this.getListItems()
 			);
 		}
 	}]);
@@ -3915,6 +3901,9 @@ ListBox.propTypes = {
 	className: React$1.PropTypes.string,
 	style: React$1.PropTypes.object,
 	prefixCls: React$1.PropTypes.string,
+	valueField: React$1.PropTypes.string,
+	textField: React$1.PropTypes.string,
+	itemsField: React$1.PropTypes.string,
 	items: React$1.PropTypes.array,
 	filter: React$1.PropTypes.func,
 	multiple: React$1.PropTypes.bool,
@@ -3925,7 +3914,66 @@ ListBox.defaultProps = {
 	prefixCls: 'nex-listbox',
 	valueField: 'value',
 	textField: 'text',
+	itemsField: 'items',
 	items: []
+};
+
+var _initialiseProps$1 = function _initialiseProps() {
+	var _this3 = this;
+
+	this.onItemClick = function (e) {
+		_this3.refs.listbox.scrollIntoView(e.target);
+	};
+
+	this.onItemSelect = function (item, el) {
+		var _props4 = _this3.props,
+		    multiple = _props4.multiple,
+		    onChange = _props4.onChange;
+		var selectedValue = _this3.state.selectedValue;
+
+		var valueField = 'value';
+
+		if (!multiple) {
+			selectedValue.length = 0;
+		}
+
+		selectedValue.push(item[valueField]);
+
+		if (!('value' in _this3.props)) {
+			_this3.setState({
+				selectedValue: selectedValue
+			});
+		}
+
+		if (onChange) {
+			onChange(multiple ? copy(selectedValue) : selectedValue[0]);
+		}
+	};
+
+	this.onItemDeselect = function (item, el) {
+		var _props5 = _this3.props,
+		    multiple = _props5.multiple,
+		    onChange = _props5.onChange;
+		var selectedValue = _this3.state.selectedValue;
+
+		var valueField = 'value';
+
+		if (!multiple) return;
+
+		var newSelectedValue = selectedValue.filter(function (d) {
+			return !isEqual(item[valueField], d);
+		});
+
+		if (!('value' in _this3.props)) {
+			_this3.setState({
+				value: newSelectedValue
+			});
+		}
+
+		if (onChange) {
+			onChange(copy(newSelectedValue));
+		}
+	};
 };
 
 exports.Button = Button;
