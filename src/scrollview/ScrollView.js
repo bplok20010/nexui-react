@@ -51,7 +51,7 @@ export default class ScrollView extends React.Component {
 		thumbMinSize: 6,
 		thumbMaxSize: 999999,
 		showTrack: true,
-		wheelStep: 20,
+		wheelStep: 100,
 		enablePreventDefaultOnEnd: true,
 		onScroll: null,
 		onHScrollEnd: null,
