@@ -1,4 +1,5 @@
-import React, {PureComponent, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import omit from 'omit.js';
 import _assign from 'object-assign';
@@ -116,7 +117,7 @@ export default class ListBox extends React.Component{
 			const isGroup = item[itemsField];
 			const itemPrefixCls = `${prefixCls}-item`;
 			
-			return (filter ? filter(item) : true) ? (!isGroup ? (
+			return (filter && !isGroup ? filter(item) : true) ? (!isGroup ? (
 				<ListItem 
 					key={item[valueField]}
 					value={item[valueField]}
@@ -138,7 +139,12 @@ export default class ListBox extends React.Component{
 	}
 	
 	renderListChild(children, markMap){
+		
+		React.Children.map(children, child=>{
+			const props = child.props;
 			
+			return 	
+		});
 	}
 	
 	getListItems(){

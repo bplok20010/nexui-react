@@ -3821,7 +3821,7 @@ var ListBox = function (_React$Component) {
 				var isGroup = item[itemsField];
 				var itemPrefixCls = prefixCls + '-item';
 
-				return (filter$$1 ? filter$$1(item) : true) ? !isGroup ? React$1__default.createElement(
+				return (filter$$1 && !isGroup ? filter$$1(item) : true) ? !isGroup ? React$1__default.createElement(
 					ListItem,
 					{
 						key: item[valueField],
@@ -3843,7 +3843,14 @@ var ListBox = function (_React$Component) {
 		}
 	}, {
 		key: 'renderListChild',
-		value: function renderListChild(children, markMap) {}
+		value: function renderListChild(children, markMap) {
+
+			React$1__default.Children.map(children, function (child) {
+				var props = child.props;
+
+				return;
+			});
+		}
 	}, {
 		key: 'getListItems',
 		value: function getListItems() {
@@ -3898,17 +3905,17 @@ var ListBox = function (_React$Component) {
 }(React$1__default.Component);
 
 ListBox.propTypes = {
-	className: React$1.PropTypes.string,
-	style: React$1.PropTypes.object,
-	prefixCls: React$1.PropTypes.string,
-	valueField: React$1.PropTypes.string,
-	textField: React$1.PropTypes.string,
-	itemsField: React$1.PropTypes.string,
-	items: React$1.PropTypes.array,
-	filter: React$1.PropTypes.func,
-	multiple: React$1.PropTypes.bool,
-	width: React$1.PropTypes.oneOfType([React$1.PropTypes.string, React$1.PropTypes.number]),
-	height: React$1.PropTypes.oneOfType([React$1.PropTypes.string, React$1.PropTypes.number])
+	className: index.string,
+	style: index.object,
+	prefixCls: index.string,
+	valueField: index.string,
+	textField: index.string,
+	itemsField: index.string,
+	items: index.array,
+	filter: index.func,
+	multiple: index.bool,
+	width: index.oneOfType([index.string, index.number]),
+	height: index.oneOfType([index.string, index.number])
 };
 ListBox.defaultProps = {
 	prefixCls: 'nex-listbox',
