@@ -7,6 +7,8 @@ export default class ItemGroup extends React.Component{
 		label: '',
 	};
 	
+	static isListItemGroup = true;
+	
 	render(){
 		const {prefixCls, label, children} = this.props;
 		return (

@@ -4,11 +4,15 @@ $listboxItemHeight: 26px;
 .nex-listbox {
 	background:#FFF;
 	overflow: hidden;
+	&:focus{
+		outline:0;	
+	}
 	.nex-listbox-body {
-		border:1px solid #26A0DA;
+		border:1px solid #20a0ff;
 		.nex-listbox-item-group-title,
 		.nex-listbox-item {
-			list-style:none;
+			//list-style:none;
+			position:relative;
 			padding:$listboxItemPadding;
 			cursor: pointer;
 			line-height:$listboxItemHeight;

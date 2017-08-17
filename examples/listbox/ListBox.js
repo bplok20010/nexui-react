@@ -49,6 +49,9 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	var ListItem = _rnexui.ListBox.ListItem,
+	    ListItemGroup = _rnexui.ListBox.ListItemGroup;
+
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
 
@@ -62,6 +65,10 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					value: value
 				});
 
+				console.log('changed ', value);
+			};
+
+			_this.handleChange2 = function (value) {
 				console.log('changed ', value);
 			};
 
@@ -100,7 +107,80 @@ define(['../../dist/rnexui'], function (_rnexui) {
 						filter: function filter(item, i) {
 							return item.text.indexOf(_this2.filterMsg) >= 0;
 						}
-					})
+					}),
+					React.createElement(
+						_rnexui.ListBox,
+						{
+							multiple: true,
+							onChange: this.handleChange2,
+							defaultValue: 'V03',
+							style: {
+								maxWidth: 300,
+								maxHeight: 400
+							}
+						},
+						React.createElement(
+							ListItemGroup,
+							{ label: 'V' },
+							React.createElement(
+								ListItem,
+								{ value: 'V01' },
+								'V01',
+								React.createElement(
+									'span',
+									{ style: {
+											position: 'absolute',
+											right: 10,
+											top: 0
+										} },
+									React.createElement(
+										'strong',
+										null,
+										'Hot'
+									)
+								)
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'V02' },
+								'V02'
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'V03' },
+								'V03'
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'V04' },
+								'V04'
+							)
+						),
+						React.createElement(
+							ListItemGroup,
+							{ label: 'X' },
+							React.createElement(
+								ListItem,
+								{ value: 'X01' },
+								'X01'
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'X02' },
+								'X02'
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'X03' },
+								'X03'
+							),
+							React.createElement(
+								ListItem,
+								{ value: 'X04' },
+								'X04'
+							)
+						)
+					)
 				);
 			}
 		}]);
@@ -124,7 +204,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		};
 		data.push(d);
 
-		for (var j = 0; j < 400; j++) {
+		for (var j = 0; j < 40; j++) {
 			var _d = {
 				value: uuid++,
 				text: '选项' + (j + 1)

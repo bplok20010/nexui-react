@@ -12,6 +12,7 @@ const noop = () => {}
 export default class Popup extends React.Component {
 	static propTypes = {
 		prefixCls: PropTypes.string,
+		rootCls: PropTypes.string,
 		className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 		destroyOnClose: PropTypes.bool,
 		visible: PropTypes.bool,
@@ -30,6 +31,7 @@ export default class Popup extends React.Component {
 
 	static defaultProps = {
 		prefixCls: 'nex-popup',
+		rootCls: '',
 		mask: false,
 		fixed: false,
 		destroyOnClose: true,
@@ -195,7 +197,7 @@ export default class Popup extends React.Component {
 	}
 	
 	getRenderComponent(){
-		const {prefixCls,className, destroyOnClose, fixed, mask, animate={}, renderTo, container, ..._others} = this.props;
+		const {prefixCls,className, destroyOnClose, fixed, mask, animate={}, renderTo, container, rootCls, ..._others} = this.props;
 		let { visible, isInit } = this.state;
 		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 		
@@ -239,10 +241,14 @@ export default class Popup extends React.Component {
 		}
 		
 		return visible ? (
-			<Portal className={`${prefixCls}-root`} animate={{
-				appear: this.animateAppear,
-				leave: this.animateLeave	
-			}} {...PortalConf}>{popup}</Portal>
+			<Portal 
+				{...PortalConf}
+				className={`${prefixCls}-root ${rootCls}`} 
+				animate={{
+					appear: this.animateAppear,
+					leave: this.animateLeave	
+				}} 
+			>{popup}</Portal>
 		) : null;
 	}
 

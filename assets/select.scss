@@ -31,6 +31,12 @@ $selectColor: rgba(0,0,0,.8);
 	}
 }
 
+.nex-select-dropdown-root {
+	position:absolute;
+	left:0;
+	top:0;	
+}
+
 .nex-select-text {
     overflow: hidden;
     text-overflow: ellipsis;

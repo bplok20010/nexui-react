@@ -17,6 +17,11 @@
   .nex-select.nex-select-inline {
     width: auto; }
 
+.nex-select-dropdown-root {
+  position: absolute;
+  left: 0;
+  top: 0; }
+
 .nex-select-text {
   overflow: hidden;
   text-overflow: ellipsis;

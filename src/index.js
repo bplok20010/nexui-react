@@ -19,7 +19,7 @@ import Popup from './popup/index';
 
 import Select from './select/Select';
 
-import ListBox from './listbox/ListBox';
+import ListBox from './listbox/index';
 
 import ScrollView from './scrollview/ScrollView';
 

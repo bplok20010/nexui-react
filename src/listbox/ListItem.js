@@ -12,6 +12,8 @@ export default class ListItem extends React.Component{
 		disabled: false,
 	};
 	
+	static isListItem = true;
+	
 	handleItemClick=(e)=>{
 		const {onSelect, onDeselect, onClick, selected, disabled, value, children} = this.props;
 		if( disabled ) return;

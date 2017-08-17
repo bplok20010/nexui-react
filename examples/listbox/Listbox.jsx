@@ -1,5 +1,7 @@
 import { ListBox, Input } from '../../dist/rnexui';
 
+const {ListItem, ListItemGroup} = ListBox
+
 class App extends React.Component{
 	
 	constructor(props){
@@ -15,6 +17,10 @@ class App extends React.Component{
 			value	
 		})	
 		
+		console.log('changed ',value)
+	}
+	
+	handleChange2= (value)=>{
 		console.log('changed ',value)
 	}
 	
@@ -40,6 +46,33 @@ class App extends React.Component{
 					items={data}
 					filter={(item, i) => item.text.indexOf( this.filterMsg ) >= 0}
 				  />
+				  
+				<ListBox
+					multiple
+					onChange={this.handleChange2}
+					defaultValue="V03"
+					style={{
+						maxWidth: 300,
+						maxHeight: 400,	
+					}}
+				>
+					<ListItemGroup label="V">
+						<ListItem value="V01">V01<span style={{
+							position: 'absolute',
+							right:10,
+							top:0,
+						}}><strong>Hot</strong></span></ListItem>
+						<ListItem value="V02">V02</ListItem>
+						<ListItem value="V03">V03</ListItem>
+						<ListItem value="V04">V04</ListItem>
+					</ListItemGroup>
+					<ListItemGroup label="X">
+						<ListItem value="X01">X01</ListItem>
+						<ListItem value="X02">X02</ListItem>
+						<ListItem value="X03">X03</ListItem>
+						<ListItem value="X04">X04</ListItem>
+					</ListItemGroup>
+				</ListBox>
 			</div>	  
 	}	
 }
@@ -60,7 +93,7 @@ for( let i=0;i<10;i++ ) {
 	}
 	data.push(d)
 	
-	for( let j=0;j<400;j++ ) {
+	for( let j=0;j<40;j++ ) {
 		let d = {
 			value: uuid++,
 			text: '选项' + (j+1)

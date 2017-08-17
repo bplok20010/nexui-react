@@ -1,7 +1,10 @@
 import React, {PureComponent, PropTypes} from 'react';
+import {findDOMNode} from 'react-dom';
 import classNames from 'classnames';
 import omit from 'omit.js';
+import _assign from 'object-assign';
 import Popup from '../popup/Popup';
+import ListBox from '../listbox/index';
 
 export default class Select extends React.Component{
 	static propTypes = {
@@ -9,6 +12,7 @@ export default class Select extends React.Component{
 		style: PropTypes.object,
 		prefixCls: PropTypes.string,
 		options: PropTypes.array,
+		dropdownStyle: PropTypes.object,
 	};
 
 	static defaultProps = {
@@ -19,7 +23,8 @@ export default class Select extends React.Component{
 		prefixCls: 'nex-select',
 		arrowCls: 'fa fa-caret-down',
 		valueField: 'value',
-		textField: 'text'
+		textField: 'text',
+		dropdownStyle: null,
 	};
 	
 	constructor(props){
@@ -29,6 +34,12 @@ export default class Select extends React.Component{
 			value: props.value || props.defaultValue,
 			showDropdown: false	
 		}
+	}
+	
+	componentWillReceiveProps({value}){
+		this.setState({
+			value	
+		});	
 	}
 	
 	componentDidMount(){
@@ -43,17 +54,12 @@ export default class Select extends React.Component{
 				if( $(e.target).closest(this.refs.select).length ) return;
 				this.hideDropdown();	
 			}
-		})
-	}
-	
-	componentWillReceiveProps({value}){
-		this.setState({
-			value	
-		});	
+		});
 	}
 	
 	handleDropdownCreate= (el)=>{
-		this.refs.dropdown = el;
+		this.refs.listbox = el;
+		this.refs.dropdown = el ? findDOMNode(el) : null;
 	}
 	
 	getSelectText(){
@@ -68,15 +74,15 @@ export default class Select extends React.Component{
 		return '';
 	}
 	
-	handleItemClick(item){
+	handleListBoxChange= (value) => {
 		const props = this.props;
 		if( !('value' in props) ) {
 			this.setState({
-				value: item[props.valueField]	
+				value: value
 			});	
 		}
 		
-		if( props.onChange ) props.onChange(item[props.valueField]);
+		if( props.onChange ) props.onChange(value);
 		
 		this.hideDropdown();
 	}
@@ -84,6 +90,17 @@ export default class Select extends React.Component{
 	getOptions(){
 		const {prefixCls, options, children, valueField, textField} = this.props;
 		const value = this.state.value;
+		
+		return (
+			<ListBox
+				ref={this.handleDropdownCreate}
+				valueField={valueField}
+				textField={textField}
+				items={options}
+				value={value}
+				onChange={this.handleListBoxChange}
+			/>
+		);
 		
 		return (
 			<div ref={this.handleDropdownCreate} className={`${prefixCls}-dropdown`}>
@@ -112,11 +129,22 @@ export default class Select extends React.Component{
 	handleClick= (e) => {
 		this.setState({
 			showDropdown: !this.state.showDropdown
-		}, ()=>{
-			const {dropdown, select} = this.refs;
-			$(dropdown).css('minWidth', $(select).outerWidth())
-			$(dropdown).css('maxHeight', $(window).height() * .7)
 		});	
+	}
+	
+	getPopupStyle(){
+		const {showDropdown} = this.state;
+		const selectEl = this.refs.select;
+		const dropdownStyle = {};
+		
+		if( showDropdown && selectEl ) {
+			const rect = selectEl.getBoundingClientRect();
+			dropdownStyle.minWidth = selectEl.offsetWidth;	
+			dropdownStyle.maxWidth = selectEl.offsetWidth + rect.right - 10;
+			dropdownStyle.maxHeight = Math.max(rect.top, window.innerHeight - rect.top - selectEl.offsetHeight) - 10;
+		}	
+		
+		return _assign(dropdownStyle, this.props.dropdownStyle);
 	}
 	
 	renderSelect(){
@@ -133,12 +161,19 @@ export default class Select extends React.Component{
 		const otherProps = omit(others, [
 			'value',
 			'valueField',
+			'dropdownStyle',
 			'textField'
 		]);
 		
 		return (
 			<div>
-				<div ref="select" className={classes} tabIndex={tabIndex} onClick={this.handleClick} {...otherProps}>
+				<div 
+					{...otherProps}
+					ref="select" 
+					className={classes} 
+					tabIndex={tabIndex} 
+					onClick={this.handleClick}
+				>
 					<div className={`${prefixCls}-text`}>{this.getSelectText()}</div>
 					<span className={classNames({
 						[`${prefixCls}-arrow`]: true,
@@ -146,7 +181,7 @@ export default class Select extends React.Component{
 					})}></span>
 					
 				</div>
-				<Popup visible={showDropdown} fixed={false} of={this.refs.select} my="left top" at="left bottom">
+				<Popup visible={showDropdown} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
 					{this.getOptions()}
 				</Popup>
 			</div>

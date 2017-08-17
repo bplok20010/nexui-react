@@ -1,4 +1,5 @@
 import React from 'react';
+import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import omit from 'omit.js';
@@ -17,6 +18,7 @@ export default class ListBox extends React.Component{
 	static propTypes = {
 		className: PropTypes.string,
 		style: PropTypes.object,
+		scrollViewBodyStyle: PropTypes.object,
 		prefixCls: PropTypes.string,
 		valueField: PropTypes.string,
 		textField: PropTypes.string,
@@ -58,9 +60,21 @@ export default class ListBox extends React.Component{
 	}
 	
 	componentWillReceiveProps({value}){
-		this.setState({
-			selectedValue: isUndefined(value) ? [] : isArray(value) ? value : [value]
-		})
+		if( !isUndefined(value) ) {
+			this.setState({
+				selectedValue: isArray(value) ? value : [value]
+			});
+		}
+	}
+	
+	componentDidMount(){
+		const el = findDOMNode(this);
+		const scrollview = this.refs.listbox;
+		
+		const selectedItem = el.querySelector('.nex-listbox-item-selected');
+		if( selectedItem ) {
+			scrollview.scrollIntoView(selectedItem);
+		}
 	}
 	
 	onItemClick=(e) => {
@@ -97,10 +111,10 @@ export default class ListBox extends React.Component{
 		if( !multiple )	return;
 		
 		let newSelectedValue = selectedValue.filter((d)=> !isEqual(item[valueField], d));
-		
+
 		if( !('value' in this.props) ) {
 			this.setState({
-				value: newSelectedValue
+				selectedValue: newSelectedValue
 			})	
 		}
 		
@@ -114,6 +128,13 @@ export default class ListBox extends React.Component{
 		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
 		
 		return items.map(item=>{
+			if(typeof item === 'string') {
+				item = {
+					[textField]: item,
+					[valueField]: item,
+				}	
+			}
+			
 			const isGroup = item[itemsField];
 			const itemPrefixCls = `${prefixCls}-item`;
 			
@@ -139,11 +160,24 @@ export default class ListBox extends React.Component{
 	}
 	
 	renderListChild(children, markMap){
+		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
 		
-		React.Children.map(children, child=>{
+		const itemPrefixCls = `${prefixCls}-item`;
+		
+		return React.Children.map(children, child=>{
 			const props = child.props;
 			
-			return 	
+			if( child.type.isListItemGroup ) {
+				return React.cloneElement(child, {}, this.renderListChild(props.children, markMap));
+			}
+			
+			return React.cloneElement(child, {
+				selected: markMap[props[valueField]],
+				prefixCls: itemPrefixCls,
+				onClick: this.onItemClick,
+				onSelect: this.onItemSelect,
+				onDeselect: this.onItemDeselect,
+			});
 		});
 	}
 	
@@ -155,11 +189,11 @@ export default class ListBox extends React.Component{
 		
 		selectedValue.forEach( v => markMap[v] = true);	
 		
-		return items ? this.renderListItems(items, markMap) : renderListChild(children, markMap);
+		return items.length ? this.renderListItems(items, markMap) : this.renderListChild(children, markMap);
 	}
 	
 	render(){
-		const {filter, className, value, prefixCls, items, width, height, style={}} = this.props;
+		const {filter, className, value, prefixCls, items, width, height, style={}, scrollViewBodyStyle={}} = this.props;
 		
 		if( width ) {
 			style.width = width;
@@ -169,7 +203,7 @@ export default class ListBox extends React.Component{
 		}
 		
 		return (
-			<ScrollView ref="listbox" scrollViewBodyCls={`${prefixCls}-body`} className={classNames(`${prefixCls}`, className)} style={style}>
+			<ScrollView ref="listbox" tabIndex={-1} scrollViewBodyCls={`${prefixCls}-body`} scrollViewBodyStyle={scrollViewBodyStyle} className={classNames(`${prefixCls}`, className)} style={style}>
 				{this.getListItems()}
 			</ScrollView>
 		);

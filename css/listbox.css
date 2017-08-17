@@ -1,11 +1,13 @@
 .nex-listbox {
   background: #FFF;
   overflow: hidden; }
+  .nex-listbox:focus {
+    outline: 0; }
   .nex-listbox .nex-listbox-body {
-    border: 1px solid #26A0DA; }
+    border: 1px solid #20a0ff; }
     .nex-listbox .nex-listbox-body .nex-listbox-item-group-title,
     .nex-listbox .nex-listbox-body .nex-listbox-item {
-      list-style: none;
+      position: relative;
       padding: 0 10px;
       cursor: pointer;
       line-height: 26px;
