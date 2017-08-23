@@ -112,6 +112,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 						_rnexui.ListBox,
 						{
 							multiple: true,
+							labelInValue: true,
 							onChange: this.handleChange2,
 							defaultValue: 'V03',
 							style: {

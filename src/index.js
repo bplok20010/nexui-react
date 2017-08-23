@@ -17,7 +17,7 @@ import Portal from './portal/Portal';
 
 import Popup from './popup/index';
 
-import Select from './select/Select';
+import Select from './select/index';
 
 import ListBox from './listbox/index';
 

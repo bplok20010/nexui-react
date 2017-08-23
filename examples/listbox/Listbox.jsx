@@ -49,6 +49,7 @@ class App extends React.Component{
 				  
 				<ListBox
 					multiple
+					labelInValue
 					onChange={this.handleChange2}
 					defaultValue="V03"
 					style={{

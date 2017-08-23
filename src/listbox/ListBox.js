@@ -28,6 +28,7 @@ export default class ListBox extends React.Component{
 		multiple: PropTypes.bool,
 		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		labelInValue: PropTypes.bool,
 	};
 
 	static defaultProps = {
@@ -35,6 +36,7 @@ export default class ListBox extends React.Component{
 		valueField: 'value',
 		textField: 'text',
 		itemsField: 'items',
+		labelInValue: false,
 		items: [],
 	};
 	
@@ -55,7 +57,8 @@ export default class ListBox extends React.Component{
 		}
 		
 		this.state = {
-			selectedValue
+			selectedValue,
+			itemsMap: {}
 		};	
 	}
 	
@@ -81,9 +84,22 @@ export default class ListBox extends React.Component{
 		this.refs.listbox.scrollIntoView(e.target);	
 	}
 	
+	transformChangeValue(value){
+		const { labelInValue } = this.props;
+		const { itemsMap } = this.state;
+		
+		if( labelInValue ) {
+			return isArray(value) ? 
+					value.map(v => itemsMap[v]) :
+					itemsMap[value];
+		}
+		
+		return value;
+	}
+	
 	onItemSelect=(item, el) => {
 		const { multiple, onChange } = this.props;
-		const { selectedValue } = this.state;
+		const { selectedValue, itemsMap } = this.state;
 		const valueField = 'value';
 		
 		if( !multiple ) {
@@ -97,14 +113,14 @@ export default class ListBox extends React.Component{
 				selectedValue	
 			})	
 		}
-	
+
 		if( onChange ) {
-			onChange(multiple ? copy(selectedValue) : selectedValue[0]);	
+			onChange(this.transformChangeValue(multiple ? copy(selectedValue) : selectedValue[0]));	
 		}
 	}
 	
 	onItemDeselect=(item, el) => {
-		const { multiple, onChange } = this.props;
+		const { multiple, onChange, labelInValue } = this.props;
 		const { selectedValue } = this.state;
 		const valueField = 'value';
 		
@@ -117,15 +133,16 @@ export default class ListBox extends React.Component{
 				selectedValue: newSelectedValue
 			})	
 		}
-		
+	
 		if( onChange ) {
-			onChange(copy(newSelectedValue));	
+			onChange(this.transformChangeValue(copy(newSelectedValue)));	
 		}
 		
 	}
 	
 	renderListItems(items, markMap){
 		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
+		const {itemsMap} = this.state;
 		
 		return items.map(item=>{
 			if(typeof item === 'string') {
@@ -137,6 +154,10 @@ export default class ListBox extends React.Component{
 			
 			const isGroup = item[itemsField];
 			const itemPrefixCls = `${prefixCls}-item`;
+			
+			if( !isGroup ) {
+				itemsMap[item[valueField]] = item;	
+			}
 			
 			return (filter && !isGroup ? filter(item) : true) ? (!isGroup ? (
 				<ListItem 
@@ -161,6 +182,7 @@ export default class ListBox extends React.Component{
 	
 	renderListChild(children, markMap){
 		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
+		const {itemsMap} = this.state;
 		
 		const itemPrefixCls = `${prefixCls}-item`;
 		
@@ -170,6 +192,8 @@ export default class ListBox extends React.Component{
 			if( child.type.isListItemGroup ) {
 				return React.cloneElement(child, {}, this.renderListChild(props.children, markMap));
 			}
+	
+			itemsMap[props[valueField]] = _assign({}, omit(props, ['children', 'selected', 'prefixCls']), { [textField]: props.children });
 			
 			return React.cloneElement(child, {
 				selected: markMap[props[valueField]],
@@ -184,6 +208,8 @@ export default class ListBox extends React.Component{
 	getListItems(){
 		const {textField, valueField, prefixCls, multiple, items, children} = this.props;
 		const {selectedValue} = this.state;
+		
+		this.state.itemsMap = {};
 		
 		const markMap = {};
 		

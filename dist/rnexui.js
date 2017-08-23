@@ -286,6 +286,17 @@ function each(obj, iterator, context) {
 
 
 
+function uuid(n) {
+    var n = n || 6;
+    var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    var res = "";
+    for (var i = 0; i < n; i++) {
+        var id = Math.ceil(Math.random() * 35);
+        res += chars[id];
+    }
+    return res;
+}
+
 
 
 function classNames() {
@@ -2639,6 +2650,18 @@ var create = function (opt) {
 
 Popup$1.create = create;
 
+var Option = function Option() {
+	classCallCheck(this, Option);
+};
+
+Option.isOption = true;
+
+var Option$2 = function Option() {
+	classCallCheck(this, Option);
+};
+
+Option$2.isOptOption = true;
+
 function on(el, type, eventHandle) {
 	el.addEventListener(type, eventHandle);
 	return function () {
@@ -3446,7 +3469,7 @@ ScrollView.childContextTypes = {
 	ScrollView: index.object
 };
 
-var ListItem = function (_React$Component) {
+var ListItem$1 = function (_React$Component) {
 	inherits(ListItem, _React$Component);
 
 	function ListItem() {
@@ -3518,13 +3541,13 @@ var ListItem = function (_React$Component) {
 	return ListItem;
 }(React$1__default.Component);
 
-ListItem.defaultProps = {
+ListItem$1.defaultProps = {
 	prefixCls: 'nex-listbox-item',
 	value: '',
 	selected: false,
 	disabled: false
 };
-ListItem.isListItem = true;
+ListItem$1.isListItem = true;
 
 var ItemGroup = function (_React$Component) {
 	inherits(ItemGroup, _React$Component);
@@ -3595,7 +3618,8 @@ var ListBox$1 = function (_React$Component) {
 		}
 
 		_this.state = {
-			selectedValue: selectedValue
+			selectedValue: selectedValue,
+			itemsMap: {}
 		};
 		return _this;
 	}
@@ -3623,6 +3647,21 @@ var ListBox$1 = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'transformChangeValue',
+		value: function transformChangeValue(value) {
+			var labelInValue = this.props.labelInValue;
+			var itemsMap = this.state.itemsMap;
+
+
+			if (labelInValue) {
+				return isArray(value) ? value.map(function (v) {
+					return itemsMap[v];
+				}) : itemsMap[value];
+			}
+
+			return value;
+		}
+	}, {
 		key: 'renderListItems',
 		value: function renderListItems(items, markMap) {
 			var _this2 = this;
@@ -3633,6 +3672,7 @@ var ListBox$1 = function (_React$Component) {
 			    itemsField = _props.itemsField,
 			    prefixCls = _props.prefixCls,
 			    filter$$1 = _props.filter;
+			var itemsMap = this.state.itemsMap;
 
 
 			return items.map(function (item) {
@@ -3645,8 +3685,12 @@ var ListBox$1 = function (_React$Component) {
 				var isGroup = item[itemsField];
 				var itemPrefixCls = prefixCls + '-item';
 
+				if (!isGroup) {
+					itemsMap[item[valueField]] = item;
+				}
+
 				return (filter$$1 && !isGroup ? filter$$1(item) : true) ? !isGroup ? React$1__default.createElement(
-					ListItem,
+					ListItem$1,
 					{
 						key: item[valueField],
 						value: item[valueField],
@@ -3676,6 +3720,7 @@ var ListBox$1 = function (_React$Component) {
 			    itemsField = _props2.itemsField,
 			    prefixCls = _props2.prefixCls,
 			    filter$$1 = _props2.filter;
+			var itemsMap = this.state.itemsMap;
 
 
 			var itemPrefixCls = prefixCls + '-item';
@@ -3686,6 +3731,8 @@ var ListBox$1 = function (_React$Component) {
 				if (child.type.isListItemGroup) {
 					return React$1__default.cloneElement(child, {}, _this3.renderListChild(props.children, markMap));
 				}
+
+				itemsMap[props[valueField]] = index$3({}, omit(props, ['children', 'selected', 'prefixCls']), defineProperty({}, textField, props.children));
 
 				return React$1__default.cloneElement(child, {
 					selected: markMap[props[valueField]],
@@ -3708,6 +3755,8 @@ var ListBox$1 = function (_React$Component) {
 			    children = _props3.children;
 			var selectedValue = this.state.selectedValue;
 
+
+			this.state.itemsMap = {};
 
 			var markMap = {};
 
@@ -3763,13 +3812,15 @@ ListBox$1.propTypes = {
 	filter: index.func,
 	multiple: index.bool,
 	width: index.oneOfType([index.string, index.number]),
-	height: index.oneOfType([index.string, index.number])
+	height: index.oneOfType([index.string, index.number]),
+	labelInValue: index.bool
 };
 ListBox$1.defaultProps = {
 	prefixCls: 'nex-listbox',
 	valueField: 'value',
 	textField: 'text',
 	itemsField: 'items',
+	labelInValue: false,
 	items: []
 };
 
@@ -3784,7 +3835,9 @@ var _initialiseProps$2 = function _initialiseProps() {
 		var _props5 = _this4.props,
 		    multiple = _props5.multiple,
 		    onChange = _props5.onChange;
-		var selectedValue = _this4.state.selectedValue;
+		var _state = _this4.state,
+		    selectedValue = _state.selectedValue,
+		    itemsMap = _state.itemsMap;
 
 		var valueField = 'value';
 
@@ -3801,14 +3854,15 @@ var _initialiseProps$2 = function _initialiseProps() {
 		}
 
 		if (onChange) {
-			onChange(multiple ? copy(selectedValue) : selectedValue[0]);
+			onChange(_this4.transformChangeValue(multiple ? copy(selectedValue) : selectedValue[0]));
 		}
 	};
 
 	this.onItemDeselect = function (item, el) {
 		var _props6 = _this4.props,
 		    multiple = _props6.multiple,
-		    onChange = _props6.onChange;
+		    onChange = _props6.onChange,
+		    labelInValue = _props6.labelInValue;
 		var selectedValue = _this4.state.selectedValue;
 
 		var valueField = 'value';
@@ -3826,15 +3880,18 @@ var _initialiseProps$2 = function _initialiseProps() {
 		}
 
 		if (onChange) {
-			onChange(copy(newSelectedValue));
+			onChange(_this4.transformChangeValue(copy(newSelectedValue)));
 		}
 	};
 };
 
 ListBox$1.ListItemGroup = ItemGroup;
-ListBox$1.ListItem = ListItem;
+ListBox$1.ListItem = ListItem$1;
 
-var Select = function (_React$Component) {
+var ListItem = ListBox$1.ListItem;
+var ListItemGroup = ListBox$1.ListItemGroup;
+
+var Select$1 = function (_React$Component) {
 	inherits(Select, _React$Component);
 
 	function Select(props) {
@@ -3846,37 +3903,103 @@ var Select = function (_React$Component) {
 
 		_this.state = {
 			value: props.value || props.defaultValue,
-			showDropdown: false
+			showDropdown: false,
+			optionsMap: {},
+			_ext: uuid(6)
 		};
+
+		_this.updateOptionsMap(props);
 		return _this;
 	}
 
 	createClass(Select, [{
 		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(_ref) {
-			var value = _ref.value;
+		value: function componentWillReceiveProps(props) {
+			this.updateOptionsMap(props);
 
-			this.setState({
-				value: value
-			});
+			if (!isUndefined(props.value)) {
+				this.setState({
+					value: props.value
+				});
+			}
 		}
+		//使用jquery的position做定位，所以这时候jquery是必定存在的
+
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			var _this2 = this;
 
-			$(window).resize(function () {
+			var ext = this.state._ext;
+
+			$(window).on('resize.' + ext, function () {
 				if (_this2.state.showDropdown) {
 					_this2.hideDropdown();
 				}
 			});
 
-			$(document).on('mousedown', function (e) {
+			$(document.body).on('mousewheel.' + ext + ' DOMMouseScroll.' + ext, function (e) {
 				if (_this2.state.showDropdown && !$(e.target).closest(_this2.refs.dropdown).length) {
 					if ($(e.target).closest(_this2.refs.select).length) return;
 					_this2.hideDropdown();
 				}
 			});
+
+			$(document).on('mousedown.' + ext, function (e) {
+				if (_this2.state.showDropdown && !$(e.target).closest(_this2.refs.dropdown).length) {
+					if ($(e.target).closest(_this2.refs.select).length) return;
+					_this2.hideDropdown();
+				}
+			});
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			var ext = this.state._ext;
+			$(window).off('.' + ext);
+			$(document.body).off('.' + ext);
+			$(document).off('.' + ext);
+		}
+	}, {
+		key: 'updateOptionsMap',
+		value: function updateOptionsMap(props) {
+			var options = props.options,
+			    children = props.children,
+			    valueField = props.valueField,
+			    textField = props.textField,
+			    optionsField = props.optionsField;
+
+			var maps = {};
+
+			function parseOptions(list) {
+				list.forEach(function (option) {
+					if (option[optionsField]) {
+						parseOptions(option[optionsField]);
+					} else {
+						maps[option[valueField]] = option;
+					}
+				});
+			}
+
+			function parseChildren(childs) {
+				React$1__default.Children.map(childs, function (child) {
+					var props = child.props;
+
+					if (child.type.isOptOption) {
+						parseChildren(props.children);
+					} else {
+						maps[props[valueField]] = index$3(omit(props, ['children']), defineProperty({}, textField, props.children));
+					}
+				});
+			}
+
+			if (options && options.length) {
+				parseOptions(options);
+			} else {
+				parseChildren(children);
+			}
+
+			this.state.optionsMap = maps;
 		}
 	}, {
 		key: 'getSelectText',
@@ -3887,25 +4010,35 @@ var Select = function (_React$Component) {
 			    textField = _props.textField;
 
 			var value = this.state.value;
-			for (var i = 0; i < options.length; i++) {
-				var option = options[i];
-				if (option[valueField] + '' === value + '') {
-					return option[textField];
-				}
-			}
-			return '';
+
+			var ret = this.state.optionsMap[value];
+
+			return ret ? ret[textField] : value;
 		}
 	}, {
-		key: 'getOptions',
-		value: function getOptions() {
-			var _this3 = this;
+		key: 'transformChangeValue',
+		value: function transformChangeValue(value) {
+			var textInValue = this.props.textInValue;
+			var optionsMap = this.state.optionsMap;
 
+
+			if (textInValue) {
+				return isArray(value) ? value.map(function (v) {
+					return optionsMap[v];
+				}) : optionsMap[value];
+			}
+
+			return value;
+		}
+	}, {
+		key: 'getSelectOptions',
+		value: function getSelectOptions() {
 			var _props2 = this.props,
-			    prefixCls = _props2.prefixCls,
-			    options = _props2.options,
-			    children = _props2.children,
 			    valueField = _props2.valueField,
-			    textField = _props2.textField;
+			    textField = _props2.textField,
+			    optionsField = _props2.optionsField,
+			    options = _props2.options,
+			    children = _props2.children;
 
 			var value = this.state.value;
 
@@ -3913,35 +4046,36 @@ var Select = function (_React$Component) {
 				ref: this.handleDropdownCreate,
 				valueField: valueField,
 				textField: textField,
-				items: options,
+				itemsField: optionsField,
 				value: value,
+				items: options,
+				children: this.renderSelectChild(children),
 				onChange: this.handleListBoxChange
 			});
+		}
+	}, {
+		key: 'renderSelectChild',
+		value: function renderSelectChild(children) {
+			var _this3 = this;
 
-			return React$1__default.createElement(
-				'div',
-				{ ref: this.handleDropdownCreate, className: prefixCls + '-dropdown' },
-				React$1__default.createElement(
-					'div',
-					{ className: prefixCls + '-dropdown-body' },
-					React$1__default.createElement(
-						'ul',
-						null,
-						options.map(function (item) {
-							var _classNames;
+			var _props3 = this.props,
+			    textField = _props3.textField,
+			    valueField = _props3.valueField;
 
-							var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-item', true), defineProperty(_classNames, prefixCls + '-item-selected', String(value) === String(item[valueField])), defineProperty(_classNames, prefixCls + '-item-disabled', item.disabled), _classNames));
-							return React$1__default.createElement(
-								'li',
-								{ key: item[valueField], className: classes, onClick: function onClick() {
-										_this3.handleItemClick(item);
-									} },
-								item[textField]
-							);
-						})
-					)
-				)
-			);
+
+			return React$1__default.Children.map(children, function (child) {
+				var props = child.props;
+
+				if (child.type.isOptOption) {
+					return React$1__default.createElement(
+						ListItemGroup,
+						{ label: props[textField] },
+						_this3.renderSelectChild(props.children)
+					);
+				}
+
+				return React$1__default.createElement(ListItem, props);
+			});
 		}
 	}, {
 		key: 'hideDropdown',
@@ -3956,7 +4090,10 @@ var Select = function (_React$Component) {
 			var showDropdown = this.state.showDropdown;
 
 			var selectEl = this.refs.select;
-			var dropdownStyle = {};
+			var dropdownStyle = {
+				maxWidth: 0,
+				maxHeight: 0
+			};
 
 			if (showDropdown && selectEl) {
 				var rect = selectEl.getBoundingClientRect();
@@ -3970,7 +4107,7 @@ var Select = function (_React$Component) {
 	}, {
 		key: 'renderSelect',
 		value: function renderSelect() {
-			var _classNames2, _classNames3;
+			var _classNames, _classNames2;
 
 			var props = this.props;
 			var showDropdown = this.state.showDropdown;
@@ -3982,34 +4119,32 @@ var Select = function (_React$Component) {
 			    arrowCls = props.arrowCls,
 			    children = props.children,
 			    options = props.options,
-			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'block', 'disabled', 'readOnly', 'arrowCls', 'children', 'options']);
+			    dropdownCls = props.dropdownCls,
+			    dropdownDestroyOnClose = props.dropdownDestroyOnClose,
+			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'block', 'disabled', 'readOnly', 'arrowCls', 'children', 'options', 'dropdownCls', 'dropdownDestroyOnClose']);
 
-			var classes = index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls, true), defineProperty(_classNames2, prefixCls + '-inline', !block), defineProperty(_classNames2, prefixCls + '-readonly', readOnly), defineProperty(_classNames2, prefixCls + '-disabled', disabled), _classNames2));
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', !block), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
-			var otherProps = omit(others, ['value', 'valueField', 'dropdownStyle', 'textField']);
+			var otherProps = omit(others, ['value', 'valueField', 'dropdownCls', 'dropdownStyle', 'dropdownDestroyOnClose', 'textField', 'optionsField', 'textInValue']);
 
 			return React$1__default.createElement(
 				'div',
-				null,
+				_extends({}, otherProps, {
+					ref: 'select',
+					className: classes,
+					tabIndex: tabIndex,
+					onClick: this.handleClick
+				}),
 				React$1__default.createElement(
 					'div',
-					_extends({}, otherProps, {
-						ref: 'select',
-						className: classes,
-						tabIndex: tabIndex,
-						onClick: this.handleClick
-					}),
-					React$1__default.createElement(
-						'div',
-						{ className: prefixCls + '-text' },
-						this.getSelectText()
-					),
-					React$1__default.createElement('span', { className: index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-arrow', true), defineProperty(_classNames3, arrowCls, true), _classNames3)) })
+					{ className: prefixCls + '-text' },
+					this.getSelectText()
 				),
+				React$1__default.createElement('span', { className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
 				React$1__default.createElement(
 					Popup$1,
-					{ visible: showDropdown, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
-					this.getOptions()
+					{ visible: showDropdown, className: dropdownCls, destroyOnClose: dropdownDestroyOnClose, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
+					this.getSelectOptions()
 				)
 			);
 		}
@@ -4022,23 +4157,31 @@ var Select = function (_React$Component) {
 	return Select;
 }(React$1__default.Component);
 
-Select.propTypes = {
+Select$1.propTypes = {
 	className: React$1.PropTypes.string,
 	style: React$1.PropTypes.object,
 	prefixCls: React$1.PropTypes.string,
 	options: React$1.PropTypes.array,
-	dropdownStyle: React$1.PropTypes.object
+	dropdownCls: React$1.PropTypes.string,
+	dropdownDestroyOnClose: React$1.PropTypes.bool,
+	dropdownStyle: React$1.PropTypes.object,
+	textInValue: React$1.PropTypes.bool
 };
-Select.defaultProps = {
+Select$1.defaultProps = {
 	disabled: false,
 	readOnly: false,
 	block: false,
+	options: [],
 	tabIndex: 0,
 	prefixCls: 'nex-select',
 	arrowCls: 'fa fa-caret-down',
 	valueField: 'value',
 	textField: 'text',
-	dropdownStyle: null
+	optionsField: 'options',
+	dropdownCls: null,
+	dropdownStyle: null,
+	dropdownDestroyOnClose: true,
+	textInValue: false
 };
 
 var _initialiseProps$1 = function _initialiseProps() {
@@ -4057,7 +4200,7 @@ var _initialiseProps$1 = function _initialiseProps() {
 			});
 		}
 
-		if (props.onChange) props.onChange(value);
+		if (props.onChange) props.onChange(_this4.transformChangeValue(value));
 
 		_this4.hideDropdown();
 	};
@@ -4068,6 +4211,9 @@ var _initialiseProps$1 = function _initialiseProps() {
 		});
 	};
 };
+
+Select$1.Option = Option;
+Select$1.OptGroup = Option$2;
 
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
@@ -4083,7 +4229,7 @@ exports.Row = Row;
 exports.Col = Col;
 exports.Portal = Portal;
 exports.Popup = Popup$1;
-exports.Select = Select;
+exports.Select = Select$1;
 exports.ListBox = ListBox$1;
 exports.ScrollView = ScrollView;
 

@@ -49,6 +49,9 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	var Option = _rnexui.Select.Option,
+	    OptGroup = _rnexui.Select.OptGroup;
+
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
 
@@ -58,9 +61,9 @@ define(['../../dist/rnexui'], function (_rnexui) {
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 			_this.handleChange = function (value) {
-				//this.setState({
-				//	value	
-				//})	
+				_this.setState({
+					value: value
+				});
 
 				console.log('changed ', value);
 			};
@@ -75,12 +78,63 @@ define(['../../dist/rnexui'], function (_rnexui) {
 			key: 'render',
 			value: function render() {
 				console.log(this.state.value);
-				return React.createElement(_rnexui.Select, {
-					style: { width: 150 },
-					defaultValue: this.state.value,
-					onChange: this.handleChange,
-					options: data
-				});
+				return React.createElement(
+					'div',
+					null,
+					React.createElement(_rnexui.Select, {
+						dropdownCls: 'dropdowntest',
+						style: { width: 150 },
+						defaultValue: 2,
+						onChange: this.handleChange,
+						options: data
+					}),
+					'--------------',
+					this.state.value == 0 ? '??' : React.createElement(
+						_rnexui.Select,
+						{ textInValue: true, onChange: function onChange(v) {
+								return console.log(v);
+							}, defaultValue: this.state.value },
+						React.createElement(
+							Option,
+							{ value: '1' },
+							'\u6D4B\u8BD51'
+						),
+						React.createElement(
+							Option,
+							{ value: '2' },
+							'\u6D4B\u8BD52'
+						),
+						React.createElement(
+							Option,
+							{ value: '3' },
+							'\u6D4B\u8BD53'
+						),
+						React.createElement(
+							Option,
+							{ value: '4' },
+							'\u6D4B\u8BD54'
+						),
+						React.createElement(
+							Option,
+							{ value: '5' },
+							'\u6D4B\u8BD55'
+						),
+						React.createElement(
+							OptGroup,
+							{ text: '\u5206\u7EC41' },
+							React.createElement(
+								Option,
+								{ value: '6' },
+								'\u6D4B\u8BD5\u6D4B\u8BD5\u6D4B\u8BD56'
+							),
+							React.createElement(
+								Option,
+								{ value: '7' },
+								'\u6D4B\u8BD57'
+							)
+						)
+					)
+				);
 			}
 		}]);
 
