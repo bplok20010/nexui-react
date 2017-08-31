@@ -43,7 +43,8 @@ gulp.task('rollup',async function () {
 				"plugins": [
 					"external-helpers",
 					"transform-es3-property-literals",
-					"transform-es3-member-expression-literals"
+					"transform-es3-member-expression-literals",
+					"transform-decorators-legacy"
 				]
 			}),
 			replace({
@@ -69,8 +70,9 @@ gulp.task('rollup',async function () {
 gulp.task("default", ["rollup", "sass"],function(){
   gulp.src("./examples/**/*.jsx")
     .pipe(babel({
-		presets:[es2015,bp,breact],
+		presets:[es2015,bp,breact,"stage-0"],
 		"plugins": [
+		"transform-decorators-legacy",
         "transform-es2015-modules-amd"
 		]	
 	}))

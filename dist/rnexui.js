@@ -348,7 +348,10 @@ if (typeof /./ != 'function' && (typeof Int8Array === 'undefined' ? 'undefined' 
     };
 }
 
-var Button = function (_PureComponent) {
+var _class;
+var _temp;
+
+var Button = (_temp = _class = function (_PureComponent) {
 	inherits(Button, _PureComponent);
 
 	function Button() {
@@ -408,9 +411,7 @@ var Button = function (_PureComponent) {
 		}
 	}]);
 	return Button;
-}(React$1.PureComponent);
-
-Button.propTypes = {
+}(React$1.PureComponent), _class.propTypes = {
 	type: React$1.PropTypes.string,
 	size: React$1.PropTypes.string,
 	htmlType: React$1.PropTypes.oneOf(['button', 'submit', 'reset']),
@@ -423,8 +424,7 @@ Button.propTypes = {
 	iconCls: React$1.PropTypes.string,
 	prefixCls: React$1.PropTypes.string,
 	onClick: React$1.PropTypes.func
-};
-Button.defaultProps = {
+}, _class.defaultProps = {
 	type: '',
 	size: '',
 	htmlType: 'button',
@@ -433,7 +433,7 @@ Button.defaultProps = {
 	disabled: false,
 	block: false,
 	prefixCls: 'nex-btn'
-};
+}, _temp);
 
 var ButtonGroup = function ButtonGroup(props) {
   var _props$prefixCls = props.prefixCls,
@@ -871,7 +871,10 @@ function omit(obj, fields) {
   return shallowCopy;
 }
 
-var TextArea = function (_PureComponent) {
+var _class$2;
+var _temp2$1;
+
+var TextArea = (_temp2$1 = _class$2 = function (_PureComponent) {
 	inherits(TextArea, _PureComponent);
 
 	function TextArea() {
@@ -956,11 +959,12 @@ var TextArea = function (_PureComponent) {
 		}
 	}]);
 	return TextArea;
-}(React$1.PureComponent);
-
-TextArea.defaultProps = {
+}(React$1.PureComponent), _class$2.defaultProps = {
 	prefixCls: 'nex-input'
-};
+}, _temp2$1);
+
+var _class$1;
+var _temp2;
 
 function fixControlledValue(value) {
 	if (typeof value === 'undefined' || value === null) {
@@ -969,7 +973,7 @@ function fixControlledValue(value) {
 	return value;
 }
 
-var Input = function (_PureComponent) {
+var Input = (_temp2 = _class$1 = function (_PureComponent) {
 	inherits(Input, _PureComponent);
 
 	function Input() {
@@ -1096,9 +1100,7 @@ var Input = function (_PureComponent) {
 		}
 	}]);
 	return Input;
-}(React$1.PureComponent);
-
-Input.defaultProps = {
+}(React$1.PureComponent), _class$1.defaultProps = {
 	disabled: false,
 	autoComplete: 'off',
 	addonBeforeCls: '',
@@ -1106,7 +1108,7 @@ Input.defaultProps = {
 	type: 'text',
 	block: false,
 	prefixCls: 'nex-input'
-};
+}, _temp2);
 
 var InputGroup = function InputGroup(props) {
 	var _classNames;
@@ -1328,7 +1330,11 @@ var index$1 = createCommonjsModule(function (module) {
 	})();
 });
 
-var Checkbox = function (_PureComponent) {
+var _class$3;
+var _temp$1;
+var _initialiseProps;
+
+var Checkbox = (_temp$1 = _class$3 = function (_PureComponent) {
 	inherits(Checkbox, _PureComponent);
 
 	function Checkbox(props) {
@@ -1408,9 +1414,7 @@ var Checkbox = function (_PureComponent) {
 		}
 	}]);
 	return Checkbox;
-}(React$1.PureComponent);
-
-Checkbox.propTypes = {
+}(React$1.PureComponent), _class$3.propTypes = {
 	prefixCls: index.string,
 	className: index.string,
 	style: index.object,
@@ -1425,8 +1429,7 @@ Checkbox.propTypes = {
 	onClick: index.func,
 	tabIndex: index.string,
 	readOnly: index.bool
-};
-Checkbox.defaultProps = {
+}, _class$3.defaultProps = {
 	prefixCls: 'nex-checkbox',
 	className: '',
 	style: {},
@@ -1435,9 +1438,7 @@ Checkbox.defaultProps = {
 	onFocus: function onFocus() {},
 	onBlur: function onBlur() {},
 	onChange: function onChange() {}
-};
-
-var _initialiseProps = function _initialiseProps() {
+}, _initialiseProps = function _initialiseProps() {
 	var _this2 = this;
 
 	this.handleChange = function (e) {
@@ -1463,7 +1464,7 @@ var _initialiseProps = function _initialiseProps() {
 			}
 		});
 	};
-};
+}, _temp$1);
 
 var index$2 = function shallowEqual(objA, objB, compare, compareContext) {
 
@@ -1512,7 +1513,10 @@ var index$2 = function shallowEqual(objA, objB, compare, compareContext) {
     return true;
 };
 
-var Checkbox$2 = function (_Component) {
+var _class$4;
+var _temp$2;
+
+var Checkbox$1 = (_temp$2 = _class$4 = function (_Component) {
 	inherits(Checkbox$$1, _Component);
 
 	function Checkbox$$1() {
@@ -1572,23 +1576,22 @@ var Checkbox$2 = function (_Component) {
 		}
 	}]);
 	return Checkbox$$1;
-}(React$1.Component);
-
-Checkbox$2.propTypes = {
+}(React$1.Component), _class$4.propTypes = {
 	className: index.string,
 	style: index.object,
 	prefixCls: index.string
-};
-Checkbox$2.defaultProps = {
+}, _class$4.defaultProps = {
 	prefixCls: 'nex-checkbox',
 	className: '',
 	style: {}
-};
-Checkbox$2.contextTypes = {
+}, _class$4.contextTypes = {
 	checkboxGroup: index.any
-};
+}, _temp$2);
 
-var CheckboxGroup = function (_React$Component) {
+var _class$5;
+var _temp$3;
+
+var CheckboxGroup = (_temp$3 = _class$5 = function (_React$Component) {
 	inherits(CheckboxGroup, _React$Component);
 
 	function CheckboxGroup(props) {
@@ -1674,7 +1677,7 @@ var CheckboxGroup = function (_React$Component) {
 			if (options && options.length > 0) {
 				children = this.getOptions().map(function (option) {
 					return React$1__default.createElement(
-						Checkbox$2,
+						Checkbox$1,
 						{
 							key: option.value,
 							disabled: 'disabled' in option ? option.disabled : props.disabled,
@@ -1699,23 +1702,22 @@ var CheckboxGroup = function (_React$Component) {
 		}
 	}]);
 	return CheckboxGroup;
-}(React$1__default.Component);
-
-CheckboxGroup.defaultProps = {
+}(React$1__default.Component), _class$5.defaultProps = {
 	options: [],
 	prefixCls: 'nex-checkbox-group'
-};
-CheckboxGroup.propTypes = {
+}, _class$5.propTypes = {
 	defaultValue: index.array,
 	value: index.array,
 	options: index.array.isRequired,
 	onChange: index.func
-};
-CheckboxGroup.childContextTypes = {
+}, _class$5.childContextTypes = {
 	checkboxGroup: index.any
-};
+}, _temp$3);
 
-var Radio = function (_React$Component) {
+var _class$6;
+var _temp$4;
+
+var Radio = (_temp$4 = _class$6 = function (_React$Component) {
 	inherits(Radio, _React$Component);
 
 	function Radio() {
@@ -1730,14 +1732,15 @@ var Radio = function (_React$Component) {
 		}
 	}]);
 	return Radio;
-}(React$1__default.Component);
-
-Radio.defaultProps = {
+}(React$1__default.Component), _class$6.defaultProps = {
 	prefixCls: 'nex-radio',
 	type: 'radio'
-};
+}, _temp$4);
 
-var Radio$1 = function (_Component) {
+var _class$7;
+var _temp$5;
+
+var Radio$1 = (_temp$5 = _class$7 = function (_Component) {
 	inherits(Radio$$1, _Component);
 
 	function Radio$$1() {
@@ -1797,23 +1800,22 @@ var Radio$1 = function (_Component) {
 		}
 	}]);
 	return Radio$$1;
-}(React$1.Component);
-
-Radio$1.propTypes = {
+}(React$1.Component), _class$7.propTypes = {
 	className: index.string,
 	style: index.object,
 	prefixCls: index.string
-};
-Radio$1.defaultProps = {
+}, _class$7.defaultProps = {
 	prefixCls: 'nex-radio',
 	className: '',
 	style: {}
-};
-Radio$1.contextTypes = {
+}, _class$7.contextTypes = {
 	radioGroup: index.any
-};
+}, _temp$5);
 
-var RadioGroup = function (_React$Component) {
+var _class$8;
+var _temp$6;
+
+var RadioGroup = (_temp$6 = _class$8 = function (_React$Component) {
 	inherits(RadioGroup, _React$Component);
 
 	function RadioGroup(props) {
@@ -1921,23 +1923,22 @@ var RadioGroup = function (_React$Component) {
 		}
 	}]);
 	return RadioGroup;
-}(React$1__default.Component);
-
-RadioGroup.defaultProps = {
+}(React$1__default.Component), _class$8.defaultProps = {
 	options: [],
 	prefixCls: 'nex-radio-group'
-};
-RadioGroup.propTypes = {
+}, _class$8.propTypes = {
 	defaultValue: index.any,
 	value: index.any,
 	options: index.array.isRequired,
 	onChange: index.func
-};
-RadioGroup.childContextTypes = {
+}, _class$8.childContextTypes = {
 	radioGroup: index.any
-};
+}, _temp$6);
 
-var Row = function (_React$Component) {
+var _class$9;
+var _temp$7;
+
+var Row = (_temp$7 = _class$9 = function (_React$Component) {
 	inherits(Row, _React$Component);
 
 	function Row() {
@@ -1987,21 +1988,21 @@ var Row = function (_React$Component) {
 		}
 	}]);
 	return Row;
-}(React$1__default.Component);
-
-Row.propTypes = {
+}(React$1__default.Component), _class$9.propTypes = {
 	className: index.string,
 	children: index.node,
 	gutter: index.number,
 	prefixCls: index.string
-};
-Row.defaultProps = {
+}, _class$9.defaultProps = {
 	gutter: 0
-};
+}, _temp$7);
+
+var _class$10;
+var _temp$8;
 
 var stringOrNumber = index.oneOfType([index.string, index.number]);
 
-var Col = function (_React$Component) {
+var Col = (_temp$8 = _class$10 = function (_React$Component) {
 	inherits(Col, _React$Component);
 
 	function Col() {
@@ -2034,15 +2035,13 @@ var Col = function (_React$Component) {
 		}
 	}]);
 	return Col;
-}(React$1__default.Component);
-
-Col.propTypes = {
+}(React$1__default.Component), _class$10.propTypes = {
 	span: stringOrNumber,
 	offset: stringOrNumber,
 	className: index.string,
 	children: index.node,
 	prefixCls: index.string
-};
+}, _temp$8);
 
 function getDom(selector) {
 	var dom = typeof selector === 'string' ? document.querySelector(selector) : selector;
@@ -2062,7 +2061,10 @@ function removeContainer(elm) {
 	}
 }
 
-var Portal = function (_React$Component) {
+var _class$11;
+var _temp$9;
+
+var Portal = (_temp$9 = _class$11 = function (_React$Component) {
 	inherits(Portal, _React$Component);
 
 	function Portal() {
@@ -2147,9 +2149,7 @@ var Portal = function (_React$Component) {
 		}
 	}]);
 	return Portal;
-}(React$1__default.Component);
-
-Portal.propTypes = {
+}(React$1__default.Component), _class$11.propTypes = {
 	children: index.node.isRequired,
 	container: index.node,
 	renderTo: index.oneOfType([index.string, index.object]).isRequired,
@@ -2157,13 +2157,12 @@ Portal.propTypes = {
 		appear: index.func,
 		leave: index.func
 	})
-};
-Portal.defaultProps = {
+}, _class$11.defaultProps = {
 	renderTo: 'body',
 	className: '',
 	container: null,
 	prefixCls: 'nex-portal'
-};
+}, _temp$9);
 
 /*
 object-assign
@@ -2261,8 +2260,11 @@ var position = function (target, source, config) {
 	}));
 };
 
+var _class$12;
+var _temp$10;
+
 //import $ from 'jquery';
-var Popup$1 = function (_React$Component) {
+var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
 	inherits(Popup, _React$Component);
 
 	function Popup(props) {
@@ -2527,9 +2529,7 @@ var Popup$1 = function (_React$Component) {
 		}
 	}]);
 	return Popup;
-}(React$1__default.Component);
-
-Popup$1.propTypes = {
+}(React$1__default.Component), _class$12.propTypes = {
 	prefixCls: index.string,
 	rootCls: index.string,
 	className: index.oneOfType([index.string, index.object]),
@@ -2546,8 +2546,7 @@ Popup$1.propTypes = {
 		appear: index.func,
 		leave: index.func
 	})
-};
-Popup$1.defaultProps = {
+}, _class$12.defaultProps = {
 	prefixCls: 'nex-popup',
 	rootCls: '',
 	mask: false,
@@ -2555,7 +2554,7 @@ Popup$1.defaultProps = {
 	destroyOnClose: true,
 	disabledSetPosition: false,
 	visible: false
-};
+}, _temp$10);
 
 var defaultConfig = {
 	renderTo: document.body,
@@ -2650,17 +2649,19 @@ var create = function (opt) {
 
 Popup$1.create = create;
 
-var Option = function Option() {
+var _class$13;
+var _temp$11;
+
+var Option = (_temp$11 = _class$13 = function Option() {
 	classCallCheck(this, Option);
-};
+}, _class$13.isOption = true, _temp$11);
 
-Option.isOption = true;
+var _class$14;
+var _temp$12;
 
-var Option$2 = function Option() {
+var Option$1 = (_temp$12 = _class$14 = function Option() {
 	classCallCheck(this, Option);
-};
-
-Option$2.isOptOption = true;
+}, _class$14.isOptOption = true, _temp$12);
 
 function on(el, type, eventHandle) {
 	el.addEventListener(type, eventHandle);
@@ -2757,7 +2758,10 @@ function isVisible(el) {
 	return true;
 }
 
-var ScrollViewBody = function (_React$Component) {
+var _class$18;
+var _temp$16;
+
+var ScrollViewBody = (_temp$16 = _class$18 = function (_React$Component) {
 	inherits(ScrollViewBody, _React$Component);
 
 	function ScrollViewBody() {
@@ -2787,20 +2791,20 @@ var ScrollViewBody = function (_React$Component) {
 		}
 	}]);
 	return ScrollViewBody;
-}(React$1__default.Component);
-
-ScrollViewBody.propTypes = {
+}(React$1__default.Component), _class$18.propTypes = {
 	className: index.string,
 	shouldComponentUpdate: index.bool,
 	component: index.oneOfType([index.string, index.func])
-};
-ScrollViewBody.defaultProps = {
+}, _class$18.defaultProps = {
 	className: '',
 	shouldComponentUpdate: true,
 	component: 'div'
-};
+}, _temp$16);
 
-var ScrollView = function (_React$Component) {
+var _class$17;
+var _temp$15;
+
+var ScrollView = (_temp$15 = _class$17 = function (_React$Component) {
 	inherits(ScrollView, _React$Component);
 
 	function ScrollView(props) {
@@ -3412,9 +3416,7 @@ var ScrollView = function (_React$Component) {
 		}
 	}]);
 	return ScrollView;
-}(React$1__default.Component);
-
-ScrollView.propTypes = {
+}(React$1__default.Component), _class$17.propTypes = {
 	prefixCls: index.string,
 	className: index.oneOfType([index.string, index.object]),
 	scrollViewBodyCls: index.string,
@@ -3439,8 +3441,7 @@ ScrollView.propTypes = {
 	onVScrollEnd: index.func,
 	onHScrollStart: index.func,
 	onVScrollStart: index.func
-};
-ScrollView.defaultProps = {
+}, _class$17.defaultProps = {
 	prefixCls: 'nex-scroll',
 	className: '',
 	scrollViewBodyCls: '',
@@ -3464,12 +3465,14 @@ ScrollView.defaultProps = {
 	onVScrollEnd: null,
 	onHScrollStart: null,
 	onVScrollStart: null
-};
-ScrollView.childContextTypes = {
+}, _class$17.childContextTypes = {
 	ScrollView: index.object
-};
+}, _temp$15);
 
-var ListItem$1 = function (_React$Component) {
+var _class$19;
+var _temp2$2;
+
+var ListItem$1 = (_temp2$2 = _class$19 = function (_React$Component) {
 	inherits(ListItem, _React$Component);
 
 	function ListItem() {
@@ -3539,17 +3542,17 @@ var ListItem$1 = function (_React$Component) {
 		}
 	}]);
 	return ListItem;
-}(React$1__default.Component);
-
-ListItem$1.defaultProps = {
+}(React$1__default.Component), _class$19.defaultProps = {
 	prefixCls: 'nex-listbox-item',
 	value: '',
 	selected: false,
 	disabled: false
-};
-ListItem$1.isListItem = true;
+}, _class$19.isListItem = true, _temp2$2);
 
-var ItemGroup = function (_React$Component) {
+var _class$20;
+var _temp$17;
+
+var ItemGroup = (_temp$17 = _class$20 = function (_React$Component) {
 	inherits(ItemGroup, _React$Component);
 
 	function ItemGroup() {
@@ -3582,19 +3585,20 @@ var ItemGroup = function (_React$Component) {
 		}
 	}]);
 	return ItemGroup;
-}(React$1__default.Component);
-
-ItemGroup.defaultProps = {
+}(React$1__default.Component), _class$20.defaultProps = {
 	prefixCls: 'nex-listbox-item-group',
 	label: ''
-};
-ItemGroup.isListItemGroup = true;
+}, _class$20.isListItemGroup = true, _temp$17);
+
+var _class$16;
+var _temp$14;
+var _initialiseProps$2;
 
 function copy(data) {
 	return isArray(data) ? [].concat(data) : data;
 }
 
-var ListBox$1 = function (_React$Component) {
+var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
 	inherits(ListBox, _React$Component);
 
 	function ListBox(props) {
@@ -3798,9 +3802,7 @@ var ListBox$1 = function (_React$Component) {
 		}
 	}]);
 	return ListBox;
-}(React$1__default.Component);
-
-ListBox$1.propTypes = {
+}(React$1__default.Component), _class$16.propTypes = {
 	className: index.string,
 	style: index.object,
 	scrollViewBodyStyle: index.object,
@@ -3814,17 +3816,14 @@ ListBox$1.propTypes = {
 	width: index.oneOfType([index.string, index.number]),
 	height: index.oneOfType([index.string, index.number]),
 	labelInValue: index.bool
-};
-ListBox$1.defaultProps = {
+}, _class$16.defaultProps = {
 	prefixCls: 'nex-listbox',
 	valueField: 'value',
 	textField: 'text',
 	itemsField: 'items',
 	labelInValue: false,
 	items: []
-};
-
-var _initialiseProps$2 = function _initialiseProps() {
+}, _initialiseProps$2 = function _initialiseProps() {
 	var _this4 = this;
 
 	this.onItemClick = function (e) {
@@ -3883,15 +3882,18 @@ var _initialiseProps$2 = function _initialiseProps() {
 			onChange(_this4.transformChangeValue(copy(newSelectedValue)));
 		}
 	};
-};
+}, _temp$14);
 
 ListBox$1.ListItemGroup = ItemGroup;
 ListBox$1.ListItem = ListItem$1;
 
+var _class$15;
+var _temp$13;
+var _initialiseProps$1;
+
 var ListItem = ListBox$1.ListItem;
 var ListItemGroup = ListBox$1.ListItemGroup;
-
-var Select$1 = function (_React$Component) {
+var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 	inherits(Select, _React$Component);
 
 	function Select(props) {
@@ -4155,9 +4157,7 @@ var Select$1 = function (_React$Component) {
 		}
 	}]);
 	return Select;
-}(React$1__default.Component);
-
-Select$1.propTypes = {
+}(React$1__default.Component), _class$15.propTypes = {
 	className: React$1.PropTypes.string,
 	style: React$1.PropTypes.object,
 	prefixCls: React$1.PropTypes.string,
@@ -4166,8 +4166,7 @@ Select$1.propTypes = {
 	dropdownDestroyOnClose: React$1.PropTypes.bool,
 	dropdownStyle: React$1.PropTypes.object,
 	textInValue: React$1.PropTypes.bool
-};
-Select$1.defaultProps = {
+}, _class$15.defaultProps = {
 	disabled: false,
 	readOnly: false,
 	block: false,
@@ -4182,9 +4181,7 @@ Select$1.defaultProps = {
 	dropdownStyle: null,
 	dropdownDestroyOnClose: true,
 	textInValue: false
-};
-
-var _initialiseProps$1 = function _initialiseProps() {
+}, _initialiseProps$1 = function _initialiseProps() {
 	var _this4 = this;
 
 	this.handleDropdownCreate = function (el) {
@@ -4210,17 +4207,17 @@ var _initialiseProps$1 = function _initialiseProps() {
 			showDropdown: !_this4.state.showDropdown
 		});
 	};
-};
+}, _temp$13);
 
 Select$1.Option = Option;
-Select$1.OptGroup = Option$2;
+Select$1.OptGroup = Option$1;
 
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
 exports.Input = Input;
 exports.InputGroup = InputGroup;
 exports.RCheckbox = Checkbox;
-exports.Checkbox = Checkbox$2;
+exports.Checkbox = Checkbox$1;
 exports.CheckboxGroup = CheckboxGroup;
 exports.RRadio = Radio;
 exports.RadioGroup = RadioGroup;

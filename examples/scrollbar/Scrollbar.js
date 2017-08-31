@@ -57,7 +57,9 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var List = function (_React$Component) {
+	var _class, _temp2;
+
+	var List = (_temp2 = _class = function (_React$Component) {
 		_inherits(List, _React$Component);
 
 		function List() {
@@ -114,11 +116,9 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		}]);
 
 		return List;
-	}(_react2['default'].Component);
-
-	List.contextTypes = {
+	}(_react2['default'].Component), _class.contextTypes = {
 		ScrollView: _react2['default'].PropTypes.object
-	};
+	}, _temp2);
 
 	var App = function (_React$Component2) {
 		_inherits(App, _React$Component2);
