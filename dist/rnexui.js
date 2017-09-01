@@ -348,6 +348,9 @@ if (typeof /./ != 'function' && (typeof Int8Array === 'undefined' ? 'undefined' 
     };
 }
 
+
+var isFunction = _util.isFunction;
+
 var _class;
 var _temp;
 
@@ -4212,6 +4215,166 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 Select$1.Option = Option;
 Select$1.OptGroup = Option$1;
 
+var TreeNode = function (_React$Component) {
+	inherits(TreeNode, _React$Component);
+
+	function TreeNode() {
+		classCallCheck(this, TreeNode);
+		return possibleConstructorReturn(this, (TreeNode.__proto__ || Object.getPrototypeOf(TreeNode)).apply(this, arguments));
+	}
+
+	createClass(TreeNode, [{
+		key: 'render',
+		value: function render() {
+
+			return React$1__default.createElement('li', null);
+		}
+	}]);
+	return TreeNode;
+}(React$1__default.Component);
+
+var _class$21;
+var _temp$18;
+
+var Tree = (_temp$18 = _class$21 = function (_React$Component) {
+	inherits(Tree, _React$Component);
+
+	function Tree(props) {
+		classCallCheck(this, Tree);
+
+		var _this = possibleConstructorReturn(this, (Tree.__proto__ || Object.getPrototypeOf(Tree)).apply(this, arguments));
+
+		_this.state = {};
+
+		return _this;
+	}
+
+	createClass(Tree, [{
+		key: 'renderLoadingNode',
+		value: function renderLoadingNode() {
+			return React$1__default.createElement(
+				'li',
+				null,
+				'\u52A0\u8F7D\u4E2D...'
+			);
+		}
+	}, {
+		key: 'getNodeList',
+		value: function getNodeList(tid) {
+			var _this2 = this;
+
+			var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+			var self = this;
+			var loadData = this.props.loadData;
+
+
+			if (!loadData) return null;
+
+			var curData = this.renderLoadingNode(),
+			    async = false;
+
+			function createNodeList(list) {
+				var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+
+				var icons = Array(level).fill(1);
+
+				level++;
+
+				return list.map(function (node) {
+					return React$1__default.createElement(
+						'li',
+						{ key: node.id, onClick: function onClick(e) {
+								if (e.isDefaultPrevented()) {
+									return;
+								}node.expand = !node.expand;self.setState({});e.preventDefault();
+							} },
+						React$1__default.createElement(
+							'div',
+							{ className: 'nex-tree-text' },
+							icons.map(function (v, k) {
+								return React$1__default.createElement('span', { key: k, className: 'nex-tree-sp' });
+							}),
+							React$1__default.createElement(
+								'span',
+								{ className: 'nex-tree-inner' },
+								node.text
+							)
+						),
+						node.expand ? React$1__default.createElement(
+							'ul',
+							null,
+							self.getNodeList(node.id, level)
+						) : null
+					);
+				});
+			}
+
+			var done = function done(list) {
+				if (async) {
+					_this2.setState({});
+				} else {
+					curData = createNodeList(list, level);
+				}
+			};
+
+			var fail = function fail(msg) {
+				if (async) {}
+			};
+
+			var promise = loadData(tid);
+
+			if (promise.then && isFunction(promise.then)) {
+				promise.then(done, fail);
+			} else {
+				curData = createNodeList(promise, level);
+			}
+
+			async = true;
+
+			return curData;
+		}
+	}, {
+		key: 'renderTree',
+		value: function renderTree() {
+			var rootId = this.props.rootId;
+
+
+			return React$1__default.createElement(
+				'ul',
+				null,
+				this.getNodeList(rootId)
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+
+			return this.renderTree();
+		}
+	}]);
+	return Tree;
+}(React$1__default.Component), _class$21.propTypes = {
+	data: index.oneOfType([index.func, index.array]),
+	loadData: index.func
+}, _class$21.defaultProps = {
+	prefixCls: 'nex-tree',
+	className: '',
+	iconField: 'icon',
+	iconClsField: 'iconCls',
+	rootId: '0',
+	idField: 'id',
+	textField: 'text',
+	parentField: 'pid',
+	childrenField: 'children',
+	expandField: 'expand',
+	leafField: 'isLeaf',
+	defaultExpandAll: false,
+	loadingText: '加载中...',
+	loadData: null
+}, _temp$18);
+
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
 exports.Input = Input;
@@ -4229,6 +4392,7 @@ exports.Popup = Popup$1;
 exports.Select = Select$1;
 exports.ListBox = ListBox$1;
 exports.ScrollView = ScrollView;
+exports.Tree = Tree;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

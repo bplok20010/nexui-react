@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import omit from 'omit.js';
 import _assign from 'object-assign';
 import TreeNode from './TreeNode';
-import {isArray, isUndefined, toArray, isEqual} from '../shared/util';
+import {isArray, isUndefined, toArray, isEqual, isFunction} from '../shared/util';
 
 export default class Tree extends React.Component{
 	
@@ -40,39 +40,66 @@ export default class Tree extends React.Component{
 	}
 	
 	renderLoadingNode(){
-		
+		return (
+			<li>加载中...</li>
+		);
 	}	
 	
-	getRootNodeList(){
-		const {rootId, loadData} = this.props;
+	getNodeList(tid, level = 0){
+		const self = this;
+		const {loadData} = this.props;
 		
 		if( !loadData ) return null;
 		
-		let async = 1;
+		let curData = this.renderLoadingNode(), async = false;
+		
+		function createNodeList(list, level = 0) {
+			
+			var icons = Array(level).fill(1);
+			
+			level++;
+			
+			return list.map(node=> <li key={node.id} onClick={(e)=>{ if( e.isDefaultPrevented() ) {return;} node.expand= !node.expand; self.setState({}); e.preventDefault(); }}>
+				<div className="nex-tree-text">{icons.map((v, k)=><span key={k} className="nex-tree-sp"></span>)}<span className="nex-tree-inner">{node.text}</span></div>
+				{node.expand ? <ul>{self.getNodeList(node.id, level)}</ul> : null}
+				</li>);
+		}
 		
 		const done = list=>{
-			async = false;
+			if( async ) {
+				this.setState({});	
+			} else {
+				curData = createNodeList(list, level)
+			}
+			
 		};
 		
 		const fail = msg=>{
-			async = false;
+			if( async ) {
+					
+			}
 				
 		};
 		
-		loadData(rootId).then(done, fail);
+		const promise = loadData(tid);
 		
-		async = 2
-		
-		if( !async ) {
-				
+		if( promise.then && isFunction(promise.then) ){
+			promise.then(done, fail);
+		} else {
+			curData	= createNodeList(promise, level)
 		}
+		
+		async = true;
+		
+		return curData;
 	}
 	
 	renderTree(){
+		const {rootId} = this.props;
 		
 		return (
 			<ul>
-				{this.getRootNodeList()}
+				{this.getNodeList(rootId)}
 			</ul>
 		);		
 	}

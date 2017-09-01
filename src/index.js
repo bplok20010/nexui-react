@@ -23,6 +23,8 @@ import ListBox from './listbox/index';
 
 import ScrollView from './scrollview/ScrollView';
 
+import Tree from './tree/Tree';
+
 export {
 	Button,
 	ButtonGroup,
@@ -40,5 +42,6 @@ export {
 	Popup,
 	Select,
 	ListBox,
-	ScrollView
+	ScrollView,
+	Tree,
 }
