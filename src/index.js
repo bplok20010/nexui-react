@@ -23,7 +23,9 @@ import ListBox from './listbox/index';
 
 import ScrollView from './scrollview/ScrollView';
 
-import Tree from './tree/Tree';
+//import Tree from './tree/Tree';
+
+import Ajax from './ajax/Ajax';
 
 export {
 	Button,
@@ -43,5 +45,6 @@ export {
 	Select,
 	ListBox,
 	ScrollView,
-	Tree,
+	//Tree,
+	Ajax,
 }

@@ -1,0 +1,80 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+        <script src="../lib/jquery/jquery.min.js"></script>
+        <script src="./../lib/react/dist/react.js"></script>
+        <script src="./../lib/react-dom/dist/react-dom.js"></script>
+        <script src="./../lib/require.js"></script>
+    </head>
+    <body style="padding:10px;">
+    	<div id="response"></div>
+     
+       <script>
+		define('react', React);
+		define('react-dom', ReactDOM);
+		</script>
+       <script type="text/javascript">
+	   
+	   require(['../../dist/rnexui'], function(rnexui){
+		   
+			console.log('load success')
+		
+	   
+	   	var ajax = rnexui.Ajax;
+				
+				abort = ajax.create({
+					url:'text.php?C=20',
+					timeout : 5000,
+					onAbort:function(){console.log('...onAbort1...')},
+					onError : function(){console.log('timeout')}
+				});
+				
+				custom = ajax.create({
+					url: function(d,s,f){
+						return $.ajax({
+							url : 'text.php?C=40'
+						});
+					},
+					data : {
+						a : 1,
+						b : 2	
+					},
+					timeout : 6000,
+					onAbort:function(){console.log('...onAbort2...')},
+					onError : function(){console.log('timeout')}
+				});
+				
+				//start();
+				//_start();
+				def = $.when(
+					ajax.create({url:'text.php?C=1',onSuccess:function(){console.log(1)}}),
+					ajax.create({url:'text.php?C=2',onSuccess:function(){console.log(2)}}),
+					ajax.create({url:'text.php?C=3',onSuccess:function(){console.log(3)}}),
+					ajax.create({url:'text.php?C=4',onSuccess:function(){console.log(4)}})
+				)
+				.fail(function(){
+					console.log('fail')	
+				}).done(function(){
+					console.log('done');
+					ajax.create({url:'text.php?C=1',onSuccess:function(){console.log(1)}})
+					.then(function(){
+						return ajax.create({url:'text.php?C=1',onSuccess:function(){console.log(2)}});
+					})
+					.then(function(){
+						return ajax.create({url:'text.php?C=1',onSuccess:function(){console.log(3)}});
+					})
+					.then(function(){
+						return ajax.create({url:'text.php?C=1',onSuccess:function(){console.log(4)}});
+					});		
+				});
+			
+		});	
+		</script> 
+        
+    </body>
+</html>

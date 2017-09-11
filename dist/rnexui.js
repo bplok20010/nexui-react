@@ -190,7 +190,9 @@ function isUndefined(obj) {
 
 
 
-
+function isPromiseLike(promise) {
+    return promise && isFunction(promise.then);
+}
 
 
 
@@ -276,9 +278,18 @@ function each(obj, iterator, context) {
 
 
 
+function indexOf(array, item) {
+    var i = 0,
+        length = array && array.length;
 
+    for (; i < length; i++) {
+        if (array[i] === item) return i;
+    }return -1;
+}
 
-
+function contains(array, item) {
+    return indexOf(array, item) >= 0;
+}
 
 
 
@@ -4215,165 +4226,253 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 Select$1.Option = Option;
 Select$1.OptGroup = Option$1;
 
-var TreeNode = function (_React$Component) {
-	inherits(TreeNode, _React$Component);
-
-	function TreeNode() {
-		classCallCheck(this, TreeNode);
-		return possibleConstructorReturn(this, (TreeNode.__proto__ || Object.getPrototypeOf(TreeNode)).apply(this, arguments));
-	}
-
-	createClass(TreeNode, [{
-		key: 'render',
-		value: function render() {
-
-			return React$1__default.createElement('li', null);
+var Ajax = function () {
+	createClass(Ajax, null, [{
+		key: 'create',
+		value: function create(opts) {
+			return new Ajax(opts);
 		}
 	}]);
-	return TreeNode;
-}(React$1__default.Component);
 
-var _class$21;
-var _temp$18;
+	function Ajax() {
+		var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+		classCallCheck(this, Ajax);
 
-var Tree = (_temp$18 = _class$21 = function (_React$Component) {
-	inherits(Tree, _React$Component);
+		this.config = index$3({
+			url: '',
+			timeout: 0,
+			async: true,
+			sendType: 'ajax',
+			/**
+    * 数据最终处理
+    * @examples:
+    * dataType = json
+    * success  = function(data){
+    *	return data.data;
+    * }
+    */
+			dataFormatter: null,
+			/**
+    * @ type {function(resolve, reject)}
+    * 在触发success之前再次进行验证 如果这时候验证失败可以调用 hooks
+    */
+			resolveProcess: null,
+			onSuccess: null,
+			onError: null,
+			onAbort: null,
+			onComplete: null,
+			data: {}
+		}, opts);
 
-	function Tree(props) {
-		classCallCheck(this, Tree);
+		this.config.sendType = String(this.config.sendType).toLowerCase();
 
-		var _this = possibleConstructorReturn(this, (Tree.__proto__ || Object.getPrototypeOf(Tree)).apply(this, arguments));
+		if (isFunction(this.config.url)) {
+			this.config.sendType = 'custom';
+		}
 
-		_this.state = {};
-
-		return _this;
+		this._initAjax();
 	}
 
-	createClass(Tree, [{
-		key: 'renderLoadingNode',
-		value: function renderLoadingNode() {
-			return React$1__default.createElement(
-				'li',
-				null,
-				'\u52A0\u8F7D\u4E2D...'
-			);
-		}
-	}, {
-		key: 'getNodeList',
-		value: function getNodeList(tid) {
-			var _this2 = this;
+	createClass(Ajax, [{
+		key: '_initAjax',
+		value: function _initAjax() {
+			var _this = this;
 
-			var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+			var _config = this.config,
+			    url = _config.url,
+			    resolveProcess = _config.resolveProcess,
+			    dataFormatter = _config.dataFormatter,
+			    sendType = _config.sendType;
 
+			var dfd = $.Deferred();
 			var self = this;
-			var loadData = this.props.loadData;
 
+			dfd.promise(this);
 
-			if (!loadData) return null;
+			dfd.done(function () {
+				_this.onSuccess.apply(_this, arguments);
+			}).fail(function () {
+				_this.onError.apply(_this, arguments);
+			}).always(function () {
+				_this.onComplete.apply(_this, arguments);
+			});
 
-			var curData = this.renderLoadingNode(),
-			    async = false;
+			function reject(msg, ts, xhr) {
 
-			function createNodeList(list) {
-				var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+				var args = [].slice.apply(arguments);
 
-
-				var icons = Array(level).fill(1);
-
-				level++;
-
-				return list.map(function (node) {
-					return React$1__default.createElement(
-						'li',
-						{ key: node.id, onClick: function onClick(e) {
-								if (e.isDefaultPrevented()) {
-									return;
-								}node.expand = !node.expand;self.setState({});e.preventDefault();
-							} },
-						React$1__default.createElement(
-							'div',
-							{ className: 'nex-tree-text' },
-							icons.map(function (v, k) {
-								return React$1__default.createElement('span', { key: k, className: 'nex-tree-sp' });
-							}),
-							React$1__default.createElement(
-								'span',
-								{ className: 'nex-tree-inner' },
-								node.text
-							)
-						),
-						node.expand ? React$1__default.createElement(
-							'ul',
-							null,
-							self.getNodeList(node.id, level)
-						) : null
-					);
-				});
+				dfd.rejectWith(self, args);
 			}
 
-			var done = function done(list) {
-				if (async) {
-					_this2.setState({});
-				} else {
-					curData = createNodeList(list, level);
+			function resolve(data, ts, xhr) {
+				var args = [].slice.apply(arguments);
+
+				if (dataFormatter && isFunction(dataFormatter)) {
+					args[0] = dataFormatter(args[0]);
 				}
-			};
 
-			var fail = function fail(msg) {
-				if (async) {}
-			};
-
-			var promise = loadData(tid);
-
-			if (promise.then && isFunction(promise.then)) {
-				promise.then(done, fail);
-			} else {
-				curData = createNodeList(promise, level);
+				dfd.resolveWith(self, args);
 			}
 
-			async = true;
+			var method = isFunction(sendType) ? sendType : this[sendType + 'Send'];
 
-			return curData;
+			if (!method) {
+				throw new Error('error sendType not exists!');
+			}
+
+			this._xhr = method.call(this, function (data, ts, xhr) {
+				if (resolveProcess && isFunction(resolveProcess)) {
+					resolveProcess.call(self, data, function (d) {
+						resolve(d || data, ts, xhr);
+					}, function (msg, ts) {
+						reject(msg, ts || 'error', xhr);
+					});
+				} else {
+					resolve(data, ts, xhr);
+				}
+			}, reject);
 		}
 	}, {
-		key: 'renderTree',
-		value: function renderTree() {
-			var rootId = this.props.rootId;
+		key: 'onSuccess',
+		value: function onSuccess() {
+			var onSuccess = this.config.onSuccess;
 
 
-			return React$1__default.createElement(
-				'ul',
-				null,
-				this.getNodeList(rootId)
-			);
+			if (onSuccess && isFunction(onSuccess)) {
+				onSuccess.apply(undefined, arguments);
+			}
 		}
 	}, {
-		key: 'render',
-		value: function render() {
+		key: 'onError',
+		value: function onError(msg, ts, xhr) {
+			var _config2 = this.config,
+			    onError = _config2.onError,
+			    onAbort = _config2.onAbort;
 
-			return this.renderTree();
+
+			if (contains(['timeout', 'canceled', 'abort'], ts)) {
+				if (onAbort && isFunction(onAbort)) {
+					onAbort(msg, ts, xhr);
+				}
+			}
+
+			if (onError && isFunction(onError)) {
+				onError(msg, ts, xhr);
+			}
 		}
+	}, {
+		key: 'onComplete',
+		value: function onComplete() {
+			var onComplete = this.config.onComplete;
+
+
+			if (onComplete && isFunction(onComplete)) {
+				onComplete.apply(undefined, arguments);
+			}
+		}
+	}, {
+		key: 'abort',
+		value: function abort() {
+			var xhr = this._xhr;
+
+			if (xhr && xhr.abort) {
+				xhr.abort(ts);
+			}
+
+			return this;
+		}
+	}, {
+		key: 'getAjaxConfig',
+		value: function getAjaxConfig() {
+			return omit(this.config, ['sendType', 'dataFormatter', 'resolveProcess', 'onSuccess', 'onError', 'onAbort', 'onComplete']);
+		}
+
+		/**
+  * ajax请求
+  */
+
+	}, {
+		key: 'ajaxSend',
+		value: function ajaxSend(resolve, reject) {
+			var _resolve = function _resolve(data, ts, xhr) {
+				resolve(data, ts, xhr);
+			},
+			    _reject = function _reject(xhr, ts, msg) {
+				reject(msg, ts || 'error', xhr);
+			},
+			    xhr = $.ajax(this.getAjaxConfig());
+
+			xhr.then(_resolve, _reject);
+
+			return xhr;
+		}
+	}, {
+		key: 'customSend',
+		value: function customSend(resolve, reject) {
+			var undef,
+			    timeoutTimer,
+			    dfd = $.Deferred(),
+			    xhr = dfd.promise(),
+			    _resolve = function _resolve(data) {
+				if (timeoutTimer) {
+					clearTimeout(timeoutTimer);
+				}
+				resolve(data, 'success', xhr);
+			},
+			    _reject = function _reject(msg, ts) {
+				if (timeoutTimer) {
+					clearTimeout(timeoutTimer);
+				}
+				reject(msg, ts || 'error', xhr);
+			};
+
+			var _config3 = this.config,
+			    url = _config3.url,
+			    async = _config3.async,
+			    timeout = _config3.timeout,
+			    data = _config3.data;
+
+
+			xhr = url(data, _resolve, _reject, xhr);
+
+			if (xhr === undef || !isPromiseLike(xhr)) {
+				xhr = dfd.promise();
+			}
+
+			xhr.then(_resolve, _reject);
+
+			xhr.abort = xhr.abort || function (ts) {
+				ts = ts || 'abort'; //canceled
+				_reject(ts, ts);
+			};
+
+			if (async && timeout > 0) {
+				timeoutTimer = setTimeout(function () {
+					xhr.abort('timeout');
+				}, timeout);
+			}
+
+			return xhr;
+		}
+		/**
+  * form表单请求
+  */
+
+	}, {
+		key: 'formSend',
+		value: function formSend() {}
+		/**
+  * form文件上传
+  */
+
+	}, {
+		key: 'fileSend',
+		value: function fileSend() {}
 	}]);
-	return Tree;
-}(React$1__default.Component), _class$21.propTypes = {
-	data: index.oneOfType([index.func, index.array]),
-	loadData: index.func
-}, _class$21.defaultProps = {
-	prefixCls: 'nex-tree',
-	className: '',
-	iconField: 'icon',
-	iconClsField: 'iconCls',
-	rootId: '0',
-	idField: 'id',
-	textField: 'text',
-	parentField: 'pid',
-	childrenField: 'children',
-	expandField: 'expand',
-	leafField: 'isLeaf',
-	defaultExpandAll: false,
-	loadingText: '加载中...',
-	loadData: null
-}, _temp$18);
+	return Ajax;
+}();
+
+//import Tree from './tree/Tree';
 
 exports.Button = Button;
 exports.ButtonGroup = ButtonGroup;
@@ -4392,7 +4491,7 @@ exports.Popup = Popup$1;
 exports.Select = Select$1;
 exports.ListBox = ListBox$1;
 exports.ScrollView = ScrollView;
-exports.Tree = Tree;
+exports.Ajax = Ajax;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
