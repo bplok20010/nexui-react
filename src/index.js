@@ -27,6 +27,8 @@ import ScrollView from './scrollview/ScrollView';
 
 import Ajax from './ajax/Ajax';
 
+import Pagination from './pagination/Pagination';
+
 export {
 	Button,
 	ButtonGroup,
@@ -47,4 +49,5 @@ export {
 	ScrollView,
 	//Tree,
 	Ajax,
+	Pagination,
 }

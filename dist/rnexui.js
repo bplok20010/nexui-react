@@ -4472,6 +4472,235 @@ var Ajax = function () {
 	return Ajax;
 }();
 
+var _class$21;
+var _temp$18;
+
+var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
+	inherits(Pagination, _React$Component);
+
+	function Pagination(props) {
+		var _ref;
+
+		classCallCheck(this, Pagination);
+
+		for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+			args[_key - 1] = arguments[_key];
+		}
+
+		var _this = possibleConstructorReturn(this, (_ref = Pagination.__proto__ || Object.getPrototypeOf(Pagination)).call.apply(_ref, [this, props].concat(args)));
+
+		_this.state = {
+			current: props.current || props.defaultCurrent || 1,
+			pageSize: props.pageSize || props.defaultPageSize || 10
+		};
+		return _this;
+	}
+
+	createClass(Pagination, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(props) {
+
+			if (!isUndefined(props.current)) {
+				this.setState({
+					current: props.current
+				});
+			}
+			if (!isUndefined(props.pageSize)) {
+				this.setState({
+					pageSize: props.pageSize
+				});
+			}
+		}
+	}, {
+		key: 'toPage',
+		value: function toPage(num) {
+			if (num === this.state.current) return;
+			var props = this.props;
+			var pageCount = this.getTotalPages();
+
+			num = Math.max(Math.min(num, pageCount), 1);
+
+			if (!('current' in props)) {
+				this.setState({
+					current: num
+				});
+			}
+
+			if (props.onChange) props.onChange(num);
+		}
+	}, {
+		key: 'prevPage',
+		value: function prevPage() {
+			var current = this.state.current;
+
+			this.toPage(--current);
+		}
+	}, {
+		key: 'nextPage',
+		value: function nextPage() {
+			var current = this.state.current;
+
+			this.toPage(++current);
+		}
+
+		/**
+   * 获取总页数
+   */
+
+	}, {
+		key: 'getTotalPages',
+		value: function getTotalPages() {
+			return Math.max(Math.ceil(this.props.total / this.state.pageSize), 1);
+		}
+		/**
+   * 获取当前页码的样式
+   */
+
+	}, {
+		key: 'getPageItemCls',
+		value: function getPageItemCls(pn) {
+			var _classNames;
+
+			var prefixCls = this.props.prefixCls;
+			var current = this.state.current;
+
+
+			return index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-item', true), defineProperty(_classNames, prefixCls + '-item-active', current == pn), _classNames));
+		}
+	}, {
+		key: 'handlePageItemClick',
+		value: function handlePageItemClick(pn) {}
+	}, {
+		key: 'renderPagination',
+		value: function renderPagination() {
+			var _this2 = this;
+
+			this.state.current = this.state.current < 1 ? 1 : this.state.current;
+
+			var _state = this.state,
+			    pageSize = _state.pageSize,
+			    current = _state.current;
+
+			var pageNumber = current;
+			var _props = this.props,
+			    total = _props.total,
+			    prefixCls = _props.prefixCls,
+			    maxPagesShow = _props.maxPagesShow;
+
+			var pageCount = this.getTotalPages();
+			var p = ~~(maxPagesShow / 2);
+			var prevPage = pageNumber - 1;
+			var nextPage = pageNumber + 1;
+
+			var toPage = function toPage(pn) {
+				return function () {
+					return _this2.toPage(pn);
+				};
+			};
+
+			var loopPage = function loopPage() {
+				var list = [];
+				var end = Math.min(pageNumber + p, pageCount - 1);
+				var start = Math.max(end - maxPagesShow + 1, 2);
+
+				list.push(React$1__default.createElement(
+					'li',
+					{ key: '1', className: this.getPageItemCls(1), onClick: toPage(1) },
+					'1'
+				));
+				list.push(start > 2 ? React$1__default.createElement(
+					'li',
+					{ key: 'prev', className: '' },
+					'...'
+				) : null);
+
+				var cpn = end - start + 1;
+
+				if (cpn < maxPagesShow) {
+					end = Math.min(pageCount - 1, end + maxPagesShow - cpn);
+				}
+
+				for (var page = start; page <= end; page++) {
+					list.push(React$1__default.createElement(
+						'li',
+						{ key: page, className: this.getPageItemCls(page), onClick: toPage(page) },
+						page
+					));
+				}
+
+				list.push(end < pageCount - 1 ? React$1__default.createElement(
+					'li',
+					{ key: 'next' },
+					'...'
+				) : null);
+				list.push(pageCount > 1 ? React$1__default.createElement(
+					'li',
+					{ key: pageCount, className: this.getPageItemCls(pageCount), onClick: toPage(pageCount) },
+					pageCount
+				) : null);
+
+				return list;
+			};
+
+			return React$1__default.createElement(
+				'ul',
+				{ className: prefixCls + '-list' },
+				loopPage.call(this)
+			);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var prefixCls = this.props.prefixCls;
+
+			var pageSizeOptions = this.props.pageSizeOptions;
+
+			var list = pageSizeOptions.map(function (v) {
+				return {
+					text: v,
+					value: v
+				};
+			});
+
+			return React$1__default.createElement(
+				'div',
+				{ className: '' + prefixCls },
+				React$1__default.createElement(Select$1, { options: list, value: this.state.pageSize }),
+				React$1__default.createElement(
+					'span',
+					{ className: prefixCls + '-btn ' + prefixCls + '-prev' },
+					'prev'
+				),
+				this.renderPagination(),
+				React$1__default.createElement(
+					'span',
+					{ className: prefixCls + '-btn ' + prefixCls + '-next' },
+					'next'
+				)
+			);
+		}
+	}]);
+	return Pagination;
+}(React$1__default.Component), _class$21.propTypes = {
+	className: index.string,
+	prefixCls: index.string,
+	total: index.number.isRequired,
+	defaultCurrent: index.number,
+	current: index.number,
+	defaultPageSize: index.number,
+	pageSize: index.number,
+	maxPagesShow: index.number,
+	pageSizeOptions: index.array,
+	onPageSizeChange: index.func,
+	onChange: index.func
+}, _class$21.defaultProps = {
+	prefixCls: 'nex-pagination',
+	total: 0,
+	showSizeChanger: false,
+	pageSizeOptions: [10, 20, 30, 40],
+	maxPagesShow: 5 //必须是奇数，界面上最多显示7页
+}, _temp$18);
+
 //import Tree from './tree/Tree';
 
 exports.Button = Button;
@@ -4492,6 +4721,7 @@ exports.Select = Select$1;
 exports.ListBox = ListBox$1;
 exports.ScrollView = ScrollView;
 exports.Ajax = Ajax;
+exports.Pagination = Pagination;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
