@@ -231,7 +231,7 @@ export default class Popup extends React.Component {
 		const popup = (
 			<div>
 				{mask ? this.getMaskComponent() : null}
-				<div ref="popup" className={classes} tabIndex={-1} {...others}></div>
+				<div {...others} ref="popup" className={classes} tabIndex={-1}></div>
 			</div>
 		);
 		

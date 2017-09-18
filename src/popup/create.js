@@ -1,4 +1,5 @@
 import Popup from './Popup';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import _assign from 'object-assign';
 
@@ -34,8 +35,8 @@ export default function(opt){
 	const getPopup = ()=>{
 		return (
 			<Popup 
-				visible={visible}
 				{...others}
+				visible={visible}
 			>
 				{typeof children === 'function' ? children() : children}
 			</Popup>

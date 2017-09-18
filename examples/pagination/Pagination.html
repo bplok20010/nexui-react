@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="../../css/scrollbar.css">
         <link rel="stylesheet" href="../../css/listbox.css">
         <link rel="stylesheet" href="../../css/select.css">
+         <link rel="stylesheet" href="../../css/pagination.css">
         <script src="../lib/jquery/jquery.min.js"></script>
         <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
         <script src="./../lib/react/dist/react.js"></script>
@@ -92,10 +93,17 @@ li.nex-pagination-item-active+li {
     box-sizing: border-box;
 }
 
+.nex-pagination-btn {
+	text-align:center;
+	font-size:18px;
+	padding:0 6px;
+}
+
 .nex-pagination-prev {
     background: center center no-repeat #fff;
     background-size: 16px;
     border: 1px solid #d1dbe5;
+	border-right:none;
     cursor: pointer;
     margin: 0;
     color: #97a8be;
@@ -105,10 +113,13 @@ li.nex-pagination-item-active+li {
     background: center center no-repeat #fff;
     background-size: 16px;
     border: 1px solid #d1dbe5;
+	border-left:none;
     cursor: pointer;
     margin: 0;
     color: #97a8be;
 }
+
+
 </style>
 
 <div id="demo" style="border:1px solid #E6E6E6; width:620px; margin:0 auto; padding:10px;"></div>

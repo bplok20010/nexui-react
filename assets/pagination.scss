@@ -1,0 +1,18 @@
+.nex-pagination {
+	> * {
+		vertical-align: middle;
+		display: inline-block;
+		margin: 0;
+		user-select: none;
+		height:28px;
+		line-height:28px;
+	}
+	
+	> .nex-pagination-total-text {
+		margin-right:10px;
+	}
+	
+	> .nex-pagination-item {
+		
+	}
+}

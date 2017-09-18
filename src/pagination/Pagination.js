@@ -18,6 +18,9 @@ export default class Pagination extends React.Component{
 		pageSizeOptions: PropTypes.array,
 		onPageSizeChange: PropTypes.func,
 		onChange: PropTypes.func,
+		prevBtnCls: PropTypes.string,
+		nextBtnCls: PropTypes.string,
+		showTotal: PropTypes.func,
 	};
 
 	static defaultProps = {
@@ -26,6 +29,11 @@ export default class Pagination extends React.Component{
 		showSizeChanger: false,
 		pageSizeOptions: [10, 20, 30, 40],
 		maxPagesShow: 5,//必须是奇数，界面上最多显示7页
+		prevBtnCls: 'fa fa-angle-left',
+		nextBtnCls: 'fa fa-angle-right',
+		showTotal: function(total){
+			return `共 ${total} 条`;
+		}
 	};
 	
 	constructor(props, ...args){
@@ -150,7 +158,9 @@ export default class Pagination extends React.Component{
 	}
 
 	render(){
-		const {prefixCls} = this.props;
+		const {prefixCls, prevBtnCls, nextBtnCls, showTotal} = this.props;
+		const {current} = this.state;
+		const totalPages = this.getTotalPages();
 		const pageSizeOptions = this.props.pageSizeOptions;
 		
 		const list = pageSizeOptions.map(v => {
@@ -160,12 +170,33 @@ export default class Pagination extends React.Component{
 			}	
 		});
 		
+		const _prevBtnCls = classNames({
+			[`${prefixCls}-btn`]: true,
+			[`${prefixCls}-prev`]: true,
+			[`${prevBtnCls}`]: prevBtnCls,
+			[`${prefixCls}-btn-disabled`]: current == 1
+		});
+		
+		const _nextBtnCls = classNames({
+			[`${prefixCls}-btn`]: true,
+			[`${prefixCls}-next`]: true,
+			[`${nextBtnCls}`]: nextBtnCls,
+			[`${prefixCls}-btn-disabled`]: totalPages == current
+		});
+		
 		return (
 			<div className={`${prefixCls}`}>
-				<Select options={list} value={this.state.pageSize}/>
-				<span className={`${prefixCls}-btn ${prefixCls}-prev`}>prev</span>
+				{showTotal ? <span className={`${prefixCls}-total-text`}>{showTotal.call(this, totalPages)}</span> : null}
+				<button 
+					className={`${_prevBtnCls}`}
+					onClick={()=> this.prevPage()}
+				/>
 				{this.renderPagination()}
-				<span className={`${prefixCls}-btn ${prefixCls}-next`}>next</span>
+				<button 
+					className={`${_nextBtnCls}`}
+					onClick={()=> this.nextPage()}
+				/>
+				<span><Select options={list} value={this.state.pageSize}/></span>
 			</div>
 		);
 	}
