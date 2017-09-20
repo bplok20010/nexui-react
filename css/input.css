@@ -6,7 +6,7 @@ input[type="text"]::-ms-clear {
   display: inline-block;
   padding: 3px 7px;
   width: 100%;
-  height: 26px;
+  height: 28px;
   cursor: text;
   font-size: 12px;
   line-height: 1.5;
@@ -14,7 +14,7 @@ input[type="text"]::-ms-clear {
   background-color: #fff;
   background-image: none;
   border: 1px solid #d9d9d9;
-  border-radius: 5px;
+  border-radius: 3px;
   vertical-align: middle; }
   .nex-input::-moz-placeholder {
     color: #ccc;
@@ -46,7 +46,7 @@ textarea.nex-input {
 
 .nex-input-lg {
   padding: 6px 7px;
-  height: 30px; }
+  height: 32px; }
 
 .nex-input-sm {
   padding: 1px 7px;
@@ -77,14 +77,14 @@ textarea.nex-input {
     padding: 0 6px;
     background-color: #eee;
     border: 1px solid #d9d9d9;
-    border-radius: 5px; }
+    border-radius: 3px; }
   .nex-input-wrapper > textarea {
     resize: none; }
   .nex-input-wrapper > textarea.nex-input-autosize {
     resize: both; }
   .nex-input-wrapper.nex-input-wrapper-inline {
     display: inline-table;
-    vertical-align: middle;
+    vertical-align: top;
     width: auto; }
 
 .nex-input-wrapper > .nex-input-addon:first-child {
@@ -136,7 +136,7 @@ textarea.nex-input {
 
 .nex-input-group-lg .nex-input {
   padding: 6px 7px;
-  height: 30px; }
+  height: 32px; }
 
 .nex-input-group-sm .nex-input {
   padding: 1px 7px;

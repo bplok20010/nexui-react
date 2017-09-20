@@ -105,7 +105,7 @@
      var length = obj == null ? void 0 : obj.length;
      return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
  }
-
+ 
  export var isObject = (toString.call(null) === '[object Object]') ?
      function(value) {
          // check ownerDocument here as well to exclude DOM nodes

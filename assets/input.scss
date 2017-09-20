@@ -1,10 +1,10 @@
 @import "./mixins/compatibility.scss";
 
-$inputHeight: 26px;
+$inputHeight: 28px;
 $inputSmallHeight: 22px;
-$inputLargeHeight: 30px;
+$inputLargeHeight: 32px;
 
-$inputBorderRadius: 5px;//3px
+$inputBorderRadius: 3px;//3px
 $inputColor: rgba(0,0,0,.8);
 $inputBGColor: #FFF;
 $inputBorderColor: #d9d9d9;
@@ -29,7 +29,7 @@ input[type="text"]::-ms-clear{
 	background-image:none;
 	border:1px solid $inputBorderColor;
 	border-radius:$inputBorderRadius;
-	vertical-align:middle;
+	vertical-align: middle;
 	//-webkit-transition:all .3s;
 	//transition:all .3s;
 	
@@ -109,7 +109,7 @@ textarea.nex-input {
 	
 	&.nex-input-wrapper-inline {
 		display:inline-table;
-		vertical-align: middle;
+		vertical-align: top;
 		width:auto;
 	}
 }

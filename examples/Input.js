@@ -9,8 +9,14 @@ define(["../dist/rnexui"], function (_rnexui) {
 			}, onPressEnter: function onPressEnter() {
 				return console.log('enter');
 			} }),
-		React.createElement(_rnexui.Input, { block: false, addonAfter: "test..." }),
-		React.createElement(_rnexui.Input, { type: "textarea", defaultValue: "test", width: "200px", height: "150px", autosize: true }),
+		React.createElement(_rnexui.Input, { block: false, addonAfter: "test...", onChange: function onChange(v) {
+				return console.log(v);
+			}, onFocus: function onFocus() {
+				return console.log('focus...');
+			} }),
+		React.createElement(_rnexui.Input, { type: "textarea", defaultValue: "test", onChange: function onChange(v) {
+				return console.log(v);
+			}, width: "200px", height: "150px", autosize: true }),
 		React.createElement(_rnexui.Input, { type: "hidden", value: "test" }),
 		React.createElement(
 			_rnexui.InputGroup,

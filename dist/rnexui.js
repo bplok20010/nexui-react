@@ -913,6 +913,13 @@ var TextArea = (_temp2$1 = _class$2 = function (_PureComponent) {
 			if (onKeyDown) {
 				onKeyDown(e);
 			}
+		}, _this.handleChange = function (e) {
+			var onChange = _this.props.onChange;
+
+
+			if (onChange) {
+				onChange(e.target.value);
+			}
 		}, _this.saveTextAreaRef = function (textArea) {
 			_this.textAreaRef = textArea;
 		}, _temp), possibleConstructorReturn(_this, _ret);
@@ -943,10 +950,12 @@ var TextArea = (_temp2$1 = _class$2 = function (_PureComponent) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var _classNames2;
+
 			var props = this.props;
 			var otherProps = omit(props, ['prefixCls', 'block', 'addonBeforeCls', 'addonAfterCls', 'onPressEnter', 'autosize', 'width', 'height']);
 
-			var classname = classNames(props.prefixCls + '-wrapper', defineProperty({}, props.prefixCls + '-wrapper-inline', !props.block));
+			var classname = classNames(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', !props.block), defineProperty(_classNames2, props.className, props.className), _classNames2));
 
 			var style = {};
 			if ('width' in props) {
@@ -965,7 +974,8 @@ var TextArea = (_temp2$1 = _class$2 = function (_PureComponent) {
 				'div',
 				{ className: classname, style: style },
 				React__default.createElement('textarea', _extends({}, otherProps, {
-					className: classNames(this.getTextAreaClassName(), props.className),
+					onChange: this.handleChange,
+					className: classNames(this.getTextAreaClassName()),
 					onKeyDown: this.handleKeyDown,
 					ref: this.saveTextAreaRef
 				}))
@@ -1012,6 +1022,13 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			if (onKeyDown) {
 				onKeyDown(e);
 			}
+		}, _this.handleChange = function (e) {
+			var onChange = _this.props.onChange;
+
+
+			if (onChange) {
+				onChange(e.target.value);
+			}
 		}, _temp), possibleConstructorReturn(_this, _ret);
 	}
 
@@ -1047,6 +1064,8 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 	}, {
 		key: 'renderInput',
 		value: function renderInput() {
+			var _classNames2;
+
 			var props = this.props;
 			var _props2 = this.props,
 			    value = _props2.value,
@@ -1055,7 +1074,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			    style = _props2$style === undefined ? {} : _props2$style;
 			// Fix https://fb.me/react-unknown-prop
 
-			var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'addonBefore', 'addonBeforeCls', 'addonBeforeStyle', 'addonAfter', 'addonAfterCls', 'addonAfterStyle', 'autoFocus', 'style', 'size', 'block', 'width']);
+			var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'onChange', 'addonBefore', 'addonBeforeCls', 'addonBeforeStyle', 'addonAfter', 'addonAfterCls', 'addonAfterStyle', 'autoFocus', 'style', 'size', 'block', 'width']);
 
 			if ('width' in props) {
 				style.width = props.width;
@@ -1071,7 +1090,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 				delete otherProps.defaultValue;
 			}
 
-			var classname = classNames(props.prefixCls + '-wrapper', defineProperty({}, props.prefixCls + '-wrapper-inline', !props.block));
+			var classname = classNames(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', !props.block), defineProperty(_classNames2, className, className), _classNames2));
 
 			var addonBeforeCls = props.prefixCls + '-addon ' + props.prefixCls + '-addon-before';
 			var addonBefore = props.addonBefore ? React__default.createElement(
@@ -1094,10 +1113,10 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 				React__default.createElement(
 					'span',
 					{ className: props.prefixCls + '-inner' },
-					React__default.createElement('input', _extends({
-						ref: 'input'
-					}, otherProps, {
-						className: classNames(this.getInputClassName(), className),
+					React__default.createElement('input', _extends({}, otherProps, {
+						ref: 'input',
+						onChange: this.handleChange,
+						className: classNames(this.getInputClassName()),
 						onKeyDown: this.handleKeyDown
 					}))
 				),
@@ -4489,6 +4508,19 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 
 		var _this = possibleConstructorReturn(this, (_ref = Pagination.__proto__ || Object.getPrototypeOf(Pagination)).call.apply(_ref, [this, props].concat(args)));
 
+		_this.handlePageSizeChange = function (v) {
+			var onPageSizeChange = _this.props.onPageSizeChange;
+
+
+			if (!('pageSize' in _this.props)) {
+				_this.setState({
+					pageSize: v
+				});
+			}
+
+			if (onPageSizeChange) onPageSizeChange(v);
+		};
+
 		_this.state = {
 			current: props.current || props.defaultCurrent || 1,
 			pageSize: props.pageSize || props.defaultPageSize || 10
@@ -4564,12 +4596,10 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 			var prefixCls = this.props.prefixCls;
 			var current = this.state.current;
 
+			var pageCount = this.getTotalPages();
 
-			return index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-item', true), defineProperty(_classNames, prefixCls + '-item-active', current == pn), _classNames));
+			return index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-item', true), defineProperty(_classNames, prefixCls + '-item-first', pn == 1), defineProperty(_classNames, prefixCls + '-item-last', pn == pageCount), defineProperty(_classNames, prefixCls + '-item-active', current == pn), _classNames));
 		}
-	}, {
-		key: 'handlePageItemClick',
-		value: function handlePageItemClick(pn) {}
 	}, {
 		key: 'renderPagination',
 		value: function renderPagination() {
@@ -4585,7 +4615,10 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 			var _props = this.props,
 			    total = _props.total,
 			    prefixCls = _props.prefixCls,
-			    maxPagesShow = _props.maxPagesShow;
+			    maxPagesShow = _props.maxPagesShow,
+			    itemRender = _props.itemRender,
+			    showPrevMore = _props.showPrevMore,
+			    showNextMore = _props.showNextMore;
 
 			var pageCount = this.getTotalPages();
 			var p = ~~(maxPagesShow / 2);
@@ -4598,19 +4631,23 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 				};
 			};
 
+			var _itemRender = function _itemRender(pn) {
+				return itemRender ? itemRender.call(_this2, pn) : pn;
+			};
+
 			var loopPage = function loopPage() {
 				var list = [];
 				var end = Math.min(pageNumber + p, pageCount - 1);
 				var start = Math.max(end - maxPagesShow + 1, 2);
 
 				list.push(React__default.createElement(
-					'li',
+					'a',
 					{ key: '1', className: this.getPageItemCls(1), onClick: toPage(1) },
-					'1'
+					_itemRender(1)
 				));
-				list.push(start > 2 ? React__default.createElement(
-					'li',
-					{ key: 'prev', className: '' },
+				list.push(showPrevMore && start > 2 ? React__default.createElement(
+					'span',
+					{ key: 'prev', className: prefixCls + '-item ' + prefixCls + '-item-more' },
 					'...'
 				) : null);
 
@@ -4622,86 +4659,191 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 
 				for (var page = start; page <= end; page++) {
 					list.push(React__default.createElement(
-						'li',
+						'a',
 						{ key: page, className: this.getPageItemCls(page), onClick: toPage(page) },
-						page
+						_itemRender(page)
 					));
 				}
 
-				list.push(end < pageCount - 1 ? React__default.createElement(
-					'li',
-					{ key: 'next' },
+				list.push(showNextMore && end < pageCount - 1 ? React__default.createElement(
+					'span',
+					{ key: 'next', className: prefixCls + '-item ' + prefixCls + '-item-more' },
 					'...'
 				) : null);
 				list.push(pageCount > 1 ? React__default.createElement(
-					'li',
+					'a',
 					{ key: pageCount, className: this.getPageItemCls(pageCount), onClick: toPage(pageCount) },
-					pageCount
+					_itemRender(pageCount)
 				) : null);
 
 				return list;
 			};
 
+			return loopPage.call(this);
+		}
+	}, {
+		key: 'renderLTotal',
+		value: function renderLTotal() {
+			var _props2 = this.props,
+			    prefixCls = _props2.prefixCls,
+			    totalRender = _props2.totalRender,
+			    total = _props2.total;
+			var _state2 = this.state,
+			    current = _state2.current,
+			    pageSize = _state2.pageSize;
+
+
 			return React__default.createElement(
-				'ul',
-				{ className: prefixCls + '-list' },
-				loopPage.call(this)
+				'span',
+				{ key: 'total', className: prefixCls + '-total-text' },
+				totalRender.call(this, total, current, pageSize)
 			);
 		}
 	}, {
-		key: 'render',
-		value: function render() {
-			var _classNames2,
-			    _classNames3,
-			    _this3 = this;
-
-			var _props2 = this.props,
-			    prefixCls = _props2.prefixCls,
-			    prevBtnCls = _props2.prevBtnCls,
-			    nextBtnCls = _props2.nextBtnCls,
-			    showTotal = _props2.showTotal;
-			var current = this.state.current;
-
-			var totalPages = this.getTotalPages();
-			var pageSizeOptions = this.props.pageSizeOptions;
+		key: 'renderLSizes',
+		value: function renderLSizes() {
+			var _props3 = this.props,
+			    prefixCls = _props3.prefixCls,
+			    pageSizeOptions = _props3.pageSizeOptions,
+			    pageSizeOptionRender = _props3.pageSizeOptionRender,
+			    handlePageSizeChange = _props3.handlePageSizeChange,
+			    small = _props3.small;
 
 			var list = pageSizeOptions.map(function (v) {
 				return {
-					text: v,
+					text: pageSizeOptionRender(v),
 					value: v
 				};
 			});
 
+			return React__default.createElement(
+				'span',
+				{ key: 'sizes', className: prefixCls + '-pagesize' },
+				React__default.createElement(Select$1, { options: list, size: small ? 'small' : '', value: this.state.pageSize, onChange: this.handlePageSizeChange, className: prefixCls + '-changer' })
+			);
+		}
+	}, {
+		key: 'renderLPrev',
+		value: function renderLPrev() {
+			var _classNames2,
+			    _this3 = this;
+
+			var _props4 = this.props,
+			    prefixCls = _props4.prefixCls,
+			    prevBtnCls = _props4.prevBtnCls;
+			var current = this.state.current;
+
 			var _prevBtnCls = index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-btn', true), defineProperty(_classNames2, prefixCls + '-prev', true), defineProperty(_classNames2, '' + prevBtnCls, prevBtnCls), defineProperty(_classNames2, prefixCls + '-btn-disabled', current == 1), _classNames2));
 
+			return React__default.createElement('a', { key: 'prev-btn', className: '' + _prevBtnCls, onClick: function onClick() {
+					return _this3.prevPage();
+				} });
+		}
+	}, {
+		key: 'renderLPager',
+		value: function renderLPager() {
+			return this.renderPagination();
+		}
+	}, {
+		key: 'renderLNext',
+		value: function renderLNext() {
+			var _classNames3,
+			    _this4 = this;
+
+			var _props5 = this.props,
+			    prefixCls = _props5.prefixCls,
+			    nextBtnCls = _props5.nextBtnCls;
+			var current = this.state.current;
+
+			var totalPages = this.getTotalPages();
 			var _nextBtnCls = index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-btn', true), defineProperty(_classNames3, prefixCls + '-next', true), defineProperty(_classNames3, '' + nextBtnCls, nextBtnCls), defineProperty(_classNames3, prefixCls + '-btn-disabled', totalPages == current), _classNames3));
+
+			return React__default.createElement('a', { key: 'next-btn', className: '' + _nextBtnCls, onClick: function onClick() {
+					return _this4.nextPage();
+				} });
+		}
+	}, {
+		key: 'renderLJumper',
+		value: function renderLJumper() {
+			var _this5 = this;
+
+			var _props6 = this.props,
+			    prefixCls = _props6.prefixCls,
+			    nextBtnCls = _props6.nextBtnCls,
+			    small = _props6.small;
+			var current = this.state.current;
+
+
+			var _toPage = function _toPage(e) {
+				var pn = parseInt(e.target.value);
+				if (pn) {
+					_this5.toPage(pn);
+				}
+			};
+
+			return React__default.createElement(
+				'span',
+				{ key: 'jumper', className: prefixCls + '-quick-jumper' },
+				'\u524D\u5F80',
+				React__default.createElement(Input, { style: { width: 40 }, size: small ? 'small' : '', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' }),
+				'\u9875'
+			);
+		}
+	}, {
+		key: 'renderLDefault',
+		value: function renderLDefault(layout) {
+			var _props7 = this.props,
+			    defalutLayoutRender = _props7.defalutLayoutRender,
+			    prefixCls = _props7.prefixCls;
+
+
+			return defalutLayoutRender ? React__default.createElement(
+				'span',
+				{ key: 'defalut-' + layout, className: prefixCls + '-layout-default' },
+				defalutLayoutRender.call(this, layout, this.props, this.state)
+			) : null;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames4,
+			    _this6 = this;
+
+			var _props8 = this.props,
+			    prefixCls = _props8.prefixCls,
+			    className = _props8.className,
+			    layout = _props8.layout,
+			    small = _props8.small;
+
+			var classes = index$1((_classNames4 = {}, defineProperty(_classNames4, '' + prefixCls, true), defineProperty(_classNames4, prefixCls + '-sm', small), _classNames4), className);
 
 			return React__default.createElement(
 				'div',
-				{ className: '' + prefixCls },
-				showTotal ? React__default.createElement(
-					'span',
-					{ className: prefixCls + '-total-text' },
-					showTotal.call(this, totalPages)
-				) : null,
-				React__default.createElement('button', {
-					className: '' + _prevBtnCls,
-					onClick: function onClick() {
-						return _this3.prevPage();
+				{ className: classes },
+				layout.split(',').map(function (l) {
+					switch (l.trim()) {
+						case 'total':
+							return _this6.renderLTotal();
+							break;
+						case 'sizes':
+							return _this6.renderLSizes();
+							break;
+						case 'prev':
+							return _this6.renderLPrev();
+							break;
+						case 'pager':
+							return _this6.renderLPager();
+							break;
+						case 'next':
+							return _this6.renderLNext();
+							break;
+						case 'jumper':
+							return _this6.renderLJumper();
+							break;
+						default:
+							return _this6.renderLDefault(l.trim());
 					}
-				}),
-				this.renderPagination(),
-				React__default.createElement('button', {
-					className: '' + _nextBtnCls,
-					onClick: function onClick() {
-						return _this3.nextPage();
-					}
-				}),
-				React__default.createElement(
-					'span',
-					null,
-					React__default.createElement(Select$1, { options: list, value: this.state.pageSize })
-				)
+				})
 			);
 		}
 	}]);
@@ -4709,6 +4851,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 }(React__default.Component), _class$21.propTypes = {
 	className: index.string,
 	prefixCls: index.string,
+	small: index.bool,
 	total: index.number.isRequired,
 	defaultCurrent: index.number,
 	current: index.number,
@@ -4720,18 +4863,38 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 	onChange: index.func,
 	prevBtnCls: index.string,
 	nextBtnCls: index.string,
-	showTotal: index.func
+	layout: index.string,
+	defalutLayoutRender: index.func,
+	totalRender: index.func,
+	prevBtnRender: index.func,
+	nextBtnRender: index.func,
+	itemRender: index.func,
+	pageSizeOptionRender: index.func,
+	showPrevMore: index.bool,
+	showNextMore: index.bool
 }, _class$21.defaultProps = {
 	prefixCls: 'nex-pagination',
+	small: false,
 	total: 0,
 	showSizeChanger: false,
 	pageSizeOptions: [10, 20, 30, 40],
 	maxPagesShow: 5, //必须是奇数，界面上最多显示7页
 	prevBtnCls: 'fa fa-angle-left',
 	nextBtnCls: 'fa fa-angle-right',
-	showTotal: function showTotal(total) {
+	//total, sizes, prev, pager, next, jumper, default
+	layout: 'total, sizes, prev, pager, next, jumper',
+	defalutLayoutRender: null,
+	totalRender: function totalRender(total, pn, ps) {
 		return '\u5171 ' + total + ' \u6761';
-	}
+	},
+	pageSizeOptionRender: function pageSizeOptionRender(v) {
+		return v + ' \u6761/\u9875';
+	},
+	prevBtnRender: null,
+	nextBtnRender: null,
+	itemRender: null,
+	showPrevMore: true,
+	showNextMore: true
 }, _temp$18);
 
 //import Tree from './tree/Tree';

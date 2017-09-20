@@ -20,7 +20,14 @@ class App extends React.Component{
 	render(){
 		const {current} = this.state;
 		return 	(
-			<Pagination total={175} current={current} maxPagesShow={5} onChange={this.onPageChange} />
+			<div>
+				<Pagination total={175} current={current} maxPagesShow={5} defaultPageSize={20} onChange={this.onPageChange} />
+				<Pagination total={175} layout="total, prev,next" totalRender={(total, pn, ps)=> `当前第${pn}页`} />
+				<Pagination total={175} small={true} layout="total, prev,next, ta" defalutLayoutRender={()=> 'test...'} totalRender={(total, pn, ps)=> `当前第${pn}页`} />
+				<Pagination total={175} layout="pager" />
+				<br />
+				<Pagination total={175} small={true} layout="prev,pager,next" current={current} maxPagesShow={5} defaultPageSize={20} onChange={this.onPageChange} />
+			</div>	
 		)
 	}	
 }

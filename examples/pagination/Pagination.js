@@ -1,5 +1,5 @@
-define(['../../dist/rnexui'], function (_rnexui) {
-	'use strict';
+define(["../../dist/rnexui"], function (_rnexui) {
+	"use strict";
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -78,11 +78,26 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		}
 
 		_createClass(App, [{
-			key: 'render',
+			key: "render",
 			value: function render() {
 				var current = this.state.current;
 
-				return React.createElement(_rnexui.Pagination, { total: 175, current: current, maxPagesShow: 5, onChange: this.onPageChange });
+				return React.createElement(
+					"div",
+					null,
+					React.createElement(_rnexui.Pagination, { total: 175, current: current, maxPagesShow: 5, defaultPageSize: 20, onChange: this.onPageChange }),
+					React.createElement(_rnexui.Pagination, { total: 175, layout: "total, prev,next", totalRender: function totalRender(total, pn, ps) {
+							return "\u5F53\u524D\u7B2C" + pn + "\u9875";
+						} }),
+					React.createElement(_rnexui.Pagination, { total: 175, small: true, layout: "total, prev,next, ta", defalutLayoutRender: function defalutLayoutRender() {
+							return 'test...';
+						}, totalRender: function totalRender(total, pn, ps) {
+							return "\u5F53\u524D\u7B2C" + pn + "\u9875";
+						} }),
+					React.createElement(_rnexui.Pagination, { total: 175, layout: "pager" }),
+					React.createElement("br", null),
+					React.createElement(_rnexui.Pagination, { total: 175, small: true, layout: "prev,pager,next", current: current, maxPagesShow: 5, defaultPageSize: 20, onChange: this.onPageChange })
+				);
 			}
 		}]);
 

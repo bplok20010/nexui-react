@@ -1,18 +1,124 @@
+$paginationHeight: 28px;
+$paginationSmallHeight: 22px;
+$paginationBorderRadius: 2px;
+
 .nex-pagination {
 	> * {
-		vertical-align: middle;
+		vertical-align: top;
 		display: inline-block;
 		margin: 0;
 		user-select: none;
-		height:28px;
-		line-height:28px;
+		height:$paginationHeight;
+		line-height:$paginationHeight;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		outline:0;
 	}
 	
-	> .nex-pagination-total-text {
-		margin-right:10px;
+	.nex-pagination-pagesize {
+		margin-right:10px;	
+	}
+	.nex-pagination-quick-jumper {
+		margin-left:10px;		
+	}
+	.nex-pagination-total-text {
+		margin:0 10px;
 	}
 	
-	> .nex-pagination-item {
+	.nex-pagination-item {
+		border: 1px solid #d1dbe5;
+		padding: 0 4px;
+		border-right: 0;
+		background: #fff;
+		font-size: 13px;
+		min-width: 28px;
+		text-align: center;
+		cursor:pointer;
+		&:hover {
+			color: #20a0ff;
+		}
+	}
+	
+	.nex-pagination-item-first {
 		
+	}
+	
+	.nex-pagination-item-last {
+		border-right: 1px solid #d1dbe5;
+	}
+	
+	.nex-pagination-item-active {
+		border-color: #20a0ff;
+		background-color: #20a0ff;
+		color: #fff;
+		cursor: default;
+		&:hover {
+			color: #fff;
+		}
+	}
+	
+	.nex-pagination-item-active + .nex-pagination-item {
+		border-left: 0;
+	}
+	
+	.nex-pagination-btn {
+		text-align:center;
+		font-size:18px;
+    	min-width: 28px;
+		border: 1px solid #d1dbe5;
+		padding:0 6px;
+		cursor: pointer;
+		margin: 0;
+		color: #97a8be;
+		&:hover {
+			color: #20a0ff;
+		}
+	}
+	
+	.nex-pagination-prev {
+		border-right:none;
+		border-radius: $paginationBorderRadius 0 0 $paginationBorderRadius;
+	}
+	.nex-pagination-next {
+		border-left:none;
+		border-radius: 0 $paginationBorderRadius $paginationBorderRadius 0;
+	}
+	
+	.nex-pagination-btn-disabled {
+    	//cursor: not-allowed;
+		cursor: default;
+		opacity: .4;
+		&:hover {
+			color: #97a8be;
+		}
+	}
+	
+	.nex-pagination-item-more {
+		cursor:default;	
+	}
+	
+	.nex-pagination-jumper {
+		margin:0 6px;
+		input {
+			text-align:center;	
+		}
+	}
+}
+
+.nex-pagination-sm {
+	> * {
+		height:$paginationSmallHeight;
+		line-height:$paginationSmallHeight;
+	}
+	.nex-pagination-btn,
+	.nex-pagination-item {
+		border-width:0;
+		min-width:22px;
+	}
+	
+	.nex-pagination-item {
+		border-radius: $paginationBorderRadius;
 	}
 }

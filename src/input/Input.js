@@ -40,6 +40,14 @@ export default class Input extends PureComponent{
 		}
 	}
 	
+	handleChange = (e) => {
+		const { onChange } = this.props;
+
+		if(onChange) {
+			onChange(e.target.value);
+		}	
+	}
+	
 	componentDidMount(){
 		if( this.props.autoFocus ) {
 			this.focus();	
@@ -61,6 +69,7 @@ export default class Input extends PureComponent{
 		const otherProps = omit(this.props, [
 			'prefixCls',
 			'onPressEnter',
+			'onChange',
 			'addonBefore',
 			'addonBeforeCls',
 			'addonBeforeStyle',
@@ -89,7 +98,8 @@ export default class Input extends PureComponent{
 		}
 		
 		const classname = classNames(`${props.prefixCls}-wrapper`, {
-			[`${props.prefixCls}-wrapper-inline`] : !props.block 	
+			[`${props.prefixCls}-wrapper-inline`] : !props.block,
+			[className]: className	
 		});
 		
 		const addonBeforeCls = `${props.prefixCls}-addon ${props.prefixCls}-addon-before`;
@@ -107,9 +117,10 @@ export default class Input extends PureComponent{
             	{addonBefore}
 				<span className={`${props.prefixCls}-inner`}>
 					<input 
-						ref="input" 
 						{...otherProps} 
-						className={classNames(this.getInputClassName(), className)} 
+						ref="input" 
+						onChange={this.handleChange}
+						className={classNames(this.getInputClassName())} 
 						onKeyDown={this.handleKeyDown}
 					/>
 				</span>

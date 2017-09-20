@@ -35,6 +35,14 @@ export default class TextArea extends PureComponent {
 		}
 	}
 	
+	handleChange = (e) => {
+		const { onChange } = this.props;
+
+		if(onChange) {
+			onChange(e.target.value);
+		}	
+	}
+	
 	saveTextAreaRef = (textArea) => {
 		this.textAreaRef = textArea;
 	}
@@ -53,7 +61,8 @@ export default class TextArea extends PureComponent {
 		]);
 		
 		const classname = classNames(`${props.prefixCls}-wrapper`, {
-			[`${props.prefixCls}-wrapper-inline`] : !props.block 	
+			[`${props.prefixCls}-wrapper-inline`] : !props.block,
+			[props.className]: props.className
 		});
 		
 		const style = {};
@@ -73,7 +82,8 @@ export default class TextArea extends PureComponent {
 			<div className={classname} style={style}>
 				<textarea
 					{...otherProps}
-					className={classNames(this.getTextAreaClassName(), props.className)}
+					onChange={this.handleChange}
+					className={classNames(this.getTextAreaClassName())}
 					onKeyDown={this.handleKeyDown}
 					ref={this.saveTextAreaRef}
 				/>

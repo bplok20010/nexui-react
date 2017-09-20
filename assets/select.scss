@@ -1,6 +1,6 @@
-$selectHeight: 26px;
+$selectHeight: 28px;
 $selectSmallHeight: 22px;
-$selectLargeHeight: 30px;
+$selectLargeHeight: 32px;
 
 $selectBorderRadius: 3px;//3px
 $selectColor: rgba(0,0,0,.8);
@@ -12,7 +12,7 @@ $selectColor: rgba(0,0,0,.8);
 .nex-select {
 	position:relative;
 	display:inline-block;
-	vertical-align:middle;
+	vertical-align:top;
 	padding:3px 7px;
 	width:100%;
 	height:$selectHeight;
@@ -24,7 +24,6 @@ $selectColor: rgba(0,0,0,.8);
 	background-image:none;
 	border:1px solid $selectBorderColor;
 	border-radius:$selectBorderRadius;
-	vertical-align:middle;
 	
 	&.nex-select-inline {
 		width:auto;

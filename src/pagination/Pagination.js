@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {isUndefined, isArray} from '../shared/util';
 import Select from '../select/index';
+import Input from '../input/Input';
 
 export default class Pagination extends React.Component{
 	
 	static propTypes = {
 		className: PropTypes.string,
 		prefixCls: PropTypes.string,
+		small: PropTypes.bool,
 		total: PropTypes.number.isRequired,
 		defaultCurrent: PropTypes.number,
 		current: PropTypes.number,
@@ -20,20 +22,40 @@ export default class Pagination extends React.Component{
 		onChange: PropTypes.func,
 		prevBtnCls: PropTypes.string,
 		nextBtnCls: PropTypes.string,
-		showTotal: PropTypes.func,
+		layout: PropTypes.string,
+		defalutLayoutRender: PropTypes.func,
+		totalRender: PropTypes.func,
+		prevBtnRender: PropTypes.func,
+		nextBtnRender: PropTypes.func,
+		itemRender: PropTypes.func,
+		pageSizeOptionRender: PropTypes.func,
+		showPrevMore: PropTypes.bool,
+		showNextMore: PropTypes.bool,
 	};
 
 	static defaultProps = {
 		prefixCls: 'nex-pagination',
+		small: false,
 		total: 0,
 		showSizeChanger: false,
 		pageSizeOptions: [10, 20, 30, 40],
 		maxPagesShow: 5,//必须是奇数，界面上最多显示7页
 		prevBtnCls: 'fa fa-angle-left',
 		nextBtnCls: 'fa fa-angle-right',
-		showTotal: function(total){
+		//total, sizes, prev, pager, next, jumper, default
+		layout: 'total, sizes, prev, pager, next, jumper',
+		defalutLayoutRender: null,
+		totalRender: function(total, pn, ps){
 			return `共 ${total} 条`;
-		}
+		},
+		pageSizeOptionRender: function(v){
+			return `${v} 条/页`;
+		},
+		prevBtnRender: null,
+		nextBtnRender: null,
+		itemRender: null,
+		showPrevMore: true,
+		showNextMore: true,
 	};
 	
 	constructor(props, ...args){
@@ -99,15 +121,26 @@ export default class Pagination extends React.Component{
 	getPageItemCls(pn){
 		const {prefixCls} = this.props;
 		const {current} = this.state;
+		const pageCount = this.getTotalPages();
 		
 		return classNames({
 			[`${prefixCls}-item`]: true,
+			[`${prefixCls}-item-first`]: pn == 1,
+			[`${prefixCls}-item-last`]: pn == pageCount,
 			[`${prefixCls}-item-active`]: current == pn,	
 		});
 	}
 	
-	handlePageItemClick(pn){
-			
+	handlePageSizeChange = (v) => {
+		const {onPageSizeChange} = this.props;
+		
+		if( !('pageSize' in this.props) ) {
+			this.setState({
+				pageSize: v	
+			});	
+		}
+		
+		if( onPageSizeChange ) onPageSizeChange(v);	
 	}
 	
 	renderPagination(){
@@ -115,7 +148,7 @@ export default class Pagination extends React.Component{
 		
 		const {pageSize, current} = this.state;
 		const pageNumber = current;
-		const {total, prefixCls, maxPagesShow} = this.props;
+		const {total, prefixCls, maxPagesShow, itemRender, showPrevMore, showNextMore} = this.props;
 		const pageCount = this.getTotalPages();
 		const p = ~~(maxPagesShow / 2);
 		const prevPage = pageNumber - 1;
@@ -125,13 +158,17 @@ export default class Pagination extends React.Component{
 			return ()=> this.toPage(pn);
 		}
 		
+		const _itemRender = (pn) => {
+			return itemRender ? itemRender.call(this, pn) : pn;	
+		};
+		
 		const loopPage = function(){
 			const list = [];
 			let end = Math.min(pageNumber + p, pageCount - 1);
 			const start = Math.max(end - maxPagesShow + 1, 2);
 			
-			list.push(<li key="1" className={this.getPageItemCls(1)} onClick={toPage(1)}>1</li>);
-			list.push(start > 2 ? <li key="prev" className="">...</li> : null);
+			list.push(<a key="1" className={this.getPageItemCls(1)} onClick={toPage(1)}>{_itemRender(1)}</a>);
+			list.push(showPrevMore && start > 2 ? <span key="prev" className={`${prefixCls}-item ${prefixCls}-item-more`}>...</span> : null);
 			
 			const cpn = end - start + 1;
 			
@@ -140,36 +177,43 @@ export default class Pagination extends React.Component{
 			}
 			
 			for( let page = start;page <= end; page++ ) {
-				list.push(<li key={page} className={this.getPageItemCls(page)} onClick={toPage(page)}>{page}</li>)	
+				list.push(<a key={page} className={this.getPageItemCls(page)} onClick={toPage(page)}>{_itemRender(page)}</a>)	
 			}
 			
-			list.push(end < pageCount - 1 ? <li key="next">...</li> : null);
-			list.push(pageCount > 1 ? <li key={pageCount} className={this.getPageItemCls(pageCount)}  onClick={toPage(pageCount)}>{pageCount}</li> : null);
+			list.push(showNextMore && end < pageCount - 1 ? <span key="next" className={`${prefixCls}-item ${prefixCls}-item-more`}>...</span> : null);
+			list.push(pageCount > 1 ? <a key={pageCount} className={this.getPageItemCls(pageCount)}  onClick={toPage(pageCount)}>{_itemRender(pageCount)}</a> : null);
 			
 			return list;
 		}
 		
-		return (
-			<ul className={`${prefixCls}-list`}>
-				{loopPage.call(this)}
-			</ul>
-		);
-		
+		return loopPage.call(this);
 	}
-
-	render(){
-		const {prefixCls, prevBtnCls, nextBtnCls, showTotal} = this.props;
-		const {current} = this.state;
-		const totalPages = this.getTotalPages();
-		const pageSizeOptions = this.props.pageSizeOptions;
+	
+	renderLTotal(){
+		const {prefixCls, totalRender, total} = this.props;	
+		const {current, pageSize} = this.state;	
 		
+		return <span key="total" className={`${prefixCls}-total-text`}>{totalRender.call(this, total, current, pageSize)}</span>;
+	}
+	
+	renderLSizes(){
+		const {prefixCls, pageSizeOptions, pageSizeOptionRender, handlePageSizeChange, small} = this.props;
 		const list = pageSizeOptions.map(v => {
 			return {
-				text: v,
+				text: pageSizeOptionRender(v),
 				value: v	
 			}	
 		});
 		
+		return (
+			<span key="sizes" className={`${prefixCls}-pagesize`}>
+				<Select options={list} size={small ? 'small' : ''} value={this.state.pageSize} onChange={this.handlePageSizeChange} className={`${prefixCls}-changer`}/>
+			</span>
+		);	
+	}
+	renderLPrev(){
+		const {prefixCls, prevBtnCls} = this.props;
+		const {current} = this.state;
 		const _prevBtnCls = classNames({
 			[`${prefixCls}-btn`]: true,
 			[`${prefixCls}-prev`]: true,
@@ -177,6 +221,15 @@ export default class Pagination extends React.Component{
 			[`${prefixCls}-btn-disabled`]: current == 1
 		});
 		
+		return <a key="prev-btn" className={`${_prevBtnCls}`} onClick={()=> this.prevPage()}></a>;
+	}
+	renderLPager(){
+		return this.renderPagination();	
+	}
+	renderLNext(){
+		const {prefixCls, nextBtnCls} = this.props;
+		const {current} = this.state;
+		const totalPages = this.getTotalPages();
 		const _nextBtnCls = classNames({
 			[`${prefixCls}-btn`]: true,
 			[`${prefixCls}-next`]: true,
@@ -184,19 +237,67 @@ export default class Pagination extends React.Component{
 			[`${prefixCls}-btn-disabled`]: totalPages == current
 		});
 		
+		return <a key="next-btn" className={`${_nextBtnCls}`} onClick={()=> this.nextPage()}></a>;		
+	}
+	renderLJumper(){
+		const {prefixCls, nextBtnCls, small} = this.props;
+		const {current} = this.state;
+		
+		const _toPage = (e)=>{
+			const pn = parseInt(e.target.value);
+			if( pn ) {
+				this.toPage(pn);		
+			}
+		}
+		
 		return (
-			<div className={`${prefixCls}`}>
-				{showTotal ? <span className={`${prefixCls}-total-text`}>{showTotal.call(this, totalPages)}</span> : null}
-				<button 
-					className={`${_prevBtnCls}`}
-					onClick={()=> this.prevPage()}
-				/>
-				{this.renderPagination()}
-				<button 
-					className={`${_nextBtnCls}`}
-					onClick={()=> this.nextPage()}
-				/>
-				<span><Select options={list} value={this.state.pageSize}/></span>
+			<span key="jumper" className={`${prefixCls}-quick-jumper`}>
+				前往<Input style={{width: 40}}  size={small ? 'small' : ''} defaultValue={current} onPressEnter={_toPage} className={`${prefixCls}-jumper`} />页
+			</span>
+		);
+	}
+	
+	renderLDefault(layout){
+		const {defalutLayoutRender, prefixCls} = this.props;		
+		
+		return defalutLayoutRender ? 
+			<span key={`defalut-${layout}`} className={`${prefixCls}-layout-default`}>{defalutLayoutRender.call(this, layout, this.props, this.state)}</span> : 
+			null ;
+	}
+
+	render(){
+		const {prefixCls, className, layout, small} = this.props;
+		const classes = classNames({
+			[`${prefixCls}`]: true,
+			[`${prefixCls}-sm`]: small,
+		}, className);
+		
+		return (
+			<div className={classes}>
+				{layout.split(',').map((l) => {
+					switch(l.trim()) {
+						case 'total':
+							return this.renderLTotal();
+							break;	
+						case 'sizes':
+							return this.renderLSizes();
+							break;
+						case 'prev':
+							return this.renderLPrev();
+							break;
+						case 'pager':
+							return this.renderLPager();
+							break;
+						case 'next':
+							return this.renderLNext();
+							break;
+						case 'jumper':
+							return this.renderLJumper();
+							break;
+						default:
+							return this.renderLDefault(l.trim());
+					}	
+				})}	
 			</div>
 		);
 	}
