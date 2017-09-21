@@ -29,6 +29,7 @@ export default class Pagination extends React.Component{
 		nextBtnRender: PropTypes.func,
 		itemRender: PropTypes.func,
 		pageSizeOptionRender: PropTypes.func,
+		jumperRender: PropTypes.func,
 		showPrevMore: PropTypes.bool,
 		showNextMore: PropTypes.bool,
 	};
@@ -51,6 +52,7 @@ export default class Pagination extends React.Component{
 		pageSizeOptionRender: function(v){
 			return `${v} 条/页`;
 		},
+		jumperRender: null,
 		prevBtnRender: null,
 		nextBtnRender: null,
 		itemRender: null,
@@ -212,7 +214,7 @@ export default class Pagination extends React.Component{
 		);	
 	}
 	renderLPrev(){
-		const {prefixCls, prevBtnCls} = this.props;
+		const {prefixCls, prevBtnCls, prevBtnRender} = this.props;
 		const {current} = this.state;
 		const _prevBtnCls = classNames({
 			[`${prefixCls}-btn`]: true,
@@ -221,13 +223,13 @@ export default class Pagination extends React.Component{
 			[`${prefixCls}-btn-disabled`]: current == 1
 		});
 		
-		return <a key="prev-btn" className={`${_prevBtnCls}`} onClick={()=> this.prevPage()}></a>;
+		return <a key="prev-btn" className={`${_prevBtnCls}`} onClick={()=> this.prevPage()}>{ prevBtnRender ? prevBtnRender.call(this) : null }</a>;
 	}
 	renderLPager(){
 		return this.renderPagination();	
 	}
 	renderLNext(){
-		const {prefixCls, nextBtnCls} = this.props;
+		const {prefixCls, nextBtnCls, nextBtnRender} = this.props;
 		const {current} = this.state;
 		const totalPages = this.getTotalPages();
 		const _nextBtnCls = classNames({
@@ -237,10 +239,10 @@ export default class Pagination extends React.Component{
 			[`${prefixCls}-btn-disabled`]: totalPages == current
 		});
 		
-		return <a key="next-btn" className={`${_nextBtnCls}`} onClick={()=> this.nextPage()}></a>;		
+		return <a key="next-btn" className={`${_nextBtnCls}`} onClick={()=> this.nextPage()}>{ nextBtnRender ? nextBtnRender.call(this) : null }</a>;		
 	}
 	renderLJumper(){
-		const {prefixCls, nextBtnCls, small} = this.props;
+		const {prefixCls, nextBtnCls, jumperRender, small} = this.props;
 		const {current} = this.state;
 		
 		const _toPage = (e)=>{
@@ -250,9 +252,11 @@ export default class Pagination extends React.Component{
 			}
 		}
 		
+		const jumper = <Input style={{width: 40}} key="jumper" size={small ? 'small' : ''} defaultValue={current} onPressEnter={_toPage} className={`${prefixCls}-jumper`} />;
+		
 		return (
 			<span key="jumper" className={`${prefixCls}-quick-jumper`}>
-				前往<Input style={{width: 40}}  size={small ? 'small' : ''} defaultValue={current} onPressEnter={_toPage} className={`${prefixCls}-jumper`} />页
+				{ jumperRender ? jumperRender.call(this, jumper) : ['前往',jumper,'页'] }
 			</span>
 		);
 	}

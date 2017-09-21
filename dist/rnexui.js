@@ -4730,14 +4730,19 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 
 			var _props4 = this.props,
 			    prefixCls = _props4.prefixCls,
-			    prevBtnCls = _props4.prevBtnCls;
+			    prevBtnCls = _props4.prevBtnCls,
+			    prevBtnRender = _props4.prevBtnRender;
 			var current = this.state.current;
 
 			var _prevBtnCls = index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-btn', true), defineProperty(_classNames2, prefixCls + '-prev', true), defineProperty(_classNames2, '' + prevBtnCls, prevBtnCls), defineProperty(_classNames2, prefixCls + '-btn-disabled', current == 1), _classNames2));
 
-			return React__default.createElement('a', { key: 'prev-btn', className: '' + _prevBtnCls, onClick: function onClick() {
-					return _this3.prevPage();
-				} });
+			return React__default.createElement(
+				'a',
+				{ key: 'prev-btn', className: '' + _prevBtnCls, onClick: function onClick() {
+						return _this3.prevPage();
+					} },
+				prevBtnRender ? prevBtnRender.call(this) : null
+			);
 		}
 	}, {
 		key: 'renderLPager',
@@ -4752,15 +4757,20 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 
 			var _props5 = this.props,
 			    prefixCls = _props5.prefixCls,
-			    nextBtnCls = _props5.nextBtnCls;
+			    nextBtnCls = _props5.nextBtnCls,
+			    nextBtnRender = _props5.nextBtnRender;
 			var current = this.state.current;
 
 			var totalPages = this.getTotalPages();
 			var _nextBtnCls = index$1((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-btn', true), defineProperty(_classNames3, prefixCls + '-next', true), defineProperty(_classNames3, '' + nextBtnCls, nextBtnCls), defineProperty(_classNames3, prefixCls + '-btn-disabled', totalPages == current), _classNames3));
 
-			return React__default.createElement('a', { key: 'next-btn', className: '' + _nextBtnCls, onClick: function onClick() {
-					return _this4.nextPage();
-				} });
+			return React__default.createElement(
+				'a',
+				{ key: 'next-btn', className: '' + _nextBtnCls, onClick: function onClick() {
+						return _this4.nextPage();
+					} },
+				nextBtnRender ? nextBtnRender.call(this) : null
+			);
 		}
 	}, {
 		key: 'renderLJumper',
@@ -4770,6 +4780,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 			var _props6 = this.props,
 			    prefixCls = _props6.prefixCls,
 			    nextBtnCls = _props6.nextBtnCls,
+			    jumperRender = _props6.jumperRender,
 			    small = _props6.small;
 			var current = this.state.current;
 
@@ -4781,12 +4792,12 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 				}
 			};
 
+			var jumper = React__default.createElement(Input, { style: { width: 40 }, key: 'jumper', size: small ? 'small' : '', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' });
+
 			return React__default.createElement(
 				'span',
 				{ key: 'jumper', className: prefixCls + '-quick-jumper' },
-				'\u524D\u5F80',
-				React__default.createElement(Input, { style: { width: 40 }, size: small ? 'small' : '', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' }),
-				'\u9875'
+				jumperRender ? jumperRender.call(this, jumper) : ['前往', jumper, '页']
 			);
 		}
 	}, {
@@ -4870,6 +4881,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 	nextBtnRender: index.func,
 	itemRender: index.func,
 	pageSizeOptionRender: index.func,
+	jumperRender: index.func,
 	showPrevMore: index.bool,
 	showNextMore: index.bool
 }, _class$21.defaultProps = {
@@ -4890,6 +4902,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 	pageSizeOptionRender: function pageSizeOptionRender(v) {
 		return v + ' \u6761/\u9875';
 	},
+	jumperRender: null,
 	prevBtnRender: null,
 	nextBtnRender: null,
 	itemRender: null,
