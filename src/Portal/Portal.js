@@ -8,7 +8,7 @@ export default class Portal extends React.Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
 		container: PropTypes.node,
-		renderTo: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+		renderTo: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]).isRequired,
 		animate: PropTypes.shape({
 			appear: PropTypes.func,
 			leave: PropTypes.func	
