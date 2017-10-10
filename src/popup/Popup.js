@@ -184,11 +184,11 @@ export default class Popup extends React.Component {
 	}
 	
 	getMaskComponent(){
-		const {prefixCls, mask, maskCks} = this.props;
+		const {prefixCls, mask, maskCls} = this.props;
 		
 		const classes = classNames( {
 				[`${prefixCls}-mask`]: true,
-				[maskCks]: maskCks
+				[maskCls]: maskCls
 			} );
 		
 		return (
@@ -222,6 +222,7 @@ export default class Popup extends React.Component {
 			'using',
 			'within',
 			'mask',
+			'maskCls',
 			'destroyOnClose',
 			'popupAnimate',
 			'maskAnimate',
