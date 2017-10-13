@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import {classNames} from '../shared/util';
+import classNames from 'classnames';
 import omit from 'omit.js';
 import TextArea from './TextArea';
 
@@ -11,15 +11,34 @@ function fixControlledValue(value) {
 	return value;
 }
 
+const propTypes = {
+		size: PropTypes.oneOf(['small', 'default', 'large']),
+		addonBefore: PropTypes.any,
+		addonBeforeCls: PropTypes.string,
+		addonBeforeStyle: PropTypes.object,
+		addonAfter: PropTypes.any,
+		addonAfterCls: PropTypes.string,
+		addonAfterStyle: PropTypes.object,
+		type: PropTypes.string, //text textarea hidden
+		inline: PropTypes.bool,
+		prefixCls: PropTypes.string,
+		onPressEnter: PropTypes.func,
+		onKeyDown: PropTypes.func,
+		onChange: PropTypes.func,
+		autoFocus: PropTypes.bool,
+		inputCls: PropTypes.string,
+		inputStyle: PropTypes.object,
+	};
+
 export default class Input extends PureComponent{
+	static propTypes = propTypes
 
 	static defaultProps = {
 		disabled: false,
 		autoComplete: 'off',
-		addonBeforeCls: '',
-		addonAfterCls: '',
 		type: 'text',
-		block: false,
+		inline: true,
+		size: 'default',
 		prefixCls: 'nex-input'
 	};
 	
@@ -65,52 +84,36 @@ export default class Input extends PureComponent{
 	}
 	renderInput(){
 		const props = this.props;
-		const { value, className, style={} } = this.props;
-		// Fix https://fb.me/react-unknown-prop
-		const otherProps = omit(this.props, [
-			'prefixCls',
-			'onPressEnter',
-			'onChange',
-			'addonBefore',
-			'addonBeforeCls',
-			'addonBeforeStyle',
-			'addonAfter',
-			'addonAfterCls',
-			'addonAfterStyle',
-			'autoFocus',
-			'style',
-			'size',
-			'block',
-			'width'
-		]);	
+		const { className, inputStyle, type, addonBeforeCls, addonAfterCls, addonBeforeStyle, addonAfterStyle, style={}, ...others } = props;
+		const otherProps = omit(others, Object.keys(propTypes));
 		
-		if( 'width' in props ) {
-			style.width = props.width;	
-		}
 		if( props.type === 'hidden' ) {
 			style.display = 'none';		
 		}
 		
 		if ('value' in props) {
-			otherProps.value = fixControlledValue(value);
-			// Input elements must be either controlled or uncontrolled,
-			// specify either the value prop, or the defaultValue prop, but not both.
+			otherProps.value = fixControlledValue(props.value);
+			
 			delete otherProps.defaultValue;
 		}
 		
 		const classname = classNames(`${props.prefixCls}-wrapper`, {
-			[`${props.prefixCls}-wrapper-inline`] : !props.block,
-			[className]: className	
+			[`${props.prefixCls}-wrapper-inline`] : props.inline,
+			[className]: className,
 		});
 		
-		const addonBeforeCls = `${props.prefixCls}-addon ${props.prefixCls}-addon-before`;
 		const addonBefore = props.addonBefore ? (
-			<span className={addonBeforeCls}>{props.addonBefore}</span>
+			<span className={classNames({
+				[`${props.prefixCls}-addon ${props.prefixCls}-addon-before`]: true,
+				[addonBeforeCls]: addonBeforeCls	
+			})} style={addonBeforeStyle}>{props.addonBefore}</span>
 		) : null;
 		
-		const addonAfterCls = `${props.prefixCls}-addon ${props.prefixCls}-addon-after`;
 		const addonAfter = props.addonAfter ? (
-			<span className={addonAfterCls}>{props.addonAfter}</span>
+			<span className={classNames({
+				[`${props.prefixCls}-addon ${props.prefixCls}-addon-after`]: true,
+				[addonAfterCls]: addonAfterCls	
+			})} style={addonAfterStyle}>{props.addonAfter}</span>
 		) : null;
 		
 		return (
@@ -120,6 +123,8 @@ export default class Input extends PureComponent{
 					<input 
 						{...otherProps} 
 						ref="input" 
+						type={type}
+						style={inputStyle}
 						onChange={this.handleChange}
 						className={classNames(this.getInputClassName())} 
 						onKeyDown={this.handleKeyDown}
@@ -130,9 +135,13 @@ export default class Input extends PureComponent{
 		);
 	}
 	
+	renderTextarea(){
+		return <textarea />;
+	}
+	
 	render(){
 		if (this.props.type === 'textarea') {
-			return <TextArea {...this.props} ref="input" />;
+			return this.renderTextarea();
 		}
 		return this.renderInput();
 	}
