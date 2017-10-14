@@ -19,14 +19,14 @@ export default class ListItem extends React.Component{
 		const {onSelect, onDeselect, onClick, selected, disabled, value, children} = this.props;
 		if( disabled ) return;
 		
-		if( onClick ) {
-			onClick(e);	
-		}
-		
 		const item = {
 			value,
 			text: children	
 		};
+		
+		if( onClick ) {
+			onClick(item, e);	
+		}
 		
 		if( !selected ) {
 			onSelect && onSelect(item, this.refs.item)	

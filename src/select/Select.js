@@ -26,7 +26,7 @@ export default class Select extends React.Component{
 	static defaultProps = {
 		disabled: false,
 		readOnly: false,
-		block: false,
+		inline: true,
 		options: [],
 		tabIndex: 0,
 		prefixCls: 'nex-select',
@@ -156,8 +156,15 @@ export default class Select extends React.Component{
 		return value;
 	}
 	
-	handleListBoxChange= (value) => {
+	handleListItemClick= ({value}) => {
 		const props = this.props;
+		const state = this.state;
+		
+		if( state.value+'' === value+'' ) {
+			this.hideDropdown();
+			return;	
+		}
+		
 		if( !('value' in props) ) {
 			this.setState({
 				value: value
@@ -182,7 +189,7 @@ export default class Select extends React.Component{
 				value={value}
 				items={options}
 				children={this.renderSelectChild(children)}
-				onChange={this.handleListBoxChange}
+				onItemClick={this.handleListItemClick}
 			/>
 		);		
 	}
@@ -234,10 +241,10 @@ export default class Select extends React.Component{
 	renderSelect(){
 		const props = this.props;
 		const {showDropdown} = this.state;
-		const {prefixCls, tabIndex, block, disabled, readOnly, arrowCls, children, options, dropdownCls, dropdownDestroyOnClose, ...others} = props;
+		const {prefixCls, tabIndex, inline, disabled, readOnly, arrowCls, children, options, dropdownCls, dropdownDestroyOnClose, ...others} = props;
 		const classes = classNames({
 			[prefixCls]: true,
-			[`${prefixCls}-inline`]: !block,
+			[`${prefixCls}-inline`]: inline,
 			[`${prefixCls}-readonly`]: readOnly,
 			[`${prefixCls}-disabled`]: disabled,
 		});

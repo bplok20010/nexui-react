@@ -11,6 +11,7 @@
   .nex-checkbox-input:focus + .nex-checkbox-inner {
     border-color: #3dbcf6; }
   .nex-checkbox-inner {
+    transition: all .3s;
     position: relative;
     top: 0;
     left: 0;
@@ -24,6 +25,7 @@
     background-color: #ffffff;
     vertical-align: top; }
     .nex-checkbox-inner:after {
+      transition: all .3s;
       -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
       transform: rotate(45deg);
@@ -116,6 +118,7 @@
   display: inline-block;
   vertical-align: middle; }
   .nex-checkbox-wrapper .nex-checkbox-label {
+    transition: all .3s;
     padding-left: 5px;
     padding-right: 5px;
     vertical-align: middle; }

@@ -1,11 +1,11 @@
-$height: 26px;
+$height: 28px;
 $smallHeight: 22px;
-$largeHeight: 30px;
-$borderRadius: 0;//3px
+$largeHeight: 32px;
+$borderRadius: 3px;//3px
 
 //按钮默认样式风格
-$defaultBorderColor: #d9d9d9;
-$defaultColor: rgba(0,0,0,.8);
+$defaultBorderColor: #c4c4c4;
+$defaultColor: #1f2d3d;
 $defaultBGColor: #FFF;
 
 $defaultHoverColor: #108ee9;
@@ -53,6 +53,7 @@ $disabledCursor:not-allowed;
 .nex-btn {
     display: inline-block;
     cursor: pointer;
+	box-sizing: border-box;
     white-space: nowrap;
     text-decoration: none;
     overflow: hidden;
@@ -75,6 +76,7 @@ $disabledCursor:not-allowed;
 	user-select:none;
 	vertical-align: middle;
 	border-radius: $borderRadius;
+	transition: all .3s;
 }
 //??
 .nex-btn-radius {

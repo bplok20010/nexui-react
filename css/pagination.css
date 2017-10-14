@@ -1,0 +1,93 @@
+.nex-pagination > * {
+  vertical-align: top;
+  display: inline-block;
+  margin: 0;
+  user-select: none;
+  height: 28px;
+  line-height: 28px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: 0; }
+
+.nex-pagination .nex-pagination-pagesize {
+  margin-right: 10px; }
+
+.nex-pagination .nex-pagination-quick-jumper {
+  margin-left: 10px; }
+
+.nex-pagination .nex-pagination-total-text {
+  margin: 0 10px; }
+
+.nex-pagination .nex-pagination-item {
+  border: 1px solid #d1dbe5;
+  padding: 0 4px;
+  border-right: 0;
+  background: #fff;
+  font-size: 13px;
+  min-width: 28px;
+  text-align: center;
+  cursor: pointer; }
+  .nex-pagination .nex-pagination-item:hover {
+    color: #20a0ff; }
+
+.nex-pagination .nex-pagination-item-last {
+  border-right: 1px solid #d1dbe5; }
+
+.nex-pagination .nex-pagination-item-active {
+  border-color: #20a0ff;
+  background-color: #20a0ff;
+  color: #fff;
+  cursor: default; }
+  .nex-pagination .nex-pagination-item-active:hover {
+    color: #fff; }
+
+.nex-pagination .nex-pagination-item-active + .nex-pagination-item {
+  border-left: 0; }
+
+.nex-pagination .nex-pagination-btn {
+  text-align: center;
+  font-size: 18px;
+  min-width: 28px;
+  border: 1px solid #d1dbe5;
+  padding: 0 6px;
+  cursor: pointer;
+  margin: 0;
+  color: #97a8be; }
+  .nex-pagination .nex-pagination-btn:hover {
+    color: #20a0ff; }
+
+.nex-pagination .nex-pagination-prev {
+  border-right: none;
+  border-radius: 2px 0 0 2px; }
+
+.nex-pagination .nex-pagination-next {
+  border-left: none;
+  border-radius: 0 2px 2px 0; }
+
+.nex-pagination .nex-pagination-btn-disabled {
+  cursor: default;
+  opacity: .4; }
+  .nex-pagination .nex-pagination-btn-disabled:hover {
+    color: #97a8be; }
+
+.nex-pagination .nex-pagination-item-more {
+  cursor: default; }
+
+.nex-pagination .nex-pagination-jumper {
+  margin: 0 6px; }
+  .nex-pagination .nex-pagination-jumper input {
+    text-align: center; }
+
+.nex-pagination-sm > * {
+  height: 22px;
+  line-height: 22px; }
+
+.nex-pagination-sm .nex-pagination-btn,
+.nex-pagination-sm .nex-pagination-item {
+  border-width: 0;
+  min-width: 22px; }
+
+.nex-pagination-sm .nex-pagination-item {
+  border-radius: 2px; }

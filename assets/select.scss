@@ -24,6 +24,7 @@ $selectColor: rgba(0,0,0,.8);
 	background-image:none;
 	border:1px solid $selectBorderColor;
 	border-radius:$selectBorderRadius;
+	box-sizing: border-box;
 	
 	&.nex-select-inline {
 		width:auto;

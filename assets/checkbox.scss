@@ -15,7 +15,9 @@ $checkboxBorderRadius: 0;//3px
   }
 
   &-inner {
+	  transition: all .3s;
     &:after {
+		transition: all .3s;
       -webkit-transform: rotate(45deg);
 	  -ms-transform: rotate(45deg);
       transform: rotate(45deg);
@@ -157,6 +159,7 @@ $checkboxBorderRadius: 0;//3px
     display: inline-block;
 	vertical-align:middle;
 	.nex-checkbox-label {
+		transition: all .3s;
 		padding-left: 5px;
 		padding-right: 5px;
 		vertical-align: middle;

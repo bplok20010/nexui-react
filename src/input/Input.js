@@ -2,7 +2,6 @@ import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import omit from 'omit.js';
-import TextArea from './TextArea';
 
 function fixControlledValue(value) {
 	if (typeof value === 'undefined' || value === null) {
@@ -135,8 +134,46 @@ export default class Input extends PureComponent{
 		);
 	}
 	
+	getTextareaClassName() {
+		const { prefixCls, disabled, inputCls } = this.props;
+		return classNames(prefixCls, {
+			[`${prefixCls}-disabled`]: disabled,
+			[inputCls]: inputCls,
+		});
+	}
+	
 	renderTextarea(){
-		return <textarea />;
+		const {prefixCls, className, inline, inputStyle, style, ...others} = this.props;
+		const otherProps = omit(others, Object.keys(propTypes));
+		
+		if ('value' in this.props) {
+			otherProps.value = fixControlledValue(this.props.value);
+			
+			delete otherProps.defaultValue;
+		}
+		
+		const classname = classNames(`${prefixCls}-wrapper`, {
+			[`${prefixCls}-wrapper-inline`] : inline,
+			[className]: className
+		});
+		
+		const {height} = style;
+		
+		return (
+			<div className={classname} style={style}>
+				<textarea
+					{...otherProps}
+					ref="input"
+					style={{
+						height,
+						...inputStyle	
+					}}
+					className={classNames(this.getTextareaClassName())}
+					onChange={this.handleChange}
+					onKeyDown={this.handleKeyDown}
+				/>
+			</div>
+		);
 	}
 	
 	render(){

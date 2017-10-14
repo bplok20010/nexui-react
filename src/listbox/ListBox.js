@@ -29,6 +29,8 @@ export default class ListBox extends React.Component{
 		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		labelInValue: PropTypes.bool,
+		onItemClick: PropTypes.func,
+		onChange: PropTypes.func,
 	};
 
 	static defaultProps = {
@@ -80,8 +82,11 @@ export default class ListBox extends React.Component{
 		}
 	}
 	
-	onItemClick=(e) => {
+	onItemClick=(item, e) => {
+		const { onItemClick } = this.props;
 		this.refs.listbox.scrollIntoView(e.target);	
+		
+		if( onItemClick ) onItemClick(item);
 	}
 	
 	transformChangeValue(value){

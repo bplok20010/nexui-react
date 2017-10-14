@@ -1,0 +1,74 @@
+.nex-switch {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 44px;
+  height: 22px;
+  line-height: 20px;
+  vertical-align: middle;
+  border-radius: 20px 20px;
+  border: 1px solid #bfcbd9;
+  background-color: #bfcbd9;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: all .3s; }
+  .nex-switch-inner {
+    color: #fff;
+    font-size: 12px;
+    display: block;
+    margin-left: 24px;
+    margin-right: 6px;
+    transition: all .3s; }
+  .nex-switch:after {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 2px;
+    top: 1px;
+    border-radius: 50% 50%;
+    background-color: #fff;
+    content: " ";
+    cursor: pointer;
+    transition: all .3s; }
+  .nex-switch:focus {
+    outline: none; }
+  .nex-switch-small {
+    height: 14px;
+    min-width: 28px;
+    line-height: 12px; }
+    .nex-switch-small .nex-switch-inner {
+      margin-left: 18px;
+      margin-right: 3px; }
+    .nex-switch-small:after {
+      width: 12px;
+      height: 12px;
+      top: 0;
+      left: 0.5px; }
+  .nex-switch-small.nex-switch-checked:after {
+    left: 100%;
+    margin-left: -12.5px; }
+  .nex-switch-small.nex-switch-checked .nex-switch-inner {
+    margin-left: 3px;
+    margin-right: 18px; }
+  .nex-switch-checked:after {
+    margin-left: -16.5px; }
+  .nex-switch-checked {
+    border: 1px solid #20a0ff;
+    background-color: #20a0ff; }
+    .nex-switch-checked .nex-switch-inner {
+      margin-left: 6px;
+      margin-right: 24px; }
+    .nex-switch-checked:after {
+      left: 100%;
+      margin-left: -19px; }
+  .nex-switch-disabled {
+    cursor: not-allowed;
+    background: #e4e8f1 !important;
+    border-color: #e4e8f1 !important; }
+    .nex-switch-disabled:after {
+      background: #fbfdff !important;
+      animation-name: none;
+      cursor: no-drop; }

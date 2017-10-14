@@ -29,6 +29,8 @@ import Ajax from './ajax/Ajax';
 
 import Pagination from './pagination/Pagination';
 
+import Switch from './switch/Switch';
+
 export {
 	Button,
 	ButtonGroup,
@@ -50,4 +52,5 @@ export {
 	//Tree,
 	Ajax,
 	Pagination,
+	Switch,
 }

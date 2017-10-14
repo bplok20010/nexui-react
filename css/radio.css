@@ -11,6 +11,7 @@
   .nex-radio-input:focus + .nex-radio-inner {
     border-color: #108ee9; }
   .nex-radio-inner {
+    transition: all .3s;
     position: relative;
     top: 0;
     left: 0;
@@ -24,6 +25,7 @@
     background-color: #ffffff;
     vertical-align: middle; }
     .nex-radio-inner:after {
+      transition: all .3s;
       position: absolute;
       left: 3px;
       top: 3px;
@@ -79,7 +81,8 @@
   .nex-radio-wrapper .nex-radio-label {
     padding-left: 5px;
     padding-right: 5px;
-    vertical-align: middle; }
+    vertical-align: middle;
+    transition: all .3s; }
 
 .nex-radio-wrapper:not(:last-child) {
   margin-right: 8px; }

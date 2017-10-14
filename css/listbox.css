@@ -1,6 +1,7 @@
 .nex-listbox {
   background: #FFF;
-  overflow: hidden; }
+  overflow: hidden;
+  box-sizing: border-box; }
   .nex-listbox:focus {
     outline: 0; }
   .nex-listbox .nex-listbox-body {

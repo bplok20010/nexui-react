@@ -315,6 +315,144 @@ var index = createCommonjsModule(function (module) {
   }
 });
 
+var index$1 = createCommonjsModule(function (module) {
+	/*!
+   Copyright (c) 2016 Jed Watson.
+   Licensed under the MIT License (MIT), see
+   http://jedwatson.github.io/classnames
+ */
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames() {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if ('object' !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (typeof undefined === 'function' && _typeof(undefined.amd) === 'object' && undefined.amd) {
+			// register as 'classnames', consistent with npm package name
+			undefined('classnames', [], function () {
+				return classNames;
+			});
+		} else {
+			window.classNames = classNames;
+		}
+	})();
+});
+
+var _class;
+var _temp;
+
+var Button = (_temp = _class = function (_PureComponent) {
+	inherits(Button, _PureComponent);
+
+	function Button() {
+		classCallCheck(this, Button);
+		return possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).apply(this, arguments));
+	}
+
+	createClass(Button, [{
+		key: 'handleClick',
+
+
+		// 处理点击事件
+		value: function handleClick(event) {
+			if (this.props.disabled || this.props.loading) return;
+
+			if (this.props.onClick) {
+				this.props.onClick(event);
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames,
+			    _this2 = this,
+			    _classNames2;
+
+			var _props = this.props,
+			    prefixCls = _props.prefixCls,
+			    htmlType = _props.htmlType,
+			    disabled = _props.disabled,
+			    iconCls = _props.iconCls,
+			    type = _props.type,
+			    size = _props.size,
+			    inline = _props.inline,
+			    className = _props.className;
+
+
+			var nodeProps = {};
+			if (disabled) {
+				nodeProps['disabled'] = true;
+			}
+
+			var Icon = iconCls ? React__default.createElement('span', { className: index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-icon', true), defineProperty(_classNames, iconCls, true), _classNames)) }) : null;
+
+			return React__default.createElement(
+				'button',
+				_extends({}, nodeProps, { type: htmlType, onClick: function onClick(e) {
+						return _this2.handleClick(e);
+					}, className: index$1((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-' + type, type), defineProperty(_classNames2, prefixCls + '-block', !inline), defineProperty(_classNames2, prefixCls + '-inline', inline), defineProperty(_classNames2, prefixCls + '-sm', size === 'small'), defineProperty(_classNames2, prefixCls + '-lg', size === 'large'), defineProperty(_classNames2, prefixCls + '-disabled', disabled), defineProperty(_classNames2, className, true), _classNames2)) }),
+				Icon,
+				this.props.children ? React__default.createElement(
+					'span',
+					{ className: 'nex-btn-text' },
+					this.props.children
+				) : null
+			);
+		}
+	}]);
+	return Button;
+}(React.PureComponent), _class.propTypes = {
+	type: index.string,
+	size: index.string,
+	htmlType: index.oneOf(['button', 'submit', 'reset']),
+	className: index.string,
+	block: index.bool,
+	disabled: index.bool,
+	loading: index.bool,
+	outline: index.bool,
+	bordered: index.bool,
+	iconCls: index.string,
+	prefixCls: index.string,
+	onClick: index.func
+}, _class.defaultProps = {
+	type: '',
+	size: '',
+	htmlType: 'button',
+	className: '',
+	iconCls: '',
+	disabled: false,
+	inline: true,
+	prefixCls: 'nex-btn'
+}, _temp);
+
 var ObjProto = Object.prototype;
 
 var toString = ObjProto.toString;
@@ -471,7 +609,7 @@ function uuid(n) {
 
 
 
-function classNames() {
+function classNames$1() {
     var classes = [];
 
     for (var i = 0; i < arguments.length; i++) {
@@ -483,7 +621,7 @@ function classNames() {
         if (argType === 'string' || argType === 'number') {
             classes.push(arg);
         } else if (isArray(arg)) {
-            classes.push(classNames.apply(null, arg));
+            classes.push(classNames$1.apply(null, arg));
         } else if (argType === 'object') {
             for (var key in arg) {
                 if (hasOwnProperty.call(arg, key) && arg[key]) {
@@ -523,93 +661,6 @@ if (typeof /./ != 'function' && (typeof Int8Array === 'undefined' ? 'undefined' 
 
 var isFunction = _util.isFunction;
 
-var _class;
-var _temp;
-
-var Button = (_temp = _class = function (_PureComponent) {
-	inherits(Button, _PureComponent);
-
-	function Button() {
-		classCallCheck(this, Button);
-		return possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).apply(this, arguments));
-	}
-
-	createClass(Button, [{
-		key: 'handleClick',
-
-
-		// 处理点击事件
-		value: function handleClick(event) {
-			if (this.props.disabled || this.props.loading) return;
-
-			if (this.props.onClick) {
-				this.props.onClick(event);
-			}
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _classNames,
-			    _this2 = this,
-			    _classNames2;
-
-			var _props = this.props,
-			    prefixCls = _props.prefixCls,
-			    htmlType = _props.htmlType,
-			    disabled = _props.disabled,
-			    iconCls = _props.iconCls,
-			    type = _props.type,
-			    size = _props.size,
-			    block = _props.block,
-			    className = _props.className;
-
-
-			var nodeProps = {};
-			if (disabled) {
-				nodeProps['disabled'] = true;
-			}
-
-			var Icon = iconCls ? React__default.createElement('span', { className: classNames((_classNames = {}, defineProperty(_classNames, prefixCls + '-icon', true), defineProperty(_classNames, iconCls, true), _classNames)) }) : null;
-
-			return React__default.createElement(
-				'button',
-				_extends({ type: htmlType, onClick: function onClick(e) {
-						return _this2.handleClick(e);
-					} }, nodeProps, { className: classNames((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-' + type, type), defineProperty(_classNames2, prefixCls + '-block', block), defineProperty(_classNames2, prefixCls + '-inline', !block), defineProperty(_classNames2, prefixCls + '-sm', size === 'small'), defineProperty(_classNames2, prefixCls + '-lg', size === 'large'), defineProperty(_classNames2, prefixCls + '-disabled', disabled), defineProperty(_classNames2, className, true), _classNames2)) }),
-				Icon,
-				this.props.children ? React__default.createElement(
-					'span',
-					{ className: 'nex-btn-text' },
-					this.props.children
-				) : null
-			);
-		}
-	}]);
-	return Button;
-}(React.PureComponent), _class.propTypes = {
-	type: index.string,
-	size: index.string,
-	htmlType: index.oneOf(['button', 'submit', 'reset']),
-	className: index.string,
-	block: index.bool,
-	disabled: index.bool,
-	loading: index.bool,
-	outline: index.bool,
-	bordered: index.bool,
-	iconCls: index.string,
-	prefixCls: index.string,
-	onClick: index.func
-}, _class.defaultProps = {
-	type: '',
-	size: '',
-	htmlType: 'button',
-	className: '',
-	iconCls: '',
-	disabled: false,
-	block: false,
-	prefixCls: 'nex-btn'
-}, _temp);
-
 var ButtonGroup = function ButtonGroup(props) {
   var _props$prefixCls = props.prefixCls,
       prefixCls = _props$prefixCls === undefined ? 'nex-btn-group' : _props$prefixCls,
@@ -632,7 +683,7 @@ var ButtonGroup = function ButtonGroup(props) {
       break;
   }
 
-  var classes = classNames(prefixCls, defineProperty({}, prefixCls + '-' + sizeCls, sizeCls), className);
+  var classes = classNames$1(prefixCls, defineProperty({}, prefixCls + '-' + sizeCls, sizeCls), className);
 
   return React__default.createElement('div', _extends({}, others, { className: classes }));
 };
@@ -1038,108 +1089,6 @@ function omit(obj, fields) {
   return shallowCopy;
 }
 
-var _class$2;
-var _temp2$1;
-
-var TextArea = (_temp2$1 = _class$2 = function (_PureComponent) {
-	inherits(TextArea, _PureComponent);
-
-	function TextArea() {
-		var _ref;
-
-		var _temp, _this, _ret;
-
-		classCallCheck(this, TextArea);
-
-		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-			args[_key] = arguments[_key];
-		}
-
-		return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = TextArea.__proto__ || Object.getPrototypeOf(TextArea)).call.apply(_ref, [this].concat(args))), _this), _this.textAreaRef = null, _this.handleKeyDown = function (e) {
-			var _this$props = _this.props,
-			    onPressEnter = _this$props.onPressEnter,
-			    onKeyDown = _this$props.onKeyDown;
-
-			if (e.keyCode === 13 && onPressEnter) {
-				onPressEnter(e);
-			}
-			if (onKeyDown) {
-				onKeyDown(e);
-			}
-		}, _this.handleChange = function (e) {
-			var onChange = _this.props.onChange;
-
-
-			if (onChange) {
-				onChange(e.target.value);
-			}
-		}, _this.saveTextAreaRef = function (textArea) {
-			_this.textAreaRef = textArea;
-		}, _temp), possibleConstructorReturn(_this, _ret);
-	}
-
-	createClass(TextArea, [{
-		key: 'focus',
-		value: function focus() {
-			this.textAreaRef.focus();
-		}
-	}, {
-		key: 'blur',
-		value: function blur() {
-			this.textAreaRef.blur();
-		}
-	}, {
-		key: 'getTextAreaClassName',
-		value: function getTextAreaClassName() {
-			var _classNames;
-
-			var _props = this.props,
-			    prefixCls = _props.prefixCls,
-			    disabled = _props.disabled,
-			    autosize = _props.autosize;
-
-			return classNames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-disabled', disabled), defineProperty(_classNames, prefixCls + '-autosize', autosize), _classNames));
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _classNames2;
-
-			var props = this.props;
-			var otherProps = omit(props, ['prefixCls', 'block', 'addonBeforeCls', 'addonAfterCls', 'onPressEnter', 'autosize', 'width', 'height']);
-
-			var classname = classNames(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', !props.block), defineProperty(_classNames2, props.className, props.className), _classNames2));
-
-			var style = {};
-			if ('width' in props) {
-				style.width = props.width;
-			}
-			if ('height' in props) {
-				otherProps.style = otherProps.style || {};
-				otherProps.style.height = props.height;
-			}
-
-			if ('value' in otherProps) {
-				otherProps.value = otherProps.value || '';
-				delete otherProps.defaultValue;
-			}
-			return React__default.createElement(
-				'div',
-				{ className: classname, style: style },
-				React__default.createElement('textarea', _extends({}, otherProps, {
-					onChange: this.handleChange,
-					className: classNames(this.getTextAreaClassName()),
-					onKeyDown: this.handleKeyDown,
-					ref: this.saveTextAreaRef
-				}))
-			);
-		}
-	}]);
-	return TextArea;
-}(React.PureComponent), _class$2.defaultProps = {
-	prefixCls: 'nex-input'
-}, _temp2$1);
-
 var _class$1;
 var _temp2;
 
@@ -1149,6 +1098,25 @@ function fixControlledValue(value) {
 	}
 	return value;
 }
+
+var propTypes = {
+	size: index.oneOf(['small', 'default', 'large']),
+	addonBefore: index.any,
+	addonBeforeCls: index.string,
+	addonBeforeStyle: index.object,
+	addonAfter: index.any,
+	addonAfterCls: index.string,
+	addonAfterStyle: index.object,
+	type: index.string, //text textarea hidden
+	inline: index.bool,
+	prefixCls: index.string,
+	onPressEnter: index.func,
+	onKeyDown: index.func,
+	onChange: index.func,
+	autoFocus: index.bool,
+	inputCls: index.string,
+	inputStyle: index.object
+};
 
 var Input = (_temp2 = _class$1 = function (_PureComponent) {
 	inherits(Input, _PureComponent);
@@ -1212,50 +1180,48 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			    size = _props.size,
 			    disabled = _props.disabled;
 
-			return classNames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-sm', size === 'small'), defineProperty(_classNames, prefixCls + '-lg', size === 'large'), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+			return index$1(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-sm', size === 'small'), defineProperty(_classNames, prefixCls + '-lg', size === 'large'), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 		}
 	}, {
 		key: 'renderInput',
 		value: function renderInput() {
-			var _classNames2;
+			var _classNames2, _classNames3, _classNames4;
 
 			var props = this.props;
-			var _props2 = this.props,
-			    value = _props2.value,
-			    className = _props2.className,
-			    _props2$style = _props2.style,
-			    style = _props2$style === undefined ? {} : _props2$style;
-			// Fix https://fb.me/react-unknown-prop
+			var className = props.className,
+			    inputStyle = props.inputStyle,
+			    type = props.type,
+			    addonBeforeCls = props.addonBeforeCls,
+			    addonAfterCls = props.addonAfterCls,
+			    addonBeforeStyle = props.addonBeforeStyle,
+			    addonAfterStyle = props.addonAfterStyle,
+			    _props$style = props.style,
+			    style = _props$style === undefined ? {} : _props$style,
+			    others = objectWithoutProperties(props, ['className', 'inputStyle', 'type', 'addonBeforeCls', 'addonAfterCls', 'addonBeforeStyle', 'addonAfterStyle', 'style']);
 
-			var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'onChange', 'addonBefore', 'addonBeforeCls', 'addonBeforeStyle', 'addonAfter', 'addonAfterCls', 'addonAfterStyle', 'autoFocus', 'style', 'size', 'block', 'width']);
+			var otherProps = omit(others, Object.keys(propTypes));
 
-			if ('width' in props) {
-				style.width = props.width;
-			}
 			if (props.type === 'hidden') {
 				style.display = 'none';
 			}
 
 			if ('value' in props) {
-				otherProps.value = fixControlledValue(value);
-				// Input elements must be either controlled or uncontrolled,
-				// specify either the value prop, or the defaultValue prop, but not both.
+				otherProps.value = fixControlledValue(props.value);
+
 				delete otherProps.defaultValue;
 			}
 
-			var classname = classNames(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', !props.block), defineProperty(_classNames2, className, className), _classNames2));
+			var classname = index$1(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', props.inline), defineProperty(_classNames2, className, className), _classNames2));
 
-			var addonBeforeCls = props.prefixCls + '-addon ' + props.prefixCls + '-addon-before';
 			var addonBefore = props.addonBefore ? React__default.createElement(
 				'span',
-				{ className: addonBeforeCls },
+				{ className: index$1((_classNames3 = {}, defineProperty(_classNames3, props.prefixCls + '-addon ' + props.prefixCls + '-addon-before', true), defineProperty(_classNames3, addonBeforeCls, addonBeforeCls), _classNames3)), style: addonBeforeStyle },
 				props.addonBefore
 			) : null;
 
-			var addonAfterCls = props.prefixCls + '-addon ' + props.prefixCls + '-addon-after';
 			var addonAfter = props.addonAfter ? React__default.createElement(
 				'span',
-				{ className: addonAfterCls },
+				{ className: index$1((_classNames4 = {}, defineProperty(_classNames4, props.prefixCls + '-addon ' + props.prefixCls + '-addon-after', true), defineProperty(_classNames4, addonAfterCls, addonAfterCls), _classNames4)), style: addonAfterStyle },
 				props.addonAfter
 			) : null;
 
@@ -1268,8 +1234,10 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 					{ className: props.prefixCls + '-inner' },
 					React__default.createElement('input', _extends({}, otherProps, {
 						ref: 'input',
+						type: type,
+						style: inputStyle,
 						onChange: this.handleChange,
-						className: classNames(this.getInputClassName()),
+						className: index$1(this.getInputClassName()),
 						onKeyDown: this.handleKeyDown
 					}))
 				),
@@ -1277,22 +1245,73 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			);
 		}
 	}, {
+		key: 'getTextareaClassName',
+		value: function getTextareaClassName() {
+			var _classNames5;
+
+			var _props2 = this.props,
+			    prefixCls = _props2.prefixCls,
+			    disabled = _props2.disabled,
+			    inputCls = _props2.inputCls;
+
+			return index$1(prefixCls, (_classNames5 = {}, defineProperty(_classNames5, prefixCls + '-disabled', disabled), defineProperty(_classNames5, inputCls, inputCls), _classNames5));
+		}
+	}, {
+		key: 'renderTextarea',
+		value: function renderTextarea() {
+			var _classNames6;
+
+			var _props3 = this.props,
+			    prefixCls = _props3.prefixCls,
+			    className = _props3.className,
+			    inline = _props3.inline,
+			    inputStyle = _props3.inputStyle,
+			    style = _props3.style,
+			    others = objectWithoutProperties(_props3, ['prefixCls', 'className', 'inline', 'inputStyle', 'style']);
+
+			var otherProps = omit(others, Object.keys(propTypes));
+
+			if ('value' in this.props) {
+				otherProps.value = fixControlledValue(this.props.value);
+
+				delete otherProps.defaultValue;
+			}
+
+			var classname = index$1(prefixCls + '-wrapper', (_classNames6 = {}, defineProperty(_classNames6, prefixCls + '-wrapper-inline', inline), defineProperty(_classNames6, className, className), _classNames6));
+
+			var height = style.height;
+
+
+			return React__default.createElement(
+				'div',
+				{ className: classname, style: style },
+				React__default.createElement('textarea', _extends({}, otherProps, {
+					ref: 'input',
+					style: _extends({
+						height: height
+					}, inputStyle),
+					className: index$1(this.getTextareaClassName()),
+					onChange: this.handleChange,
+					onKeyDown: this.handleKeyDown
+				}))
+			);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			if (this.props.type === 'textarea') {
-				return React__default.createElement(TextArea, _extends({}, this.props, { ref: 'input' }));
+				return this.renderTextarea();
 			}
 			return this.renderInput();
 		}
 	}]);
 	return Input;
-}(React.PureComponent), _class$1.defaultProps = {
+}(React.PureComponent), _class$1.propTypes = propTypes, _class$1.defaultProps = {
 	disabled: false,
 	autoComplete: 'off',
-	addonBeforeCls: '',
-	addonAfterCls: '',
 	type: 'text',
-	block: false,
+	inline: true,
+	size: 'default',
 	prefixCls: 'nex-input'
 }, _temp2);
 
@@ -1304,7 +1323,7 @@ var InputGroup = function InputGroup(props) {
 	    _props$className = props.className,
 	    className = _props$className === undefined ? '' : _props$className;
 
-	var cls = classNames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), _classNames), className);
+	var cls = classNames$1(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), _classNames), className);
 	return React__default.createElement(
 		'div',
 		{ className: cls, style: props.style },
@@ -1312,62 +1331,11 @@ var InputGroup = function InputGroup(props) {
 	);
 };
 
-var index$1 = createCommonjsModule(function (module) {
-	/*!
-   Copyright (c) 2016 Jed Watson.
-   Licensed under the MIT License (MIT), see
-   http://jedwatson.github.io/classnames
- */
-	/* global define */
-
-	(function () {
-		'use strict';
-
-		var hasOwn = {}.hasOwnProperty;
-
-		function classNames() {
-			var classes = [];
-
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-
-				var argType = typeof arg === 'undefined' ? 'undefined' : _typeof(arg);
-
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-
-			return classes.join(' ');
-		}
-
-		if ('object' !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (typeof undefined === 'function' && _typeof(undefined.amd) === 'object' && undefined.amd) {
-			// register as 'classnames', consistent with npm package name
-			undefined('classnames', [], function () {
-				return classNames;
-			});
-		} else {
-			window.classNames = classNames;
-		}
-	})();
-});
-
-var _class$3;
+var _class$2;
 var _temp$1;
 var _initialiseProps;
 
-var Checkbox = (_temp$1 = _class$3 = function (_PureComponent) {
+var Checkbox = (_temp$1 = _class$2 = function (_PureComponent) {
 	inherits(Checkbox, _PureComponent);
 
 	function Checkbox(props) {
@@ -1447,7 +1415,7 @@ var Checkbox = (_temp$1 = _class$3 = function (_PureComponent) {
 		}
 	}]);
 	return Checkbox;
-}(React.PureComponent), _class$3.propTypes = {
+}(React.PureComponent), _class$2.propTypes = {
 	prefixCls: index.string,
 	className: index.string,
 	style: index.object,
@@ -1462,7 +1430,7 @@ var Checkbox = (_temp$1 = _class$3 = function (_PureComponent) {
 	onClick: index.func,
 	tabIndex: index.string,
 	readOnly: index.bool
-}, _class$3.defaultProps = {
+}, _class$2.defaultProps = {
 	prefixCls: 'nex-checkbox',
 	className: '',
 	style: {},
@@ -1546,10 +1514,10 @@ var index$2 = function shallowEqual(objA, objB, compare, compareContext) {
     return true;
 };
 
-var _class$4;
+var _class$3;
 var _temp$2;
 
-var Checkbox$1 = (_temp$2 = _class$4 = function (_Component) {
+var Checkbox$1 = (_temp$2 = _class$3 = function (_Component) {
 	inherits(Checkbox$$1, _Component);
 
 	function Checkbox$$1() {
@@ -1609,22 +1577,22 @@ var Checkbox$1 = (_temp$2 = _class$4 = function (_Component) {
 		}
 	}]);
 	return Checkbox$$1;
-}(React.Component), _class$4.propTypes = {
+}(React.Component), _class$3.propTypes = {
 	className: index.string,
 	style: index.object,
 	prefixCls: index.string
-}, _class$4.defaultProps = {
+}, _class$3.defaultProps = {
 	prefixCls: 'nex-checkbox',
 	className: '',
 	style: {}
-}, _class$4.contextTypes = {
+}, _class$3.contextTypes = {
 	checkboxGroup: index.any
 }, _temp$2);
 
-var _class$5;
+var _class$4;
 var _temp$3;
 
-var CheckboxGroup = (_temp$3 = _class$5 = function (_React$Component) {
+var CheckboxGroup = (_temp$3 = _class$4 = function (_React$Component) {
 	inherits(CheckboxGroup, _React$Component);
 
 	function CheckboxGroup(props) {
@@ -1735,22 +1703,22 @@ var CheckboxGroup = (_temp$3 = _class$5 = function (_React$Component) {
 		}
 	}]);
 	return CheckboxGroup;
-}(React__default.Component), _class$5.defaultProps = {
+}(React__default.Component), _class$4.defaultProps = {
 	options: [],
 	prefixCls: 'nex-checkbox-group'
-}, _class$5.propTypes = {
+}, _class$4.propTypes = {
 	defaultValue: index.array,
 	value: index.array,
 	options: index.array.isRequired,
 	onChange: index.func
-}, _class$5.childContextTypes = {
+}, _class$4.childContextTypes = {
 	checkboxGroup: index.any
 }, _temp$3);
 
-var _class$6;
+var _class$5;
 var _temp$4;
 
-var Radio = (_temp$4 = _class$6 = function (_React$Component) {
+var Radio = (_temp$4 = _class$5 = function (_React$Component) {
 	inherits(Radio, _React$Component);
 
 	function Radio() {
@@ -1765,15 +1733,15 @@ var Radio = (_temp$4 = _class$6 = function (_React$Component) {
 		}
 	}]);
 	return Radio;
-}(React__default.Component), _class$6.defaultProps = {
+}(React__default.Component), _class$5.defaultProps = {
 	prefixCls: 'nex-radio',
 	type: 'radio'
 }, _temp$4);
 
-var _class$7;
+var _class$6;
 var _temp$5;
 
-var Radio$1 = (_temp$5 = _class$7 = function (_Component) {
+var Radio$1 = (_temp$5 = _class$6 = function (_Component) {
 	inherits(Radio$$1, _Component);
 
 	function Radio$$1() {
@@ -1833,22 +1801,22 @@ var Radio$1 = (_temp$5 = _class$7 = function (_Component) {
 		}
 	}]);
 	return Radio$$1;
-}(React.Component), _class$7.propTypes = {
+}(React.Component), _class$6.propTypes = {
 	className: index.string,
 	style: index.object,
 	prefixCls: index.string
-}, _class$7.defaultProps = {
+}, _class$6.defaultProps = {
 	prefixCls: 'nex-radio',
 	className: '',
 	style: {}
-}, _class$7.contextTypes = {
+}, _class$6.contextTypes = {
 	radioGroup: index.any
 }, _temp$5);
 
-var _class$8;
+var _class$7;
 var _temp$6;
 
-var RadioGroup = (_temp$6 = _class$8 = function (_React$Component) {
+var RadioGroup = (_temp$6 = _class$7 = function (_React$Component) {
 	inherits(RadioGroup, _React$Component);
 
 	function RadioGroup(props) {
@@ -1956,22 +1924,22 @@ var RadioGroup = (_temp$6 = _class$8 = function (_React$Component) {
 		}
 	}]);
 	return RadioGroup;
-}(React__default.Component), _class$8.defaultProps = {
+}(React__default.Component), _class$7.defaultProps = {
 	options: [],
 	prefixCls: 'nex-radio-group'
-}, _class$8.propTypes = {
+}, _class$7.propTypes = {
 	defaultValue: index.any,
 	value: index.any,
 	options: index.array.isRequired,
 	onChange: index.func
-}, _class$8.childContextTypes = {
+}, _class$7.childContextTypes = {
 	radioGroup: index.any
 }, _temp$6);
 
-var _class$9;
+var _class$8;
 var _temp$7;
 
-var Row = (_temp$7 = _class$9 = function (_React$Component) {
+var Row = (_temp$7 = _class$8 = function (_React$Component) {
 	inherits(Row, _React$Component);
 
 	function Row() {
@@ -2021,21 +1989,21 @@ var Row = (_temp$7 = _class$9 = function (_React$Component) {
 		}
 	}]);
 	return Row;
-}(React__default.Component), _class$9.propTypes = {
+}(React__default.Component), _class$8.propTypes = {
 	className: index.string,
 	children: index.node,
 	gutter: index.number,
 	prefixCls: index.string
-}, _class$9.defaultProps = {
+}, _class$8.defaultProps = {
 	gutter: 0
 }, _temp$7);
 
-var _class$10;
+var _class$9;
 var _temp$8;
 
 var stringOrNumber = index.oneOfType([index.string, index.number]);
 
-var Col = (_temp$8 = _class$10 = function (_React$Component) {
+var Col = (_temp$8 = _class$9 = function (_React$Component) {
 	inherits(Col, _React$Component);
 
 	function Col() {
@@ -2068,7 +2036,7 @@ var Col = (_temp$8 = _class$10 = function (_React$Component) {
 		}
 	}]);
 	return Col;
-}(React__default.Component), _class$10.propTypes = {
+}(React__default.Component), _class$9.propTypes = {
 	span: stringOrNumber,
 	offset: stringOrNumber,
 	className: index.string,
@@ -2094,10 +2062,10 @@ function removeContainer(elm) {
 	}
 }
 
-var _class$11;
+var _class$10;
 var _temp$9;
 
-var Portal = (_temp$9 = _class$11 = function (_React$Component) {
+var Portal = (_temp$9 = _class$10 = function (_React$Component) {
 	inherits(Portal, _React$Component);
 
 	function Portal() {
@@ -2182,7 +2150,7 @@ var Portal = (_temp$9 = _class$11 = function (_React$Component) {
 		}
 	}]);
 	return Portal;
-}(React__default.Component), _class$11.propTypes = {
+}(React__default.Component), _class$10.propTypes = {
 	children: index.node.isRequired,
 	container: index.node,
 	renderTo: index.oneOfType([index.string, index.object, index.func]).isRequired,
@@ -2190,7 +2158,7 @@ var Portal = (_temp$9 = _class$11 = function (_React$Component) {
 		appear: index.func,
 		leave: index.func
 	})
-}, _class$11.defaultProps = {
+}, _class$10.defaultProps = {
 	renderTo: 'body',
 	className: '',
 	container: null,
@@ -2293,11 +2261,11 @@ var position = function (target, source, config) {
 	}));
 };
 
-var _class$12;
+var _class$11;
 var _temp$10;
 
 //import $ from 'jquery';
-var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
+var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	inherits(Popup, _React$Component);
 
 	function Popup(props) {
@@ -2491,10 +2459,10 @@ var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
 			var _props2 = this.props,
 			    prefixCls = _props2.prefixCls,
 			    mask = _props2.mask,
-			    maskCks = _props2.maskCks;
+			    maskCls = _props2.maskCls;
 
 
-			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, maskCks, maskCks), _classNames));
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, maskCls, maskCls), _classNames));
 
 			return React__default.createElement('div', { ref: 'mask', className: classes, onClick: this.handleMaskClick });
 		}
@@ -2529,7 +2497,7 @@ var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
 				PortalConf.container = container;
 			}
 
-			var others = omit(_others, ['prefixCls', 'className', 'visible', 'fixed', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask', 'destroyOnClose', 'popupAnimate', 'maskAnimate', 'disabledSetPosition']);
+			var others = omit(_others, ['prefixCls', 'className', 'visible', 'fixed', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask', 'maskCls', 'destroyOnClose', 'popupAnimate', 'maskAnimate', 'disabledSetPosition']);
 
 			var popup = React__default.createElement(
 				'div',
@@ -2562,7 +2530,7 @@ var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
 		}
 	}]);
 	return Popup;
-}(React__default.Component), _class$12.propTypes = {
+}(React__default.Component), _class$11.propTypes = {
 	prefixCls: index.string,
 	rootCls: index.string,
 	className: index.oneOfType([index.string, index.object]),
@@ -2579,7 +2547,7 @@ var Popup$1 = (_temp$10 = _class$12 = function (_React$Component) {
 		appear: index.func,
 		leave: index.func
 	})
-}, _class$12.defaultProps = {
+}, _class$11.defaultProps = {
 	prefixCls: 'nex-popup',
 	rootCls: '',
 	mask: false,
@@ -2682,19 +2650,19 @@ var create = function (opt) {
 
 Popup$1.create = create;
 
-var _class$13;
+var _class$12;
 var _temp$11;
 
-var Option = (_temp$11 = _class$13 = function Option() {
+var Option = (_temp$11 = _class$12 = function Option() {
 	classCallCheck(this, Option);
-}, _class$13.isOption = true, _temp$11);
+}, _class$12.isOption = true, _temp$11);
 
-var _class$14;
+var _class$13;
 var _temp$12;
 
-var Option$1 = (_temp$12 = _class$14 = function Option() {
+var Option$1 = (_temp$12 = _class$13 = function Option() {
 	classCallCheck(this, Option);
-}, _class$14.isOptOption = true, _temp$12);
+}, _class$13.isOptOption = true, _temp$12);
 
 function on(el, type, eventHandle) {
 	el.addEventListener(type, eventHandle);
@@ -2791,10 +2759,10 @@ function isVisible(el) {
 	return true;
 }
 
-var _class$18;
+var _class$17;
 var _temp$16;
 
-var ScrollViewBody = (_temp$16 = _class$18 = function (_React$Component) {
+var ScrollViewBody = (_temp$16 = _class$17 = function (_React$Component) {
 	inherits(ScrollViewBody, _React$Component);
 
 	function ScrollViewBody() {
@@ -2824,20 +2792,20 @@ var ScrollViewBody = (_temp$16 = _class$18 = function (_React$Component) {
 		}
 	}]);
 	return ScrollViewBody;
-}(React__default.Component), _class$18.propTypes = {
+}(React__default.Component), _class$17.propTypes = {
 	className: index.string,
 	shouldComponentUpdate: index.bool,
 	component: index.oneOfType([index.string, index.func])
-}, _class$18.defaultProps = {
+}, _class$17.defaultProps = {
 	className: '',
 	shouldComponentUpdate: true,
 	component: 'div'
 }, _temp$16);
 
-var _class$17;
+var _class$16;
 var _temp$15;
 
-var ScrollView = (_temp$15 = _class$17 = function (_React$Component) {
+var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 	inherits(ScrollView, _React$Component);
 
 	function ScrollView(props) {
@@ -3449,7 +3417,7 @@ var ScrollView = (_temp$15 = _class$17 = function (_React$Component) {
 		}
 	}]);
 	return ScrollView;
-}(React__default.Component), _class$17.propTypes = {
+}(React__default.Component), _class$16.propTypes = {
 	prefixCls: index.string,
 	className: index.oneOfType([index.string, index.object]),
 	scrollViewBodyCls: index.string,
@@ -3474,7 +3442,7 @@ var ScrollView = (_temp$15 = _class$17 = function (_React$Component) {
 	onVScrollEnd: index.func,
 	onHScrollStart: index.func,
 	onVScrollStart: index.func
-}, _class$17.defaultProps = {
+}, _class$16.defaultProps = {
 	prefixCls: 'nex-scroll',
 	className: '',
 	scrollViewBodyCls: '',
@@ -3498,14 +3466,14 @@ var ScrollView = (_temp$15 = _class$17 = function (_React$Component) {
 	onVScrollEnd: null,
 	onHScrollStart: null,
 	onVScrollStart: null
-}, _class$17.childContextTypes = {
+}, _class$16.childContextTypes = {
 	ScrollView: index.object
 }, _temp$15);
 
-var _class$19;
-var _temp2$2;
+var _class$18;
+var _temp2$1;
 
-var ListItem$1 = (_temp2$2 = _class$19 = function (_React$Component) {
+var ListItem$1 = (_temp2$1 = _class$18 = function (_React$Component) {
 	inherits(ListItem, _React$Component);
 
 	function ListItem() {
@@ -3531,14 +3499,14 @@ var ListItem$1 = (_temp2$2 = _class$19 = function (_React$Component) {
 
 			if (disabled) return;
 
-			if (onClick) {
-				onClick(e);
-			}
-
 			var item = {
 				value: value,
 				text: children
 			};
+
+			if (onClick) {
+				onClick(item, e);
+			}
 
 			if (!selected) {
 				onSelect && onSelect(item, _this.refs.item);
@@ -3575,17 +3543,17 @@ var ListItem$1 = (_temp2$2 = _class$19 = function (_React$Component) {
 		}
 	}]);
 	return ListItem;
-}(React__default.Component), _class$19.defaultProps = {
+}(React__default.Component), _class$18.defaultProps = {
 	prefixCls: 'nex-listbox-item',
 	value: '',
 	selected: false,
 	disabled: false
-}, _class$19.isListItem = true, _temp2$2);
+}, _class$18.isListItem = true, _temp2$1);
 
-var _class$20;
+var _class$19;
 var _temp$17;
 
-var ItemGroup = (_temp$17 = _class$20 = function (_React$Component) {
+var ItemGroup = (_temp$17 = _class$19 = function (_React$Component) {
 	inherits(ItemGroup, _React$Component);
 
 	function ItemGroup() {
@@ -3618,12 +3586,12 @@ var ItemGroup = (_temp$17 = _class$20 = function (_React$Component) {
 		}
 	}]);
 	return ItemGroup;
-}(React__default.Component), _class$20.defaultProps = {
+}(React__default.Component), _class$19.defaultProps = {
 	prefixCls: 'nex-listbox-item-group',
 	label: ''
-}, _class$20.isListItemGroup = true, _temp$17);
+}, _class$19.isListItemGroup = true, _temp$17);
 
-var _class$16;
+var _class$15;
 var _temp$14;
 var _initialiseProps$2;
 
@@ -3631,7 +3599,7 @@ function copy(data) {
 	return isArray(data) ? [].concat(data) : data;
 }
 
-var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
+var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 	inherits(ListBox, _React$Component);
 
 	function ListBox(props) {
@@ -3835,7 +3803,7 @@ var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
 		}
 	}]);
 	return ListBox;
-}(React__default.Component), _class$16.propTypes = {
+}(React__default.Component), _class$15.propTypes = {
 	className: index.string,
 	style: index.object,
 	scrollViewBodyStyle: index.object,
@@ -3848,8 +3816,10 @@ var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
 	multiple: index.bool,
 	width: index.oneOfType([index.string, index.number]),
 	height: index.oneOfType([index.string, index.number]),
-	labelInValue: index.bool
-}, _class$16.defaultProps = {
+	labelInValue: index.bool,
+	onItemClick: index.func,
+	onChange: index.func
+}, _class$15.defaultProps = {
 	prefixCls: 'nex-listbox',
 	valueField: 'value',
 	textField: 'text',
@@ -3859,8 +3829,12 @@ var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
 }, _initialiseProps$2 = function _initialiseProps() {
 	var _this4 = this;
 
-	this.onItemClick = function (e) {
+	this.onItemClick = function (item, e) {
+		var onItemClick = _this4.props.onItemClick;
+
 		_this4.refs.listbox.scrollIntoView(e.target);
+
+		if (onItemClick) onItemClick(item);
 	};
 
 	this.onItemSelect = function (item, el) {
@@ -3920,13 +3894,13 @@ var ListBox$1 = (_temp$14 = _class$16 = function (_React$Component) {
 ListBox$1.ListItemGroup = ItemGroup;
 ListBox$1.ListItem = ListItem$1;
 
-var _class$15;
+var _class$14;
 var _temp$13;
 var _initialiseProps$1;
 
 var ListItem = ListBox$1.ListItem;
 var ListItemGroup = ListBox$1.ListItemGroup;
-var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
+var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 	inherits(Select, _React$Component);
 
 	function Select(props) {
@@ -4085,7 +4059,7 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 				value: value,
 				items: options,
 				children: this.renderSelectChild(children),
-				onChange: this.handleListBoxChange
+				onItemClick: this.handleListItemClick
 			});
 		}
 	}, {
@@ -4148,7 +4122,7 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 			var showDropdown = this.state.showDropdown;
 			var prefixCls = props.prefixCls,
 			    tabIndex = props.tabIndex,
-			    block = props.block,
+			    inline = props.inline,
 			    disabled = props.disabled,
 			    readOnly = props.readOnly,
 			    arrowCls = props.arrowCls,
@@ -4156,9 +4130,9 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 			    options = props.options,
 			    dropdownCls = props.dropdownCls,
 			    dropdownDestroyOnClose = props.dropdownDestroyOnClose,
-			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'block', 'disabled', 'readOnly', 'arrowCls', 'children', 'options', 'dropdownCls', 'dropdownDestroyOnClose']);
+			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'inline', 'disabled', 'readOnly', 'arrowCls', 'children', 'options', 'dropdownCls', 'dropdownDestroyOnClose']);
 
-			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', !block), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', inline), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
 			var otherProps = omit(others, ['value', 'valueField', 'dropdownCls', 'dropdownStyle', 'dropdownDestroyOnClose', 'textField', 'optionsField', 'textInValue']);
 
@@ -4190,7 +4164,7 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 		}
 	}]);
 	return Select;
-}(React__default.Component), _class$15.propTypes = {
+}(React__default.Component), _class$14.propTypes = {
 	className: index.string,
 	style: index.object,
 	prefixCls: index.string,
@@ -4199,10 +4173,10 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 	dropdownDestroyOnClose: index.bool,
 	dropdownStyle: index.object,
 	textInValue: index.bool
-}, _class$15.defaultProps = {
+}, _class$14.defaultProps = {
 	disabled: false,
 	readOnly: false,
-	block: false,
+	inline: true,
 	options: [],
 	tabIndex: 0,
 	prefixCls: 'nex-select',
@@ -4222,8 +4196,17 @@ var Select$1 = (_temp$13 = _class$15 = function (_React$Component) {
 		_this4.refs.dropdown = el ? ReactDOM.findDOMNode(el) : null;
 	};
 
-	this.handleListBoxChange = function (value) {
+	this.handleListItemClick = function (_ref) {
+		var value = _ref.value;
+
 		var props = _this4.props;
+		var state = _this4.state;
+
+		if (state.value + '' === value + '') {
+			_this4.hideDropdown();
+			return;
+		}
+
 		if (!('value' in props)) {
 			_this4.setState({
 				value: value
@@ -4491,10 +4474,10 @@ var Ajax = function () {
 	return Ajax;
 }();
 
-var _class$21;
+var _class$20;
 var _temp$18;
 
-var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
+var Pagination = (_temp$18 = _class$20 = function (_React$Component) {
 	inherits(Pagination, _React$Component);
 
 	function Pagination(props) {
@@ -4859,7 +4842,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 		}
 	}]);
 	return Pagination;
-}(React__default.Component), _class$21.propTypes = {
+}(React__default.Component), _class$20.propTypes = {
 	className: index.string,
 	prefixCls: index.string,
 	small: index.bool,
@@ -4884,7 +4867,7 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 	jumperRender: index.func,
 	showPrevMore: index.bool,
 	showNextMore: index.bool
-}, _class$21.defaultProps = {
+}, _class$20.defaultProps = {
 	prefixCls: 'nex-pagination',
 	small: false,
 	total: 0,
@@ -4910,6 +4893,171 @@ var Pagination = (_temp$18 = _class$21 = function (_React$Component) {
 	showNextMore: true
 }, _temp$18);
 
+var _class$21;
+var _temp$19;
+var _initialiseProps$3;
+
+function noop$2() {}
+
+var Switch = (_temp$19 = _class$21 = function (_Component) {
+	inherits(Switch, _Component);
+
+	function Switch(props) {
+		classCallCheck(this, Switch);
+
+		var _this = possibleConstructorReturn(this, (Switch.__proto__ || Object.getPrototypeOf(Switch)).call(this, props));
+
+		_initialiseProps$3.call(_this);
+
+		var checked = false;
+		if ('checked' in props) {
+			checked = !!props.checked;
+		} else {
+			checked = !!props.defaultChecked;
+		}
+		_this.state = { checked: checked };
+		return _this;
+	}
+
+	createClass(Switch, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(nextProps) {
+			if ('checked' in nextProps) {
+				this.setState({
+					checked: !!nextProps.checked
+				});
+			}
+		}
+	}, {
+		key: 'setChecked',
+		value: function setChecked(checked) {
+			if (this.props.disabled) {
+				return;
+			}
+			if (!('checked' in this.props)) {
+				this.setState({
+					checked: checked
+				});
+			}
+			this.props.onChange(checked);
+		}
+
+		// Handle auto focus when click switch in Chrome
+
+	}, {
+		key: 'render',
+		value: function render() {
+			var _classNames;
+
+			var _props = this.props,
+			    className = _props.className,
+			    prefixCls = _props.prefixCls,
+			    disabled = _props.disabled,
+			    size = _props.size,
+			    checkedText = _props.checkedText,
+			    tabIndex = _props.tabIndex,
+			    unCheckedText = _props.unCheckedText,
+			    checkedColor = _props.checkedColor,
+			    unCheckedColor = _props.unCheckedColor,
+			    _props$style = _props.style,
+			    style = _props$style === undefined ? {} : _props$style,
+			    restProps = objectWithoutProperties(_props, ['className', 'prefixCls', 'disabled', 'size', 'checkedText', 'tabIndex', 'unCheckedText', 'checkedColor', 'unCheckedColor', 'style']);
+
+			var checked = this.state.checked;
+			var switchTabIndex = disabled ? -1 : tabIndex || 0;
+			var switchClassName = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-small', size === 'small'), defineProperty(_classNames, prefixCls + '-checked', checked), defineProperty(_classNames, prefixCls + '-disabled', disabled), defineProperty(_classNames, className, !!className), _classNames));
+
+			if (checked && !!checkedColor) {
+				style.borderColor = checkedColor;
+				style.backgroundColor = checkedColor;
+			}
+
+			if (!checked && !!unCheckedColor) {
+				style.borderColor = unCheckedColor;
+				style.backgroundColor = unCheckedColor;
+			}
+
+			return React__default.createElement(
+				'span',
+				_extends({}, restProps, {
+					style: style,
+					className: switchClassName,
+					tabIndex: switchTabIndex,
+					ref: this.saveNode,
+					onKeyDown: this.handleKeyDown,
+					onClick: this.toggle,
+					onMouseUp: this.handleMouseUp
+				}),
+				React__default.createElement(
+					'span',
+					{ className: prefixCls + '-inner' },
+					checked ? checkedText : unCheckedText
+				)
+			);
+		}
+	}]);
+	return Switch;
+}(React.Component), _class$21.propTypes = {
+	className: index.string,
+	size: index.oneOf(['small', 'default', 'large']),
+	prefixCls: index.string,
+	disabled: index.bool,
+	checkedText: index.any,
+	unCheckedText: index.any,
+	onChange: index.func,
+	onMouseUp: index.func,
+	onClick: index.func,
+	tabIndex: index.number,
+	checked: index.bool,
+	defaultChecked: index.bool,
+	checkedColor: index.string,
+	unCheckedColor: index.string
+}, _class$21.defaultProps = {
+	prefixCls: 'nex-switch',
+	checkedText: null,
+	unCheckedText: null,
+	className: '',
+	defaultChecked: false,
+	onChange: noop$2,
+	onClick: noop$2
+}, _initialiseProps$3 = function _initialiseProps() {
+	var _this2 = this;
+
+	this.toggle = function () {
+		var onClick = _this2.props.onClick;
+
+		var checked = !_this2.state.checked;
+		_this2.setChecked(checked);
+		onClick(checked);
+	};
+
+	this.handleKeyDown = function (e) {
+		if (e.keyCode === 37) {
+			// Left
+			_this2.setChecked(false);
+		} else if (e.keyCode === 39) {
+			// Right
+			_this2.setChecked(true);
+		} else if (e.keyCode === 32 || e.keyCode === 13) {
+			// Space, Enter
+			_this2.toggle();
+		}
+	};
+
+	this.handleMouseUp = function (e) {
+		if (_this2.node) {
+			_this2.node.blur();
+		}
+		if (_this2.props.onMouseUp) {
+			_this2.props.onMouseUp(e);
+		}
+	};
+
+	this.saveNode = function (node) {
+		_this2.node = node;
+	};
+}, _temp$19);
+
 //import Tree from './tree/Tree';
 
 exports.Button = Button;
@@ -4931,6 +5079,7 @@ exports.ListBox = ListBox$1;
 exports.ScrollView = ScrollView;
 exports.Ajax = Ajax;
 exports.Pagination = Pagination;
+exports.Switch = Switch;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

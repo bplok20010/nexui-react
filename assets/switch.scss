@@ -1,0 +1,111 @@
+$switchPrefix: nex-switch;
+$switchBGColor: #bfcbd9;
+$switchCheckBGColor: #20a0ff;
+$switchDisabledBGColor: #e4e8f1;
+
+.#{$switchPrefix} {
+	position: relative;
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 44px;
+	height: 22px;
+	line-height: 20px;
+	vertical-align: middle;
+	border-radius: 20px 20px;
+	border: 1px solid $switchBGColor;
+	background-color: $switchBGColor;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	transition: all .3s;
+	
+	&-inner {
+		color:#fff;
+		font-size: 12px;
+		display:block;
+		margin-left: 24px;
+		margin-right: 6px;
+		transition: all .3s;
+	}
+
+	&:after{
+		position: absolute;
+		width: 18px;
+		height: 18px;
+		left: 2px;
+		top: 1px;
+		border-radius: 50% 50%;
+		background-color: #fff;
+		content: " ";
+		cursor: pointer;
+		transition: all .3s;
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&-small {
+		height: 14px;
+		min-width: 28px;
+		line-height: 12px;
+
+		.nex-switch-inner {
+			margin-left: 18px;
+			margin-right: 3px;
+		}
+
+		&:after {
+			width: 12px;
+			height: 12px;
+			top: 0;
+			left: 0.5px;
+		}
+	}
+	
+	@at-root .#{$switchPrefix}-small.#{$switchPrefix}-checked{
+		 
+		&:after {
+			left: 100%;
+			margin-left: -12.5px;
+		}
+	
+		.nex-switch-inner {
+			margin-left: 3px;
+			margin-right: 18px;
+		}
+	}
+
+	&-checked:after {
+		margin-left: -16.5px;
+	}
+
+	&-checked {
+		border: 1px solid $switchCheckBGColor;
+		background-color: $switchCheckBGColor;
+
+		.nex-switch-inner {
+				margin-left: 6px;
+			margin-right: 24px;
+		}
+
+		&:after{
+			left: 100%;
+		margin-left:-19px;
+		}
+	}
+
+	&-disabled{
+		cursor: not-allowed;
+		background: $switchDisabledBGColor !important;
+		border-color: $switchDisabledBGColor !important;
+
+		&:after{
+			background: #fbfdff !important;
+			animation-name: none;
+			cursor: no-drop;
+		}
+	}
+}

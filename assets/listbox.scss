@@ -4,6 +4,7 @@ $listboxItemHeight: 26px;
 .nex-listbox {
 	background:#FFF;
 	overflow: hidden;
+	box-sizing: border-box;
 	&:focus{
 		outline:0;	
 	}

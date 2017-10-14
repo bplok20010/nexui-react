@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import {classNames} from '../shared/util';
+import classNames from 'classnames';
 
 export default class Button extends PureComponent{
 	
@@ -26,7 +26,7 @@ export default class Button extends PureComponent{
 		className: '',
 		iconCls: '',
 		disabled: false,
-		block: false,
+		inline: true,
 		prefixCls: 'nex-btn'
 	};
 
@@ -40,7 +40,7 @@ export default class Button extends PureComponent{
 	}
 
 	render(){
-		const {prefixCls,htmlType, disabled, iconCls, type, size, block, className} = this.props;
+		const {prefixCls,htmlType, disabled, iconCls, type, size, inline, className} = this.props;
 		
 		let nodeProps = {};
 		if( disabled ) {
@@ -53,11 +53,11 @@ export default class Button extends PureComponent{
 		})}></span>) : null;
 
 		return (
-			<button type={htmlType} onClick={(e)=>this.handleClick(e)} {...nodeProps} className={classNames({
+			<button {...nodeProps} type={htmlType} onClick={(e)=>this.handleClick(e)} className={classNames({
 				[`${prefixCls}`]: true,
 				[`${prefixCls}-${type}`]: type,
-				[`${prefixCls}-block`]: block,
-				[`${prefixCls}-inline`]: !block,
+				[`${prefixCls}-block`]: !inline,
+				[`${prefixCls}-inline`]: inline,
 				[`${prefixCls}-sm`]: size === 'small',
 				[`${prefixCls}-lg`]: size === 'large',
 				[`${prefixCls}-disabled`]: disabled,
