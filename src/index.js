@@ -31,6 +31,8 @@ import Pagination from './pagination/Pagination';
 
 import Switch from './switch/Switch';
 
+import Trigger from './trigger/Trigger';
+
 export {
 	Button,
 	ButtonGroup,
@@ -53,4 +55,5 @@ export {
 	Ajax,
 	Pagination,
 	Switch,
+	Trigger,
 }

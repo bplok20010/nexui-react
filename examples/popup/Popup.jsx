@@ -42,7 +42,7 @@ class App extends React.Component {
 		}
 		this.popup = Popup.create({
 			parentComponent: this,
-			destroyOnClose: false,
+			destroyOnHide: false,
 			of: findDOMNode(this.refs.cp),
 			my: 'left top',
 			at: 'left bottom',
@@ -75,7 +75,7 @@ class App extends React.Component {
 			<Button onClick={()=> this.setState( { destroy: true, visible: false } )} >销毁{idx}</Button>
 			<Button onClick={this.showPopup} ref="cp">触发是弹窗</Button>
 			{!destroy ? (
-				<Popup ref="popup" mask={false} destroyOnClose={false} visible={this.state.visible} maskAnimate={{
+				<Popup ref="popup" mask={false} destroyOnHide={false} visible={this.state.visible} maskAnimate={{
 					appear: (el) => {
 						$(el).hide().stop(true, true).fadeIn(500);	
 					},

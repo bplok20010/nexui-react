@@ -23,13 +23,14 @@ export default class Portal extends React.Component {
 	};
 
 	componentDidMount() {
-		const { renderTo, onCreate, prefixCls, className, container, animate={} } = this.props;
+		const { renderTo, prefixCls, className, container, animate={} } = this.props;
 		if( !container ) {
 			const elm = getDom(typeof renderTo === 'function' ? renderTo() : renderTo);
 			this._container = createContainer(elm);
 		} else {
 			this._container = container;	
 		}
+		
 		this.renderPortal();
 		
 		if( animate.appear ) {

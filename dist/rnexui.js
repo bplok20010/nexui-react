@@ -404,10 +404,10 @@ var Button = (_temp = _class = function (_PureComponent) {
 			    type = _props.type,
 			    size = _props.size,
 			    inline = _props.inline,
-			    className = _props.className;
+			    className = _props.className,
+			    nodeProps = objectWithoutProperties(_props, ['prefixCls', 'htmlType', 'disabled', 'iconCls', 'type', 'size', 'inline', 'className']);
 
 
-			var nodeProps = {};
 			if (disabled) {
 				nodeProps['disabled'] = true;
 			}
@@ -434,11 +434,9 @@ var Button = (_temp = _class = function (_PureComponent) {
 	size: index.string,
 	htmlType: index.oneOf(['button', 'submit', 'reset']),
 	className: index.string,
-	block: index.bool,
+	inline: index.bool,
 	disabled: index.bool,
-	loading: index.bool,
-	outline: index.bool,
-	bordered: index.bool,
+	//loading: PropTypes.bool,
 	iconCls: index.string,
 	prefixCls: index.string,
 	onClick: index.func
@@ -2078,7 +2076,6 @@ var Portal = (_temp$9 = _class$10 = function (_React$Component) {
 		value: function componentDidMount() {
 			var _props = this.props,
 			    renderTo = _props.renderTo,
-			    onCreate = _props.onCreate,
 			    prefixCls = _props.prefixCls,
 			    className = _props.className,
 			    container = _props.container,
@@ -2091,6 +2088,7 @@ var Portal = (_temp$9 = _class$10 = function (_React$Component) {
 			} else {
 				this._container = container;
 			}
+
 			this.renderPortal();
 
 			if (animate.appear) {
@@ -2264,7 +2262,32 @@ var position = function (target, source, config) {
 var _class$11;
 var _temp$10;
 
-//import $ from 'jquery';
+var propTypes$1 = {
+	prefixCls: index.string,
+	rootCls: index.string,
+	className: index.string,
+	maskCls: index.string,
+	destroyOnHide: index.bool,
+	visible: index.bool,
+	fixed: index.bool,
+	disabledSetPosition: index.bool,
+	onMaskClick: index.func,
+	popupAnimate: index.shape({
+		appear: index.func,
+		leave: index.func
+	}),
+	maskAnimate: index.shape({
+		appear: index.func,
+		leave: index.func
+	}),
+	of: index.any,
+	my: index.any,
+	at: index.any,
+	collision: index.any,
+	using: index.any,
+	within: index.any
+};
+
 var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	inherits(Popup, _React$Component);
 
@@ -2472,7 +2495,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			var _props3 = this.props,
 			    prefixCls = _props3.prefixCls,
 			    className = _props3.className,
-			    destroyOnClose = _props3.destroyOnClose,
+			    destroyOnHide = _props3.destroyOnHide,
 			    fixed = _props3.fixed,
 			    mask = _props3.mask,
 			    _props3$animate = _props3.animate,
@@ -2480,11 +2503,12 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			    renderTo = _props3.renderTo,
 			    container = _props3.container,
 			    rootCls = _props3.rootCls,
-			    _others = objectWithoutProperties(_props3, ['prefixCls', 'className', 'destroyOnClose', 'fixed', 'mask', 'animate', 'renderTo', 'container', 'rootCls']);
+			    _others = objectWithoutProperties(_props3, ['prefixCls', 'className', 'destroyOnHide', 'fixed', 'mask', 'animate', 'renderTo', 'container', 'rootCls']);
 
 			var _state = this.state,
 			    visible = _state.visible,
 			    isInit = _state.isInit;
+
 
 			var classes = index$1(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 
@@ -2497,7 +2521,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				PortalConf.container = container;
 			}
 
-			var others = omit(_others, ['prefixCls', 'className', 'visible', 'fixed', 'of', 'my', 'at', 'collision', 'using', 'within', 'mask', 'maskCls', 'destroyOnClose', 'popupAnimate', 'maskAnimate', 'disabledSetPosition']);
+			var others = omit(_others, Object.keys(propTypes$1));
 
 			var popup = React__default.createElement(
 				'div',
@@ -2506,7 +2530,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				React__default.createElement('div', _extends({}, others, { ref: 'popup', className: classes, tabIndex: -1 }))
 			);
 
-			if (!visible && !destroyOnClose && !isInit) {
+			if (!visible && !destroyOnHide && !isInit) {
 				visible = true;
 				this.state.isHidden = true;
 			}
@@ -2530,29 +2554,13 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 		}
 	}]);
 	return Popup;
-}(React__default.Component), _class$11.propTypes = {
-	prefixCls: index.string,
-	rootCls: index.string,
-	className: index.oneOfType([index.string, index.object]),
-	destroyOnClose: index.bool,
-	visible: index.bool,
-	fixed: index.bool,
-	disabledSetPosition: index.bool,
-	onMaskClick: index.func,
-	popupAnimate: index.shape({
-		appear: index.func,
-		leave: index.func
-	}),
-	maskAnimate: index.shape({
-		appear: index.func,
-		leave: index.func
-	})
-}, _class$11.defaultProps = {
+}(React__default.Component), _class$11.propTypes = propTypes$1, _class$11.defaultProps = {
 	prefixCls: 'nex-popup',
 	rootCls: '',
 	mask: false,
 	fixed: false,
-	destroyOnClose: true,
+	destroyOnHide: true,
+	//禁用每次刷新更新位置
 	disabledSetPosition: false,
 	visible: false
 }, _temp$10);
@@ -5058,6 +5066,212 @@ var Switch = (_temp$19 = _class$21 = function (_Component) {
 	};
 }, _temp$19);
 
+var _class$22;
+var _temp$20;
+
+function noop$3() {}
+
+var propTypes$2 = {
+	popupVisible: index.bool,
+	defaultPopupVisible: index.bool,
+	action: index.oneOf(['click', 'focus', 'hover']),
+	onPopupVisibleChange: index.func,
+	destroyPopupOnHide: index.bool
+};
+
+var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
+	inherits(Trigger, _React$Component);
+
+	function Trigger(props) {
+		classCallCheck(this, Trigger);
+
+		var _this = possibleConstructorReturn(this, (Trigger.__proto__ || Object.getPrototypeOf(Trigger)).call(this, props));
+
+		var popupVisible = void 0;
+
+		if ('popupVisible' in props) {
+			popupVisible = !!props.popupVisible;
+		} else {
+			popupVisible = !!props.defaultPopupVisible;
+		}
+
+		_this._container = null;
+
+		_this.state = {
+			popupVisible: popupVisible
+		};
+		return _this;
+	}
+
+	createClass(Trigger, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.componentDidUpdate();
+		}
+	}, {
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps() {}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			this.createPopup();
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {}
+	}, {
+		key: 'setPopupVisible',
+		value: function setPopupVisible(popupVisible) {
+			this.clearDelayTimer();
+			if (this.state.popupVisible !== popupVisible) {
+				if (!('popupVisible' in this.props)) {
+					this.setState({
+						popupVisible: popupVisible
+					});
+				}
+				this.props.onPopupVisibleChange(popupVisible);
+			}
+		}
+	}, {
+		key: 'clearDelayTimer',
+		value: function clearDelayTimer() {}
+	}, {
+		key: 'getClickTriggerConfig',
+		value: function getClickTriggerConfig(child) {
+			var _this2 = this;
+
+			var action = this.props.action;
+			var popupVisible = this.state.popupVisible;
+
+			var _child$props$onClick = child.props.onClick,
+			    _onClick = _child$props$onClick === undefined ? noop$3 : _child$props$onClick;
+
+			return {
+				onClick: function onClick(e) {
+
+					if (action === 'click') {
+						_this2.setPopupVisible(!popupVisible);
+					}
+
+					_onClick(e);
+				}
+			};
+		}
+	}, {
+		key: 'getHoverTriggerConfig',
+		value: function getHoverTriggerConfig(child) {
+			var _this3 = this;
+
+			var action = this.props.action;
+			var popupVisible = this.state.popupVisible;
+
+			var _child$props = child.props,
+			    _child$props$onMouseE = _child$props.onMouseEnter,
+			    _onMouseEnter = _child$props$onMouseE === undefined ? noop$3 : _child$props$onMouseE,
+			    _child$props$onMouseL = _child$props.onMouseLeave,
+			    _onMouseLeave = _child$props$onMouseL === undefined ? noop$3 : _child$props$onMouseL;
+
+			return {
+				onMouseEnter: function onMouseEnter(e) {
+					if (action === 'hover') {
+						_this3.setPopupVisible(true);
+					}
+					_onMouseEnter(e);
+				},
+				onMouseLeave: function onMouseLeave(e) {
+					if (action === 'hover') {
+						_this3.setPopupVisible(false);
+					}
+					_onMouseLeave(e);
+				}
+			};
+		}
+	}, {
+		key: 'getFocusTriggerConfig',
+		value: function getFocusTriggerConfig(child) {
+			var _this4 = this;
+
+			var action = this.props.action;
+			var popupVisible = this.state.popupVisible;
+
+			var _child$props2 = child.props,
+			    _child$props2$onFocus = _child$props2.onFocus,
+			    _onFocus = _child$props2$onFocus === undefined ? noop$3 : _child$props2$onFocus,
+			    _child$props2$onBlur = _child$props2.onBlur,
+			    _onBlur = _child$props2$onBlur === undefined ? noop$3 : _child$props2$onBlur;
+
+			return {
+				onFocus: function onFocus(e) {
+					if (action === 'focus') {
+						_this4.setPopupVisible(true);
+					}
+					_onFocus(e);
+				},
+				onBlur: function onBlur(e) {
+					if (action === 'focus') {
+						_this4.setPopupVisible(false);
+					}
+					_onBlur(e);
+				}
+			};
+		}
+	}, {
+		key: 'createPopup',
+		value: function createPopup() {
+			var _props = this.props,
+			    content = _props.content,
+			    destroyPopupOnHide = _props.destroyPopupOnHide,
+			    others = objectWithoutProperties(_props, ['content', 'destroyPopupOnHide']);
+			var popupVisible = this.state.popupVisible;
+
+			var triggerNode = ReactDOM__default.findDOMNode(this.refs.trigger);
+
+			var otherPorps = omit(this.props, Object.keys(propTypes$2));
+
+			if (!this._container && !popupVisible) return null;
+
+			if (popupVisible && !this._container) {
+				this._container = document.createElement('div');
+			}
+
+			var popup = React__default.createElement(
+				Popup$1,
+				_extends({
+					at: 'center top',
+					my: 'center bottom-5'
+				}, otherPorps, {
+					of: triggerNode,
+					destroyOnHide: destroyPopupOnHide,
+					visible: popupVisible
+				}),
+				typeof content === 'function' ? content() : content
+			);
+
+			ReactDOM__default.unstable_renderSubtreeIntoContainer(this, popup, this._container);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var children = this.props.children;
+
+
+			var child = React__default.Children.only(children);
+
+			var trigger = React__default.cloneElement(child, _extends({}, this.getClickTriggerConfig(child), this.getHoverTriggerConfig(child), this.getFocusTriggerConfig(child), {
+				key: 'trigger',
+				ref: 'trigger'
+			}));
+
+			return trigger;
+		}
+	}]);
+	return Trigger;
+}(React__default.Component), _class$22.propTypes = propTypes$2, _class$22.defaultProps = {
+	onPopupVisibleChange: noop$3,
+	destroyPopupOnHide: false,
+	action: 'click'
+}, _temp$20);
+
 //import Tree from './tree/Tree';
 
 exports.Button = Button;
@@ -5080,6 +5294,7 @@ exports.ScrollView = ScrollView;
 exports.Ajax = Ajax;
 exports.Pagination = Pagination;
 exports.Switch = Switch;
+exports.Trigger = Trigger;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

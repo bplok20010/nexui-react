@@ -9,11 +9,9 @@ export default class Button extends PureComponent{
 		size: PropTypes.string,
 		htmlType: PropTypes.oneOf(['button', 'submit', 'reset']),
 		className: PropTypes.string,
-		block: PropTypes.bool,
+		inline: PropTypes.bool,
 		disabled: PropTypes.bool,
-		loading: PropTypes.bool,
-		outline: PropTypes.bool,
-		bordered: PropTypes.bool,
+		//loading: PropTypes.bool,
 		iconCls: PropTypes.string,
 		prefixCls: PropTypes.string,
 		onClick: PropTypes.func
@@ -40,9 +38,8 @@ export default class Button extends PureComponent{
 	}
 
 	render(){
-		const {prefixCls,htmlType, disabled, iconCls, type, size, inline, className} = this.props;
+		const {prefixCls,htmlType, disabled, iconCls, type, size, inline, className, ...nodeProps} = this.props;
 		
-		let nodeProps = {};
 		if( disabled ) {
 			nodeProps['disabled'] = true;
 		}

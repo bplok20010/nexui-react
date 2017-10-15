@@ -94,7 +94,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 				}
 				_this.popup = _rnexui.Popup.create({
 					parentComponent: _this,
-					destroyOnClose: false,
+					destroyOnHide: false,
 					of: (0, _reactDom.findDOMNode)(_this.refs.cp),
 					my: 'left top',
 					at: 'left bottom',
@@ -172,7 +172,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					),
 					!destroy ? _react2['default'].createElement(
 						_rnexui.Popup,
-						{ ref: 'popup', mask: false, destroyOnClose: false, visible: this.state.visible, maskAnimate: {
+						{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible, maskAnimate: {
 								appear: function appear(el) {
 									$(el).hide().stop(true, true).fadeIn(500);
 								},

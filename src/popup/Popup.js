@@ -1,4 +1,3 @@
-//import $ from 'jquery';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -7,14 +6,14 @@ import Portal from '../portal/Portal';
 import _assign from 'object-assign';
 import position from '../shared/position';
 
-const noop = () => {}
+function noop(){}
 
-export default class Popup extends React.Component {
-	static propTypes = {
+const propTypes = {
 		prefixCls: PropTypes.string,
 		rootCls: PropTypes.string,
-		className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-		destroyOnClose: PropTypes.bool,
+		className: PropTypes.string,
+		maskCls: PropTypes.string,
+		destroyOnHide: PropTypes.bool,
 		visible: PropTypes.bool,
 		fixed: PropTypes.bool,
 		disabledSetPosition: PropTypes.bool,
@@ -27,17 +26,27 @@ export default class Popup extends React.Component {
 			appear: PropTypes.func,
 			leave: PropTypes.func	
 		}),
+		of: PropTypes.any,
+		my: PropTypes.any,
+		at: PropTypes.any,
+		collision: PropTypes.any,
+		using: PropTypes.any,
+		within: PropTypes.any,
 	};
+
+export default class Popup extends React.Component {
+	static propTypes = propTypes
 
 	static defaultProps = {
 		prefixCls: 'nex-popup',
 		rootCls: '',
 		mask: false,
 		fixed: false,
-		destroyOnClose: true,
+		destroyOnHide: true,
+		//禁用每次刷新更新位置
 		disabledSetPosition: false,
 		visible: false
-	};
+	}
 	
 	constructor(props){
 		super(props);
@@ -197,8 +206,12 @@ export default class Popup extends React.Component {
 	}
 	
 	getRenderComponent(){
-		const {prefixCls,className, destroyOnClose, fixed, mask, animate={}, renderTo, container, rootCls, ..._others} = this.props;
+		const {prefixCls, className, destroyOnHide, fixed, mask, 
+			animate={}, renderTo, container, rootCls, ..._others
+		} = this.props;
+		
 		let { visible, isInit } = this.state;
+		
 		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 		
 		let PortalConf = {};
@@ -210,24 +223,7 @@ export default class Popup extends React.Component {
 			PortalConf.container = container;
 		}
 		
-		const others = omit(_others, [
-			'prefixCls',
-			'className',
-			'visible',
-			'fixed',
-			'of',
-			'my',
-			'at',
-			'collision',
-			'using',
-			'within',
-			'mask',
-			'maskCls',
-			'destroyOnClose',
-			'popupAnimate',
-			'maskAnimate',
-			'disabledSetPosition'
-		]);
+		const others = omit(_others, Object.keys(propTypes));
 		
 		const popup = (
 			<div>
@@ -236,7 +232,7 @@ export default class Popup extends React.Component {
 			</div>
 		);
 		
-		if( !visible && !destroyOnClose && !isInit ) {
+		if( !visible && !destroyOnHide && !isInit ) {
 			visible = true;
 			this.state.isHidden = true;	
 		}
