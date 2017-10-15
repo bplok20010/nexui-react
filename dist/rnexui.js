@@ -5066,6 +5066,12 @@ var Switch = (_temp$19 = _class$21 = function (_Component) {
 	};
 }, _temp$19);
 
+var zIndex = 2000;
+
+function getZIndex() {
+	return zIndex++;
+}
+
 var _class$22;
 var _temp$20;
 
@@ -5076,7 +5082,8 @@ var propTypes$2 = {
 	defaultPopupVisible: index.bool,
 	action: index.oneOf(['click', 'focus', 'hover']),
 	onPopupVisibleChange: index.func,
-	destroyPopupOnHide: index.bool
+	destroyPopupOnHide: index.bool,
+	content: index.any
 };
 
 var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
@@ -5136,8 +5143,8 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 		key: 'clearDelayTimer',
 		value: function clearDelayTimer() {}
 	}, {
-		key: 'getClickTriggerConfig',
-		value: function getClickTriggerConfig(child) {
+		key: 'getClickTriggerProps',
+		value: function getClickTriggerProps(child) {
 			var _this2 = this;
 
 			var action = this.props.action;
@@ -5158,8 +5165,8 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 			};
 		}
 	}, {
-		key: 'getHoverTriggerConfig',
-		value: function getHoverTriggerConfig(child) {
+		key: 'getHoverTriggerProps',
+		value: function getHoverTriggerProps(child) {
 			var _this3 = this;
 
 			var action = this.props.action;
@@ -5187,8 +5194,8 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 			};
 		}
 	}, {
-		key: 'getFocusTriggerConfig',
-		value: function getFocusTriggerConfig(child) {
+		key: 'getFocusTriggerProps',
+		value: function getFocusTriggerProps(child) {
 			var _this4 = this;
 
 			var action = this.props.action;
@@ -5221,12 +5228,14 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 			var _props = this.props,
 			    content = _props.content,
 			    destroyPopupOnHide = _props.destroyPopupOnHide,
-			    others = objectWithoutProperties(_props, ['content', 'destroyPopupOnHide']);
+			    _props$style = _props.style,
+			    style = _props$style === undefined ? {} : _props$style,
+			    others = objectWithoutProperties(_props, ['content', 'destroyPopupOnHide', 'style']);
 			var popupVisible = this.state.popupVisible;
 
 			var triggerNode = ReactDOM__default.findDOMNode(this.refs.trigger);
 
-			var otherPorps = omit(this.props, Object.keys(propTypes$2));
+			var otherPorps = omit(others, Object.keys(propTypes$2));
 
 			if (!this._container && !popupVisible) return null;
 
@@ -5240,6 +5249,10 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 					at: 'center top',
 					my: 'center bottom-5'
 				}, otherPorps, {
+					rootCls: 'nex-trigger-popup-root',
+					style: _extends({
+						zIndex: getZIndex()
+					}, style),
 					of: triggerNode,
 					destroyOnHide: destroyPopupOnHide,
 					visible: popupVisible
@@ -5257,7 +5270,7 @@ var Trigger = (_temp$20 = _class$22 = function (_React$Component) {
 
 			var child = React__default.Children.only(children);
 
-			var trigger = React__default.cloneElement(child, _extends({}, this.getClickTriggerConfig(child), this.getHoverTriggerConfig(child), this.getFocusTriggerConfig(child), {
+			var trigger = React__default.cloneElement(child, _extends({}, this.getClickTriggerProps(child), this.getHoverTriggerProps(child), this.getFocusTriggerProps(child), {
 				key: 'trigger',
 				ref: 'trigger'
 			}));

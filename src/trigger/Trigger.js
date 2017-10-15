@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import getZIndex from '../shared/getZIndex';
 import omit from 'omit.js';
 import Popup from '../popup/Popup';
 import _assign from 'object-assign';
@@ -14,6 +15,7 @@ const propTypes = {
 		action: PropTypes.oneOf(['click', 'focus', 'hover']),
 		onPopupVisibleChange: PropTypes.func,
 		destroyPopupOnHide: PropTypes.bool,
+		content: PropTypes.any,
 	};
 
 export default class Trigger extends React.Component {
@@ -71,7 +73,7 @@ export default class Trigger extends React.Component {
 	
 	clearDelayTimer(){}
 	
-	getClickTriggerConfig(child){
+	getClickTriggerProps(child){
 		const {action} = this.props;
 		const { popupVisible } = this.state;
 		const {onClick = noop } = child.props;
@@ -88,7 +90,7 @@ export default class Trigger extends React.Component {
 		}	
 	}
 	
-	getHoverTriggerConfig(child){
+	getHoverTriggerProps(child){
 		const {action} = this.props;
 		const { popupVisible } = this.state;
 		const {onMouseEnter = noop, onMouseLeave = noop } = child.props;
@@ -109,7 +111,7 @@ export default class Trigger extends React.Component {
 		}	
 	}
 	
-	getFocusTriggerConfig(child){
+	getFocusTriggerProps(child){
 		const {action} = this.props;
 		const { popupVisible } = this.state;
 		const {onFocus = noop, onBlur = noop } = child.props;
@@ -131,11 +133,11 @@ export default class Trigger extends React.Component {
 	}
 	
 	createPopup(){
-		const {content, destroyPopupOnHide, ...others} = this.props;
+		const {content, destroyPopupOnHide, style={}, ...others} = this.props;
 		const {popupVisible} = this.state;
 		const triggerNode = ReactDOM.findDOMNode(this.refs.trigger);
 		
-		const otherPorps = omit(this.props, Object.keys(propTypes));
+		const otherPorps = omit(others, Object.keys(propTypes));
 		
 		if( !this._container && !popupVisible ) return null;
 		
@@ -148,6 +150,11 @@ export default class Trigger extends React.Component {
 				at="center top"
 				my="center bottom-5"
 				{...otherPorps}
+				rootCls="nex-trigger-popup-root"
+				style={{
+					zIndex: getZIndex(),
+					...style,	
+				}}
 				of={triggerNode}
 				destroyOnHide = {destroyPopupOnHide}
 				visible={popupVisible}
@@ -169,9 +176,9 @@ export default class Trigger extends React.Component {
 		const child = React.Children.only(children);
 		
 		const trigger = React.cloneElement(child, {
-			...this.getClickTriggerConfig(child),
-			...this.getHoverTriggerConfig(child),
-			...this.getFocusTriggerConfig(child),
+			...this.getClickTriggerProps(child),
+			...this.getHoverTriggerProps(child),
+			...this.getFocusTriggerProps(child),
 			key: 'trigger', 
 			ref: 'trigger',
 		});

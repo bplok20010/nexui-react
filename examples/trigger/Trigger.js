@@ -82,7 +82,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
             _rnexui.Trigger,
             { content: React.createElement(
                 'div',
-                { style: { padding: 10, border: '1px solid red' } },
+                { style: { padding: 10, border: '1px solid red', background: '#fff' } },
                 'popup click...'
               ) },
             React.createElement(
@@ -95,7 +95,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
             _rnexui.Trigger,
             { content: React.createElement(
                 'div',
-                { style: { padding: 10, border: '1px solid red' } },
+                { style: { padding: 10, border: '1px solid red', background: '#fff' } },
                 'popup hover...'
               ), action: 'hover' },
             React.createElement(
@@ -108,7 +108,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
             _rnexui.Trigger,
             { content: React.createElement(
                 'div',
-                { style: { padding: 10, border: '1px solid red' } },
+                { style: { padding: 10, border: '1px solid red', background: '#fff' } },
                 'popup focus...'
               ), action: 'focus' },
             React.createElement(
