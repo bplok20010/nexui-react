@@ -209,7 +209,7 @@ export default class Pagination extends React.Component{
 		
 		return (
 			<span key="sizes" className={`${prefixCls}-pagesize`}>
-				<Select options={list} size={small ? 'small' : ''} value={this.state.pageSize} onChange={this.handlePageSizeChange} className={`${prefixCls}-changer`}/>
+				<Select options={list} size={small ? 'small' : 'default'} value={this.state.pageSize} onChange={this.handlePageSizeChange} className={`${prefixCls}-changer`}/>
 			</span>
 		);	
 	}
@@ -252,7 +252,7 @@ export default class Pagination extends React.Component{
 			}
 		}
 		
-		const jumper = <Input style={{width: 40}} key="jumper" size={small ? 'small' : ''} defaultValue={current} onPressEnter={_toPage} className={`${prefixCls}-jumper`} />;
+		const jumper = <Input style={{width: 40}} key="jumper" size={small ? 'small' : 'default'} defaultValue={current} onPressEnter={_toPage} className={`${prefixCls}-jumper`} />;
 		
 		return (
 			<span key="jumper" className={`${prefixCls}-quick-jumper`}>
