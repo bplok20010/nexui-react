@@ -4710,7 +4710,7 @@ var Pagination = (_temp$18 = _class$20 = function (_React$Component) {
 			return React__default.createElement(
 				'span',
 				{ key: 'sizes', className: prefixCls + '-pagesize' },
-				React__default.createElement(Select$1, { options: list, size: small ? 'small' : '', value: this.state.pageSize, onChange: this.handlePageSizeChange, className: prefixCls + '-changer' })
+				React__default.createElement(Select$1, { options: list, size: small ? 'small' : 'default', value: this.state.pageSize, onChange: this.handlePageSizeChange, className: prefixCls + '-changer' })
 			);
 		}
 	}, {
@@ -4783,7 +4783,7 @@ var Pagination = (_temp$18 = _class$20 = function (_React$Component) {
 				}
 			};
 
-			var jumper = React__default.createElement(Input, { style: { width: 40 }, key: 'jumper', size: small ? 'small' : '', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' });
+			var jumper = React__default.createElement(Input, { style: { width: 40 }, key: 'jumper', size: small ? 'small' : 'default', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' });
 
 			return React__default.createElement(
 				'span',
