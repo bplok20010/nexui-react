@@ -128,7 +128,7 @@ export default class Ajax {
 		}	
 	}
 	
-	abort(){
+	abort(ts){
 		var xhr = this._xhr;
 			
 		if( xhr && xhr.abort ) {

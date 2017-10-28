@@ -1,0 +1,34 @@
+.nex-calendar {
+  min-width: 210px; }
+
+.nex-calendar-table {
+  table-layout: fixed;
+  width: 100%; }
+  .nex-calendar-table .nex-calendar-cell {
+    text-align: center;
+    vertical-align: middle;
+    height: 26px;
+    -ms-transition-duration: .3s;
+    transition-duration: .3s;
+    transition-property: background-color,border-color,color,box-shadow,transform; }
+  .nex-calendar-table .nex-calendar-cell-h {
+    cursor: default;
+    font-weight: 400;
+    padding: 5px;
+    border-bottom: 1px solid #E6E6E6; }
+  .nex-calendar-table .nex-calendar-cell-today {
+    background: #FFE767; }
+  .nex-calendar-table .nex-calendar-cell-b {
+    cursor: pointer; }
+    .nex-calendar-table .nex-calendar-cell-b:not(.nex-calendar-cell-disabled):hover {
+      background: #c5e8fe; }
+  .nex-calendar-table .nex-calendar-cell-other-month {
+    opacity: .35; }
+  .nex-calendar-table .nex-calendar-cell-selected:not(.nex-calendar-cell-disabled) {
+    background: #20a0ff;
+    color: #FFF; }
+    .nex-calendar-table .nex-calendar-cell-selected:not(.nex-calendar-cell-disabled):hover {
+      background: #20a0ff; }
+  .nex-calendar-table .nex-calendar-cell-disabled {
+    opacity: .35;
+    cursor: not-allowed; }

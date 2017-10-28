@@ -23,6 +23,8 @@ import ListBox from './listbox/index';
 
 import ScrollView from './scrollview/ScrollView';
 
+import Calendar from './calendar';
+
 //import Tree from './tree/Tree';
 
 import Ajax from './ajax/Ajax';
@@ -56,4 +58,5 @@ export {
 	Pagination,
 	Switch,
 	Trigger,
+    Calendar,
 }
