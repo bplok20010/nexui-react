@@ -18,7 +18,7 @@ export default class Select extends React.Component{
 		prefixCls: PropTypes.string,
 		options: PropTypes.array,
 		dropdownCls: PropTypes.string,
-		dropdownDestroyOnClose: PropTypes.bool,
+		dropdownDestroyOnHide: PropTypes.bool,
 		dropdownStyle: PropTypes.object,
 		textInValue: PropTypes.bool,
 	};
@@ -36,7 +36,7 @@ export default class Select extends React.Component{
 		optionsField: 'options',
 		dropdownCls: null,
 		dropdownStyle: null,
-		dropdownDestroyOnClose: true,
+		dropdownDestroyOnHide: true,
 		textInValue: false,
 	};
 	
@@ -241,7 +241,7 @@ export default class Select extends React.Component{
 	renderSelect(){
 		const props = this.props;
 		const {showDropdown} = this.state;
-		const {prefixCls, tabIndex, inline, disabled, readOnly, arrowCls, children, options, dropdownCls, dropdownDestroyOnClose, ...others} = props;
+		const {prefixCls, tabIndex, inline, disabled, readOnly, arrowCls, children, options, dropdownCls, dropdownDestroyOnHide, ...others} = props;
 		const classes = classNames({
 			[prefixCls]: true,
 			[`${prefixCls}-inline`]: inline,
@@ -254,7 +254,7 @@ export default class Select extends React.Component{
 			'valueField',
 			'dropdownCls',
 			'dropdownStyle',
-			'dropdownDestroyOnClose',
+			'dropdownDestroyOnHide',
 			'textField',
 			'optionsField',
 			'textInValue',
@@ -273,7 +273,7 @@ export default class Select extends React.Component{
 					[`${prefixCls}-arrow`]: true,
 					[arrowCls]: true	
 				})}></span>
-				<Popup visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnClose} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
+				<Popup visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnHide} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
 					{this.getSelectOptions()}
 				</Popup>
 			</div>
