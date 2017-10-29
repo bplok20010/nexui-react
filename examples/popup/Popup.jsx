@@ -70,12 +70,12 @@ class App extends React.Component {
   render() {
 	 const {visible, idx, destroy} = this.state;
     return (
-		<div>
+		<div style={{ padding: '400px 10px'}}>
 			<Button onClick={this.togglChange} ref="button">显示{idx}</Button>
 			<Button onClick={()=> this.setState( { destroy: true, visible: false } )} >销毁{idx}</Button>
 			<Button onClick={this.showPopup} ref="cp">触发是弹窗</Button>
 			{!destroy ? (
-				<Popup ref="popup" mask={false} destroyOnHide={false} visible={this.state.visible} maskAnimate={{
+				<Popup ref="popup" mask={false} fixed destroyOnHide={false} visible={this.state.visible} maskAnimate={{
 					appear: (el) => {
 						$(el).hide().stop(true, true).fadeIn(500);	
 					},
@@ -96,6 +96,10 @@ class App extends React.Component {
 					<span className="icon-close" onClick={this.close}>X</span>
 				</Popup>
 			) : null}
+			
+			<Popup my="center" visible={this.state.visible} fixed at="center" using={(a,b) => console.log(a, b)}>
+				popupa....
+			</Popup>
 		</div>
     );
   }

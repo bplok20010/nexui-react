@@ -1,0 +1,190 @@
+$datepickerHeight: 28px;
+$datepickerSmallHeight: 22px;
+$datepickerLargeHeight: 32px;
+
+$datepickerBorderRadius: 3px;//3px
+$datepickerColor: rgba(0,0,0,.8);
+$datepickerBGColor: #FFF;
+$datepickerBorderColor: #d9d9d9;
+$datepickerHoverBorderColor: #49a9ee;
+$datepickerColor: rgba(0,0,0,.8);
+
+.nex-datepicker {
+	position:relative;
+	display:inline-block;
+	vertical-align:top;
+	padding:3px 7px;
+	width:100%;
+	height:$datepickerHeight;
+	cursor: pointer;
+	font-size:12px;
+	line-height:1.5;
+	color:$datepickerColor;
+	background-color:#fff;
+	background-image:none;
+	border:1px solid $datepickerBorderColor;
+	border-radius:$datepickerBorderRadius;
+	box-sizing: border-box;
+
+	&.nex-datepicker-inline {
+		width:auto;
+	}
+}
+
+.nex-datepicker-dropdown-root {
+	position:absolute;
+	left:0;
+	top:0;
+}
+
+.nex-datepicker-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 14px;
+	max-width: 100%;
+	width: 100%;
+	display: inline-block;
+	border: none;
+	outline: 0;
+	padding:0;
+}
+
+.nex-datepicker-arrow {
+	position:absolute;
+	display:inline-block;
+	vertical-align:middle;
+	width:12px;
+	height:12px;
+	line-height:12px;
+	text-align:center;
+	top:50%;
+	margin-top:-6px;
+	right:7px;
+}
+
+.nex-datepicker:focus,
+.nex-datepicker:hover {
+	border-color:$datepickerHoverBorderColor;
+}
+.nex-datepicker:focus {
+	outline:0;
+}
+.nex-datepicker-disabled,
+.nex-datepicker[disabled] {
+	background-color:#f7f7f7;
+	opacity:1;
+	cursor:not-allowed;
+	color:rgba(0,0,0,.25);
+
+	&:hover,
+	&:focus {
+		border-color:#e2e2e2
+	}
+
+}
+
+.nex-datepicker-lg {
+	padding:6px 7px;
+	height:$datepickerLargeHeight
+}
+.nex-datepicker-sm {
+	padding:1px 7px;
+	height:$datepickerSmallHeight
+}
+
+.nex-datepicker-dropdown {
+	box-shadow: 1px 1px 3px #d1d1d1;
+	padding:5px;
+	border:1px solid #d9d9d9;
+	background:#FFF;
+	overflow:auto;
+	.nex-datepicker-dropdown-body {
+	}
+}
+
+.nex-datepicker-picker-header {
+	text-align: center;
+	position: relative;
+	line-height:26px;
+	height: 26px;
+	z-index: 1;
+	.year-label,
+	.month-label {
+		cursor: pointer;
+		display: inline-block;
+		position: relative;
+		&:hover > span {
+			color: #20a0ff;
+		}
+		.month-list,
+		.year-list {
+			position: absolute;
+			top:100%;
+			left:50%;
+			margin-left: -25px;
+			background: #FFF;
+			height: 160px;
+			width: 60px;
+			border:1px solid #E6E6E6;
+			text-align: center;
+			line-height: normal;
+			.nex-scroll-view-body > div {
+				overflow-x: hidden;
+				display: inline-block;
+				vertical-align: top;
+				line-height: 25px;
+				padding-right: 10px;
+
+				&.active {
+					color: #20a0ff;
+				}
+
+				&:hover {
+					color: #20a0ff;
+				}
+			}
+		}
+	}
+	.year-label {
+		display: inline-block;
+	}
+	.month-label {
+		display: inline-block;
+		margin-left: 5px;
+	}
+
+	.prev-btns,
+	.next-btns {
+		position: absolute;
+		top:0;
+		bottom: 0;
+	}
+
+	.prev-btns {
+		left:0;
+	}
+
+	.next-btns {
+		right: 0;
+	}
+	.next-year-btn,
+	.prev-year-btn,
+	.next-month-btn,
+	.prev-month-btn {
+		display: inline-block;
+		width: 20px;
+		line-height:26px;
+		text-align: center;
+		vertical-align: top;
+		cursor: pointer;
+		&:hover {
+			color: #20a0ff;
+		}
+	}
+}
+
+.nex-datepicker-picker-body {
+	z-index: 0;
+	position: relative;
+}

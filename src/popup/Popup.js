@@ -30,7 +30,7 @@ const propTypes = {
 		my: PropTypes.any,
 		at: PropTypes.any,
 		collision: PropTypes.any,
-		using: PropTypes.any,
+		using: PropTypes.func,
 		within: PropTypes.any,
 	};
 
@@ -73,11 +73,15 @@ export default class Popup extends React.Component {
 	getPosition(type = 1){
 		let pos, dir;
 		const popup = this.refs.popup;
-		let {of, my, at, collision, using, within} = this.props;
+		let {of, my, at, collision, using, within, fixed} = this.props;
 		const config = {
 			using: function(p, d){
+				if( using ) {
+					using(p, d);	
+				}
+				
 				pos = p;
-				dir = d;	
+				dir = d;
 			}	
 		};	
 		
@@ -98,7 +102,7 @@ export default class Popup extends React.Component {
 			of = of();	
 		}
 		
-		position(popup, of || document.body, config);	
+		position(popup, of || window, config);	
 		
 		return type == 1 ? pos : ( type == 2 ? dir : _assign(pos, dir) );
 	}

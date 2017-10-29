@@ -150,7 +150,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 
 				return _react2['default'].createElement(
 					'div',
-					null,
+					{ style: { padding: '400px 10px' } },
 					_react2['default'].createElement(
 						_rnexui.Button,
 						{ onClick: this.togglChange, ref: 'button' },
@@ -172,7 +172,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					),
 					!destroy ? _react2['default'].createElement(
 						_rnexui.Popup,
-						{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible, maskAnimate: {
+						{ ref: 'popup', mask: false, fixed: true, destroyOnHide: false, visible: this.state.visible, maskAnimate: {
 								appear: function appear(el) {
 									$(el).hide().stop(true, true).fadeIn(500);
 								},
@@ -201,7 +201,14 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							{ className: 'icon-close', onClick: this.close },
 							'X'
 						)
-					) : null
+					) : null,
+					_react2['default'].createElement(
+						_rnexui.Popup,
+						{ my: 'center', visible: this.state.visible, fixed: true, at: 'center', using: function using(a, b) {
+								return console.log(a, b);
+							} },
+						'popupa....'
+					)
 				);
 			}
 		}]);

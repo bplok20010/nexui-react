@@ -25,6 +25,8 @@ import ScrollView from './scrollview/ScrollView';
 
 import Calendar from './calendar';
 
+import DatePicker from './datepicker';
+
 //import Tree from './tree/Tree';
 
 import Ajax from './ajax/Ajax';
@@ -59,4 +61,5 @@ export {
 	Switch,
 	Trigger,
     Calendar,
+    DatePicker,
 }

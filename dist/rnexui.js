@@ -2284,7 +2284,7 @@ var propTypes$1 = {
 	my: index.any,
 	at: index.any,
 	collision: index.any,
-	using: index.any,
+	using: index.func,
 	within: index.any
 };
 
@@ -2375,11 +2375,16 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			    my = _props.my,
 			    at = _props.at,
 			    collision = _props.collision,
-			    using = _props.using,
-			    within = _props.within;
+			    _using = _props.using,
+			    within = _props.within,
+			    fixed = _props.fixed;
 
 			var config = {
 				using: function using(p, d) {
+					if (_using) {
+						_using(p, d);
+					}
+
 					pos = p;
 					dir = d;
 				}
@@ -2402,7 +2407,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				of = of();
 			}
 
-			position(popup, of || document.body, config);
+			position(popup, of || window, config);
 
 			return type == 1 ? pos : type == 2 ? dir : index$3(pos, dir);
 		}
@@ -4160,7 +4165,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 				React__default.createElement('span', { className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
 				React__default.createElement(
 					Popup$1,
-					{ visible: showDropdown, className: dropdownCls, destroyOnClose: dropdownDestroyOnClose, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
+					{ visible: showDropdown, className: dropdownCls, destroyOnHide: dropdownDestroyOnClose, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
 					this.getSelectOptions()
 				)
 			);
@@ -5653,250 +5658,777 @@ function noop$2() {}
 // }
 
 var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
-	inherits(Calendar, _React$Component);
+  inherits(Calendar, _React$Component);
 
-	function Calendar(props) {
-		classCallCheck(this, Calendar);
+  function Calendar(props) {
+    classCallCheck(this, Calendar);
 
-		var _this = possibleConstructorReturn(this, (Calendar.__proto__ || Object.getPrototypeOf(Calendar)).call(this, props));
+    var _this = possibleConstructorReturn(this, (Calendar.__proto__ || Object.getPrototypeOf(Calendar)).call(this, props));
 
-		_this.currentShowDate = null;
-
-
-		var currentDate = 'currentDate' in props ? props.currentDate : props.defaultDate;
-
-		_this.state = {
-			currentDate: currentDate
-		};
-
-		return _this;
-	}
-
-	createClass(Calendar, [{
-		key: 'now',
-		value: function now() {
-			return new Date();
-		}
-	}, {
-		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(nextProps) {
-			if ('currentDate' in nextProps) {
-				this.setState({
-					currentDate: nextProps.currentDate
-				});
-			}
-		}
-	}, {
-		key: 'classNames',
-		value: function classNames() {
-			return index$1.apply(undefined, arguments);
-		}
-	}, {
-		key: 'renderHeader',
-		value: function renderHeader() {
-			var _props = this.props,
-			    prefixCls = _props.prefixCls,
-			    firstDay = _props.firstDay,
-			    dayNamesMin = _props.dayNamesMin;
+    _this.currentShowDate = null;
 
 
-			var ths = [];
+    var currentDate = 'currentDate' in props ? props.currentDate : props.defaultDate;
 
-			var len2 = 7 + firstDay;
-			for (var i = firstDay; i < len2; i++) {
-				var day = i % 7;
-				ths.push(React__default.createElement(
-					'th',
-					{ key: i, className: this.classNames(prefixCls + '-cell', prefixCls + '-cell-h') },
-					dayNamesMin[day]
-				));
-			}
+    _this.state = {
+      currentDate: currentDate,
+      currentShowDate: DateUtil.isDate(currentDate) ? currentDate : new Date()
+    };
 
-			return React__default.createElement(
-				'tr',
-				null,
-				ths
-			);
-		}
+    return _this;
+  }
 
-		/**
-  * 判断当前日期是否不可选
-   */
+  createClass(Calendar, [{
+    key: 'now',
+    value: function now() {
+      return new Date();
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if ('currentDate' in nextProps) {
+        this.setState({
+          currentDate: nextProps.currentDate
+        });
+      }
 
-	}, {
-		key: 'isDisabledDate',
-		value: function isDisabledDate(date) {
-			var _props2 = this.props,
-			    minDate = _props2.minDate,
-			    maxDate = _props2.maxDate,
-			    disabledDate = _props2.disabledDate;
-
-			var cTime = date.getTime();
-
-			if (minDate && cTime < minDate.getTime()) {
-				return true;
-			}
-
-			if (maxDate && cTime > maxDate.getTime()) {
-				return true;
-			}
-
-			if (disabledDate) {
-				return disabledDate(date, this);
-			}
-
-			return false;
-		}
-	}, {
-		key: 'onDateClick',
-		value: function onDateClick(date, e) {
-			var props = this.props;
-			var onSelect = props.onSelect,
-			    currentDate = props.currentDate;
+      if ('currentShowDate' in nextProps) {
+        this.setState({
+          currentShowDate: nextProps.currentShowDate
+        });
+      }
+    }
+  }, {
+    key: 'classNames',
+    value: function classNames() {
+      return index$1.apply(undefined, arguments);
+    }
+  }, {
+    key: 'renderHeader',
+    value: function renderHeader() {
+      var _props = this.props,
+          prefixCls = _props.prefixCls,
+          firstDay = _props.firstDay,
+          dayNamesMin = _props.dayNamesMin;
 
 
-			if (this.isDisabledDate(date)) return;
+      var ths = [];
 
-			if (!(currentDate in props)) {
-				this.setState({
-					currentDate: date
-				});
-			}
+      var len2 = 7 + firstDay;
+      for (var i = firstDay; i < len2; i++) {
+        var day = i % 7;
+        ths.push(React__default.createElement(
+          'th',
+          { key: i, className: this.classNames(prefixCls + '-cell', prefixCls + '-cell-h') },
+          dayNamesMin[day]
+        ));
+      }
 
-			onSelect(date);
-		}
-	}, {
-		key: 'renderDate',
-		value: function renderDate(date, key) {
-			var _classNames2;
+      return React__default.createElement(
+        'tr',
+        null,
+        ths
+      );
+    }
 
-			var _props3 = this.props,
-			    prefixCls = _props3.prefixCls,
-			    dateRender = _props3.dateRender,
-			    dateClassNameRender = _props3.dateClassNameRender;
-			var currentDate = this.state.currentDate;
+    /**
+    * 判断当前日期是否不可选
+     */
 
-			var now = this.now();
-			var currentShowDate = this.currentShowDate;
+  }, {
+    key: 'isDisabledDate',
+    value: function isDisabledDate(date) {
+      var _props2 = this.props,
+          minDate = _props2.minDate,
+          maxDate = _props2.maxDate,
+          disabledDate = _props2.disabledDate;
 
-			var dateLabel = dateRender ? dateRender(date, this) : date.getDate();
+      var cTime = date.getTime();
 
-			var classes = this.classNames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-cell', true), defineProperty(_classNames2, prefixCls + '-cell-b', true), defineProperty(_classNames2, prefixCls + '-cell-other-month', !isEqualMonth(currentShowDate, date)), defineProperty(_classNames2, prefixCls + '-cell-today', isEqualDate(now, date)), defineProperty(_classNames2, prefixCls + '-cell-selected', currentDate && isEqualDate(currentDate, date)), defineProperty(_classNames2, prefixCls + '-cell-disabled', this.isDisabledDate(date)), _classNames2), dateClassNameRender ? dateClassNameRender(date, this) : null);
+      if (minDate && cTime < minDate.getTime()) {
+        return true;
+      }
 
-			return React__default.createElement(
-				'td',
-				{
-					key: key,
-					className: classes,
-					onClick: this.onDateClick.bind(this, date)
-				},
-				dateLabel
-			);
-		}
-	}, {
-		key: 'renderBody',
-		value: function renderBody() {
-			var _props4 = this.props,
-			    showOtherMonths = _props4.showOtherMonths,
-			    firstDay = _props4.firstDay;
-			var currentDate = this.state.currentDate;
+      if (maxDate && cTime > maxDate.getTime()) {
+        return true;
+      }
 
+      if (disabledDate) {
+        return disabledDate(date, this);
+      }
 
-			this.currentShowDate = currentDate || this.now();
-
-			var dateRange = getMonthDateRange(this.currentShowDate, {
-				showOtherMonths: showOtherMonths,
-				firstDay: firstDay
-			});
-
-			var diff = DateUtil.difference(dateRange[0], dateRange[1], 'd');
-
-			var startDate = dateRange[0];
-			var endDate = dateRange[1];
-
-			var trs = [];
-			var tds = [];
-
-			for (var i = 0; i <= diff; i++) {
-
-				tds.push(this.renderDate(DateUtil.add(startDate, 'd', i), i));
-
-				if (tds.length === 7) {
-					trs.push(React__default.createElement(
-						'tr',
-						{ key: i },
-						tds.map(function (td) {
-							return td;
-						})
-					));
-					tds.length = 0;
-				}
-			}
-
-			return trs;
-		}
-	}, {
-		key: 'renderWrapper',
-		value: function renderWrapper() {
-			var _props5 = this.props,
-			    prefixCls = _props5.prefixCls,
-			    className = _props5.className,
-			    style = _props5.style;
+      return false;
+    }
+  }, {
+    key: 'onDateClick',
+    value: function onDateClick(date, e) {
+      var props = this.props;
+      var onSelect = props.onSelect,
+          currentDate = props.currentDate;
 
 
-			return React__default.createElement(
-				'div',
-				{ className: this.classNames(prefixCls, className), style: style },
-				React__default.createElement(
-					'table',
-					{ className: prefixCls + '-table' },
-					React__default.createElement(
-						'thead',
-						null,
-						this.renderHeader()
-					),
-					React__default.createElement(
-						'tbody',
-						null,
-						this.renderBody()
-					)
-				)
-			);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return this.renderWrapper();
-		}
-	}]);
-	return Calendar;
+      if (this.isDisabledDate(date)) return;
+
+      if (!currentDate) {
+        currentDate = date;
+      }
+
+      currentDate.setFullYear(date.getFullYear());
+      currentDate.setMonth(date.getMonth());
+      currentDate.setDate(date.getDate());
+
+      if (!(currentDate in props)) {
+        this.setState({
+          currentDate: currentDate
+        });
+      }
+
+      onSelect(currentDate);
+    }
+  }, {
+    key: 'renderDate',
+    value: function renderDate(date, key) {
+      var _classNames2;
+
+      var _props3 = this.props,
+          prefixCls = _props3.prefixCls,
+          dateRender = _props3.dateRender,
+          dateClassNameRender = _props3.dateClassNameRender;
+      var _state = this.state,
+          currentDate = _state.currentDate,
+          currentShowDate = _state.currentShowDate;
+
+      var now = this.now();
+      //const currentShowDate = this.currentShowDate;
+
+      var dateLabel = dateRender ? dateRender(date, this) : date.getDate();
+
+      var classes = this.classNames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-cell', true), defineProperty(_classNames2, prefixCls + '-cell-b', true), defineProperty(_classNames2, prefixCls + '-cell-other-month', !isEqualMonth(currentShowDate, date)), defineProperty(_classNames2, prefixCls + '-cell-today', isEqualDate(now, date)), defineProperty(_classNames2, prefixCls + '-cell-selected', currentDate && isEqualDate(currentDate, date)), defineProperty(_classNames2, prefixCls + '-cell-disabled', this.isDisabledDate(date)), _classNames2), dateClassNameRender ? dateClassNameRender(date, this) : null);
+
+      return React__default.createElement(
+        'td',
+        {
+          key: key,
+          className: classes,
+          onClick: this.onDateClick.bind(this, date)
+        },
+        dateLabel
+      );
+    }
+  }, {
+    key: 'renderBody',
+    value: function renderBody() {
+      var _props4 = this.props,
+          showOtherMonths = _props4.showOtherMonths,
+          firstDay = _props4.firstDay;
+      var _state2 = this.state,
+          currentDate = _state2.currentDate,
+          currentShowDate = _state2.currentShowDate;
+
+      //this.currentShowDate = currentDate || this.now();
+
+      var dateRange = getMonthDateRange(currentShowDate, {
+        showOtherMonths: showOtherMonths,
+        firstDay: firstDay
+      });
+
+      var diff = DateUtil.difference(dateRange[0], dateRange[1], 'd');
+
+      var startDate = dateRange[0];
+      var endDate = dateRange[1];
+
+      var trs = [];
+      var tds = [];
+
+      for (var i = 0; i <= diff; i++) {
+
+        tds.push(this.renderDate(DateUtil.add(startDate, 'd', i), i));
+
+        if (tds.length === 7) {
+          trs.push(React__default.createElement(
+            'tr',
+            { key: i },
+            tds.map(function (td) {
+              return td;
+            })
+          ));
+          tds.length = 0;
+        }
+      }
+
+      return trs;
+    }
+  }, {
+    key: 'renderWrapper',
+    value: function renderWrapper() {
+      var _props5 = this.props,
+          prefixCls = _props5.prefixCls,
+          className = _props5.className,
+          style = _props5.style;
+
+
+      return React__default.createElement(
+        'div',
+        { className: this.classNames(prefixCls, className), style: style },
+        React__default.createElement(
+          'table',
+          { className: prefixCls + '-table' },
+          React__default.createElement(
+            'thead',
+            null,
+            this.renderHeader()
+          ),
+          React__default.createElement(
+            'tbody',
+            null,
+            this.renderBody()
+          )
+        )
+      );
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.renderWrapper();
+    }
+  }]);
+  return Calendar;
 }(React__default.Component), _class$20.DateUtil = DateUtil, _class$20.propTypes = {
-	className: index.string,
-	prefixCls: index.string,
-	onSelect: index.func,
-	dayNamesMin: index.array,
-	firstDay: index.number,
-	showOtherMonths: index.bool,
-	currentDate: index.instanceOf(Date),
-	defaultDate: index.instanceOf(Date),
-	dateRender: index.func,
-	dateClassNameRender: index.func,
-	disabledDate: index.func,
-	maxDate: index.instanceOf(Date),
-	minDate: index.instanceOf(Date)
+  className: index.string,
+  prefixCls: index.string,
+  onSelect: index.func,
+  dayNamesMin: index.array,
+  firstDay: index.number,
+  showOtherMonths: index.bool,
+  currentDate: index.instanceOf(Date), //selectedDate
+  defaultDate: index.instanceOf(Date), //selectedDate
+  currentShowDate: index.instanceOf(Date), //显示当前月份的日期面板
+  dateRender: index.func,
+  dateClassNameRender: index.func,
+  disabledDate: index.func,
+  maxDate: index.instanceOf(Date),
+  minDate: index.instanceOf(Date)
 }, _class$20.defaultProps = {
-	prefixCls: 'nex-calendar',
-	dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
-	firstDay: 0,
-	showOtherMonths: true,
-	defaultDate: null,
-	dateRender: null,
-	dateClassNameRender: null,
-	disabledDate: null,
-	maxDate: null,
-	minDate: null,
-	onSelect: noop$2
+  prefixCls: 'nex-calendar',
+  dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+  firstDay: 0,
+  showOtherMonths: true,
+  defaultDate: null,
+  dateRender: null,
+  dateClassNameRender: null,
+  disabledDate: null,
+  maxDate: null,
+  minDate: null,
+  onSelect: noop$2
 }, _temp$18);
+
+var _class$21;
+var _temp$19;
+
+// function checkDate(props, name, componentName){
+//     if ( props[name] && !DateUtil.isDate(props[name])) {
+//         return new Error(`${componentName}: ${name} is invalid Date!`);
+//     }
+// }
+
+function fixValue(date, format) {
+    if (typeof date === 'string') {
+        return DateUtil.parse(date, format);
+    }
+
+    if (typeof date === 'number') {
+        return new Date(date);
+    }
+
+    return date;
+}
+
+var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
+    inherits(DatePicker, _React$Component);
+
+    function DatePicker(props) {
+        classCallCheck(this, DatePicker);
+
+        var _this = possibleConstructorReturn(this, (DatePicker.__proto__ || Object.getPrototypeOf(DatePicker)).call(this, props));
+
+        _this.handleDropdownCreate = function (el) {
+            _this.refs.dropdown = el ? ReactDOM.findDOMNode(el) : null;
+        };
+
+        _this.handleClick = function (e) {
+            _this.setState({
+                showDropdown: !_this.state.showDropdown,
+                showYearList: false,
+                showMonthList: false
+            });
+        };
+
+        _this.inputValue = null;
+
+
+        var value = fixValue('value' in props ? props.value : props.defaultValue, props.dateFormat);
+
+        _this.state = {
+            value: value,
+            currentShowDate: DateUtil.isDate(value) ? value : new Date(),
+            _ext: uuid(6),
+            showYearList: false,
+            showMonthList: false
+        };
+
+        return _this;
+    }
+
+    createClass(DatePicker, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(props) {
+
+            if ('value' in props) {
+                var value = fixValue(props.value, props.dateFormat);
+                if (value) {
+                    this.setState({
+                        value: value,
+                        currentShowDate: value
+                    });
+                }
+            }
+        }
+        //使用jquery的position做定位，所以这时候jquery是必定存在的
+
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var ext = this.state._ext;
+
+            $(window).on('resize.' + ext, function () {
+                if (_this2.state.showDropdown) {
+                    _this2.hideDropdown();
+                }
+            });
+
+            $(document.body).on('mousewheel.' + ext + ' DOMMouseScroll.' + ext, function (e) {
+                if (_this2.state.showDropdown && !$(e.target).closest(_this2.refs.dropdown).length) {
+                    if ($(e.target).closest(_this2.refs.select).length) return;
+                    _this2.hideDropdown();
+                }
+            });
+
+            $(document).on('mousedown.' + ext, function (e) {
+                if (_this2.state.showDropdown && !$(e.target).closest(_this2.refs.dropdown).length) {
+                    if ($(e.target).closest(_this2.refs.select).length) return;
+                    _this2.hideDropdown();
+                }
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            var ext = this.state._ext;
+            $(window).off('.' + ext);
+            $(document.body).off('.' + ext);
+            $(document).off('.' + ext);
+        }
+    }, {
+        key: 'hideDropdown',
+        value: function hideDropdown() {
+            this.setState({
+                showDropdown: false,
+                showYearList: false,
+                showMonthList: false
+            });
+        }
+    }, {
+        key: 'getPopupStyle',
+        value: function getPopupStyle() {
+            var showDropdown = this.state.showDropdown;
+
+            var selectEl = this.refs.select;
+            var dropdownStyle = {
+                //maxWidth: 0,
+                //maxHeight: 0,
+            };
+
+            if (showDropdown && selectEl) {
+                //const rect = selectEl.getBoundingClientRect();
+                //dropdownStyle.minWidth = selectEl.offsetWidth;
+                //dropdownStyle.maxWidth = selectEl.offsetWidth + rect.right - 10;
+                //dropdownStyle.maxHeight = Math.max(rect.top, window.innerHeight - rect.top - selectEl.offsetHeight) - 10;
+            }
+
+            return index$3(dropdownStyle, this.props.dropdownStyle);
+        }
+    }, {
+        key: 'getDateLabel',
+        value: function getDateLabel() {
+            var dateFormat = this.props.dateFormat;
+            var value = this.state.value;
+
+
+            return DateUtil.isDate(value) ? DateUtil.format(value, dateFormat) : '';
+        }
+    }, {
+        key: 'transformDateValue',
+        value: function transformDateValue(date) {
+            var dateFormat = this.props.dateFormat;
+
+
+            return DateUtil.format(date, dateFormat);
+        }
+    }, {
+        key: 'onDateSelect',
+        value: function onDateSelect(date) {
+            var props = this.props;
+            var state = this.state;
+
+            if (DateUtil.isEqual(date, state.value)) {
+                this.hideDropdown();
+                return;
+            }
+
+            if (!('value' in props)) {
+                this.setState({
+                    value: date,
+                    currentShowDate: date,
+                    showYearList: false,
+                    showMonthList: false
+                });
+            }
+
+            if (props.onChange) props.onChange(date); //this.transformDateValue(date)
+
+            this.hideDropdown();
+        }
+    }, {
+        key: 'renderYearList',
+        value: function renderYearList() {
+            var currentShowDate = this.state.currentShowDate;
+
+            var list = [];
+            var year = DateUtil.part(new Date(), 'Y');
+            var currentYear = DateUtil.part(currentShowDate, 'Y');
+
+            var end = year * 1 + 3;
+            var start = year * 1 - 30;
+
+            var onChange = function onChange(year) {
+                currentShowDate.setFullYear(year);
+                this.setState({
+                    currentShowDate: currentShowDate,
+                    showYearList: false,
+                    showMonthList: false
+                });
+            };
+
+            for (; start < end; start++) {
+                list.push(React__default.createElement(
+                    'div',
+                    { key: start, className: index$1({
+                            'active': currentYear == start
+                        }), onClick: onChange.bind(this, start) },
+                    start,
+                    '\u5E74'
+                ));
+            }
+
+            return list.reverse();
+        }
+    }, {
+        key: 'renderMonthList',
+        value: function renderMonthList() {
+            var _this3 = this;
+
+            var currentShowDate = this.state.currentShowDate;
+
+            var months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            var month = DateUtil.part(new Date(), 'm');
+            var cMonth = DateUtil.part(currentShowDate, 'm');
+
+            var onChange = function onChange(month) {
+                currentShowDate.setMonth(month - 1);
+                this.setState({
+                    currentShowDate: currentShowDate,
+                    showYearList: false,
+                    showMonthList: false
+                });
+            };
+
+            return months.map(function (num) {
+                return React__default.createElement(
+                    'div',
+                    { key: num, className: index$1({
+                            'active': cMonth == num
+                        }), onClick: onChange.bind(_this3, num) },
+                    num,
+                    '\u6708'
+                );
+            });
+        }
+    }, {
+        key: 'showYearList',
+        value: function showYearList() {
+            this.setState({
+                showYearList: !this.state.showYearList,
+                showMonthList: false
+            });
+        }
+    }, {
+        key: 'showMonthList',
+        value: function showMonthList() {
+            this.setState({
+                showYearList: false,
+                showMonthList: !this.state.showMonthList
+            });
+        }
+    }, {
+        key: 'renderPickerHeader',
+        value: function renderPickerHeader() {
+            var prefixCls = this.props.prefixCls;
+            var _state = this.state,
+                currentShowDate = _state.currentShowDate,
+                showYearList = _state.showYearList,
+                showMonthList = _state.showMonthList;
+
+
+            var date = currentShowDate;
+
+            return React__default.createElement(
+                'div',
+                { className: prefixCls + '-picker-header' },
+                React__default.createElement(
+                    'div',
+                    { className: 'prev-btns' },
+                    React__default.createElement('span', { className: 'prev-year-btn fa fa-angle-double-left', onClick: this.onPrevYear.bind(this) }),
+                    React__default.createElement('span', { className: 'prev-month-btn fa fa-angle-left', onClick: this.onPrevMonth.bind(this) })
+                ),
+                React__default.createElement(
+                    'span',
+                    { className: 'year-label' },
+                    React__default.createElement(
+                        'span',
+                        { onClick: this.showYearList.bind(this) },
+                        DateUtil.part(date, 'Y'),
+                        '\u5E74'
+                    ),
+                    showYearList ? React__default.createElement(
+                        ScrollView,
+                        { overflowX: 'hidden', className: 'year-list' },
+                        this.renderYearList()
+                    ) : null
+                ),
+                React__default.createElement(
+                    'span',
+                    { className: 'month-label' },
+                    React__default.createElement(
+                        'span',
+                        { onClick: this.showMonthList.bind(this) },
+                        DateUtil.part(date, 'm'),
+                        '\u6708'
+                    ),
+                    showMonthList ? React__default.createElement(
+                        ScrollView,
+                        { overflowX: 'hidden', className: 'year-list' },
+                        this.renderMonthList()
+                    ) : null
+                ),
+                React__default.createElement(
+                    'div',
+                    { className: 'next-btns' },
+                    React__default.createElement('span', { className: 'next-month-btn fa fa-angle-right', onClick: this.onNextMonth.bind(this) }),
+                    React__default.createElement('span', { className: 'next-year-btn fa fa-angle-double-right', onClick: this.onNextYear.bind(this) })
+                )
+            );
+        }
+    }, {
+        key: 'onPrevYear',
+        value: function onPrevYear() {
+            var currentShowDate = this.state.currentShowDate;
+
+
+            this.setState({
+                showYearList: false,
+                showMonthList: false,
+                currentShowDate: DateUtil.add(currentShowDate, 'y', -1)
+            });
+        }
+    }, {
+        key: 'onPrevMonth',
+        value: function onPrevMonth() {
+            var currentShowDate = this.state.currentShowDate;
+
+
+            this.setState({
+                showYearList: false,
+                showMonthList: false,
+                currentShowDate: DateUtil.add(currentShowDate, 'mo', -1)
+            });
+        }
+    }, {
+        key: 'onNextYear',
+        value: function onNextYear() {
+            var currentShowDate = this.state.currentShowDate;
+
+
+            this.setState({
+                showYearList: false,
+                showMonthList: false,
+                currentShowDate: DateUtil.add(currentShowDate, 'y', 1)
+            });
+        }
+    }, {
+        key: 'onNextMonth',
+        value: function onNextMonth() {
+            var currentShowDate = this.state.currentShowDate;
+
+
+            this.setState({
+                showYearList: false,
+                showMonthList: false,
+                currentShowDate: DateUtil.add(currentShowDate, 'mo', 1)
+            });
+        }
+    }, {
+        key: 'renderPicker',
+        value: function renderPicker() {
+            var _props = this.props,
+                prefixCls = _props.prefixCls,
+                maxDate = _props.maxDate,
+                minDate = _props.minDate,
+                disabledDate = _props.disabledDate;
+            var _state2 = this.state,
+                value = _state2.value,
+                currentShowDate = _state2.currentShowDate;
+
+
+            return React__default.createElement(
+                'div',
+                { ref: this.handleDropdownCreate, className: prefixCls + '-dropdown' },
+                this.renderPickerHeader(),
+                React__default.createElement(
+                    'div',
+                    { className: prefixCls + '-picker-body' },
+                    React__default.createElement(Calendar$1, {
+                        currentDate: value,
+                        currentShowDate: currentShowDate,
+                        maxDate: maxDate,
+                        minDate: minDate,
+                        disabledDate: disabledDate,
+                        onSelect: this.onDateSelect.bind(this)
+                    })
+                )
+            );
+        }
+    }, {
+        key: 'onInputChange',
+        value: function onInputChange(e) {
+            var dateFormat = this.props.dateFormat;
+
+            this.inputValue = e.target.value;
+
+            var date = DateUtil.parse(e.target.value, dateFormat);
+
+            if (date) {
+                this.onDateSelect(date);
+            }
+
+            this.hideDropdown(); //forceUpdate
+        }
+    }, {
+        key: 'getInputLabel',
+        value: function getInputLabel() {
+            return this.inputValue === null ? this.getDateLabel() : this.inputValue;
+        }
+    }, {
+        key: 'onInputBlur',
+        value: function onInputBlur(e) {
+            var dateFormat = this.props.dateFormat;
+
+
+            if (!this.state.showDropdown) {
+                var date = DateUtil.parse(e.target.value, dateFormat);
+
+                if (!date) {
+                    //this.inputValue = null;
+                    this.forceUpdate();
+                }
+
+                this.inputValue = null;
+            }
+        }
+    }, {
+        key: 'renderSelect',
+        value: function renderSelect() {
+            var _classNames, _classNames2;
+
+            var props = this.props;
+            var showDropdown = this.state.showDropdown;
+            var prefixCls = props.prefixCls,
+                tabIndex = props.tabIndex,
+                inline = props.inline,
+                disabled = props.disabled,
+                style = props.style,
+                readOnly = props.readOnly,
+                arrowCls = props.arrowCls,
+                dropdownCls = props.dropdownCls,
+                dropdownDestroyOnHide = props.dropdownDestroyOnHide,
+                others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'inline', 'disabled', 'style', 'readOnly', 'arrowCls', 'dropdownCls', 'dropdownDestroyOnHide']);
+
+            var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', inline), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+
+            return React__default.createElement(
+                'div',
+                {
+                    style: style,
+                    ref: 'select',
+                    className: classes,
+                    tabIndex: tabIndex,
+                    onClick: this.handleClick
+                },
+                React__default.createElement('input', { className: prefixCls + '-text', value: this.getInputLabel(),
+                    onChange: this.onInputChange.bind(this),
+                    onBlur: this.onInputBlur.bind(this) }),
+                React__default.createElement('span', { className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
+                React__default.createElement(
+                    Popup$1,
+                    {
+                        visible: showDropdown,
+                        className: dropdownCls,
+                        destroyOnHide: dropdownDestroyOnHide,
+                        fixed: false,
+                        rootCls: prefixCls + '-dropdown-root',
+                        of: this.refs.select,
+                        my: 'left top',
+                        at: 'left bottom',
+                        style: this.getPopupStyle()
+                    },
+                    this.renderPicker()
+                )
+            );
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return this.renderSelect();
+        }
+    }]);
+    return DatePicker;
+}(React__default.Component), _class$21.DateUtil = DateUtil, _class$21.propTypes = {
+    className: index.string,
+    prefixCls: index.string,
+    value: index.oneOfType([index.string, index.number, index.instanceOf(Date)]),
+    defaultValue: index.oneOfType([index.string, index.number, index.instanceOf(Date)]),
+    dateFormat: index.string
+}, _class$21.defaultProps = {
+    prefixCls: 'nex-datepicker',
+    dateFormat: 'Y-m-d',
+    maxDate: null,
+    minDate: null,
+    dropdownCls: null,
+    dropdownStyle: null,
+    dropdownDestroyOnHide: true,
+    tabIndex: 0
+}, _temp$19);
 
 var Ajax = function () {
 	createClass(Ajax, null, [{
@@ -6144,10 +6676,10 @@ var Ajax = function () {
 	return Ajax;
 }();
 
-var _class$21;
-var _temp$19;
+var _class$22;
+var _temp$20;
 
-var Pagination = (_temp$19 = _class$21 = function (_React$Component) {
+var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 	inherits(Pagination, _React$Component);
 
 	function Pagination(props) {
@@ -6512,7 +7044,7 @@ var Pagination = (_temp$19 = _class$21 = function (_React$Component) {
 		}
 	}]);
 	return Pagination;
-}(React__default.Component), _class$21.propTypes = {
+}(React__default.Component), _class$22.propTypes = {
 	className: index.string,
 	prefixCls: index.string,
 	small: index.bool,
@@ -6537,7 +7069,7 @@ var Pagination = (_temp$19 = _class$21 = function (_React$Component) {
 	jumperRender: index.func,
 	showPrevMore: index.bool,
 	showNextMore: index.bool
-}, _class$21.defaultProps = {
+}, _class$22.defaultProps = {
 	prefixCls: 'nex-pagination',
 	small: false,
 	total: 0,
@@ -6561,15 +7093,15 @@ var Pagination = (_temp$19 = _class$21 = function (_React$Component) {
 	itemRender: null,
 	showPrevMore: true,
 	showNextMore: true
-}, _temp$19);
+}, _temp$20);
 
-var _class$22;
-var _temp$20;
+var _class$23;
+var _temp$21;
 var _initialiseProps$3;
 
-function noop$3() {}
+function noop$4() {}
 
-var Switch = (_temp$20 = _class$22 = function (_Component) {
+var Switch = (_temp$21 = _class$23 = function (_Component) {
 	inherits(Switch, _Component);
 
 	function Switch(props) {
@@ -6667,7 +7199,7 @@ var Switch = (_temp$20 = _class$22 = function (_Component) {
 		}
 	}]);
 	return Switch;
-}(React.Component), _class$22.propTypes = {
+}(React.Component), _class$23.propTypes = {
 	className: index.string,
 	size: index.oneOf(['small', 'default', 'large']),
 	prefixCls: index.string,
@@ -6682,14 +7214,14 @@ var Switch = (_temp$20 = _class$22 = function (_Component) {
 	defaultChecked: index.bool,
 	checkedColor: index.string,
 	unCheckedColor: index.string
-}, _class$22.defaultProps = {
+}, _class$23.defaultProps = {
 	prefixCls: 'nex-switch',
 	checkedText: null,
 	unCheckedText: null,
 	className: '',
 	defaultChecked: false,
-	onChange: noop$3,
-	onClick: noop$3
+	onChange: noop$4,
+	onClick: noop$4
 }, _initialiseProps$3 = function _initialiseProps() {
 	var _this2 = this;
 
@@ -6726,7 +7258,7 @@ var Switch = (_temp$20 = _class$22 = function (_Component) {
 	this.saveNode = function (node) {
 		_this2.node = node;
 	};
-}, _temp$20);
+}, _temp$21);
 
 var zIndex = 2000;
 
@@ -6734,10 +7266,10 @@ function getZIndex() {
 	return zIndex++;
 }
 
-var _class$23;
-var _temp$21;
+var _class$24;
+var _temp$22;
 
-function noop$4() {}
+function noop$5() {}
 
 var propTypes$2 = {
 	popupVisible: index.bool,
@@ -6748,7 +7280,7 @@ var propTypes$2 = {
 	content: index.any
 };
 
-var Trigger = (_temp$21 = _class$23 = function (_React$Component) {
+var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 	inherits(Trigger, _React$Component);
 
 	function Trigger(props) {
@@ -6813,7 +7345,7 @@ var Trigger = (_temp$21 = _class$23 = function (_React$Component) {
 			var popupVisible = this.state.popupVisible;
 
 			var _child$props$onClick = child.props.onClick,
-			    _onClick = _child$props$onClick === undefined ? noop$4 : _child$props$onClick;
+			    _onClick = _child$props$onClick === undefined ? noop$5 : _child$props$onClick;
 
 			return {
 				onClick: function onClick(e) {
@@ -6836,9 +7368,9 @@ var Trigger = (_temp$21 = _class$23 = function (_React$Component) {
 
 			var _child$props = child.props,
 			    _child$props$onMouseE = _child$props.onMouseEnter,
-			    _onMouseEnter = _child$props$onMouseE === undefined ? noop$4 : _child$props$onMouseE,
+			    _onMouseEnter = _child$props$onMouseE === undefined ? noop$5 : _child$props$onMouseE,
 			    _child$props$onMouseL = _child$props.onMouseLeave,
-			    _onMouseLeave = _child$props$onMouseL === undefined ? noop$4 : _child$props$onMouseL;
+			    _onMouseLeave = _child$props$onMouseL === undefined ? noop$5 : _child$props$onMouseL;
 
 			return {
 				onMouseEnter: function onMouseEnter(e) {
@@ -6865,9 +7397,9 @@ var Trigger = (_temp$21 = _class$23 = function (_React$Component) {
 
 			var _child$props2 = child.props,
 			    _child$props2$onFocus = _child$props2.onFocus,
-			    _onFocus = _child$props2$onFocus === undefined ? noop$4 : _child$props2$onFocus,
+			    _onFocus = _child$props2$onFocus === undefined ? noop$5 : _child$props2$onFocus,
 			    _child$props2$onBlur = _child$props2.onBlur,
-			    _onBlur = _child$props2$onBlur === undefined ? noop$4 : _child$props2$onBlur;
+			    _onBlur = _child$props2$onBlur === undefined ? noop$5 : _child$props2$onBlur;
 
 			return {
 				onFocus: function onFocus(e) {
@@ -6941,11 +7473,11 @@ var Trigger = (_temp$21 = _class$23 = function (_React$Component) {
 		}
 	}]);
 	return Trigger;
-}(React__default.Component), _class$23.propTypes = propTypes$2, _class$23.defaultProps = {
-	onPopupVisibleChange: noop$4,
+}(React__default.Component), _class$24.propTypes = propTypes$2, _class$24.defaultProps = {
+	onPopupVisibleChange: noop$5,
 	destroyPopupOnHide: false,
 	action: 'click'
-}, _temp$21);
+}, _temp$22);
 
 //import Tree from './tree/Tree';
 
@@ -6971,6 +7503,7 @@ exports.Pagination = Pagination;
 exports.Switch = Switch;
 exports.Trigger = Trigger;
 exports.Calendar = Calendar$1;
+exports.DatePicker = DatePicker$1;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

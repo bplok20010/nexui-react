@@ -23,8 +23,9 @@ export default class Calendar extends React.Component{
         dayNamesMin: PropTypes.array,
         firstDay: PropTypes.number,
         showOtherMonths: PropTypes.bool,
-        currentDate: PropTypes.instanceOf(Date),
-		defaultDate: PropTypes.instanceOf(Date),
+        currentDate: PropTypes.instanceOf(Date),//selectedDate
+		defaultDate: PropTypes.instanceOf(Date),//selectedDate
+		currentShowDate: PropTypes.instanceOf(Date),//显示当前月份的日期面板
         dateRender: PropTypes.func,
 		dateClassNameRender: PropTypes.func,
         disabledDate: PropTypes.func,
@@ -52,7 +53,8 @@ export default class Calendar extends React.Component{
         const currentDate = 'currentDate' in props ? props.currentDate : props.defaultDate;
 
 		this.state = {
-            currentDate
+            currentDate,
+            currentShowDate: DateUtil.isDate(currentDate) ? currentDate : new Date
 		}
 
 	}
@@ -65,6 +67,12 @@ export default class Calendar extends React.Component{
         if ('currentDate' in nextProps) {
             this.setState({
                 currentDate: nextProps.currentDate,
+            });
+        }
+
+        if ('currentShowDate' in nextProps) {
+            this.setState({
+                currentShowDate: nextProps.currentShowDate,
             });
         }
     }
@@ -119,24 +127,32 @@ export default class Calendar extends React.Component{
 
 	onDateClick(date, e){
     	const props = this.props;
-        const {onSelect, currentDate} = props;
+        let {onSelect, currentDate} = props;
 
         if(this.isDisabledDate(date)) return;
 
+        if( !currentDate ) {
+        	currentDate = date;
+		}
+
+        currentDate.setFullYear(date.getFullYear());
+        currentDate.setMonth(date.getMonth());
+        currentDate.setDate(date.getDate());
+
         if( !(currentDate in props) ) {
         	this.setState({
-                currentDate: date
+                currentDate
 			});
 		}
 
-        onSelect(date);
+        onSelect(currentDate);
 	}
 
 	renderDate(date, key){
         const {prefixCls, dateRender, dateClassNameRender} = this.props;
-        const {currentDate} = this.state;
+        const {currentDate, currentShowDate} = this.state;
         const now = this.now();
-        const currentShowDate = this.currentShowDate;
+        //const currentShowDate = this.currentShowDate;
 
         const dateLabel = dateRender ? dateRender(date, this) : date.getDate();
 
@@ -164,11 +180,11 @@ export default class Calendar extends React.Component{
 
 	renderBody(){
         const {showOtherMonths, firstDay} = this.props;
-        const {currentDate} = this.state;
+        const {currentDate, currentShowDate} = this.state;
 
-        this.currentShowDate = currentDate || this.now();
+        //this.currentShowDate = currentDate || this.now();
 
-        const dateRange = getMonthDateRange( this.currentShowDate, {
+        const dateRange = getMonthDateRange( currentShowDate, {
             showOtherMonths,
             firstDay
 		} );

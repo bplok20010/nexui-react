@@ -273,7 +273,7 @@ export default class Select extends React.Component{
 					[`${prefixCls}-arrow`]: true,
 					[arrowCls]: true	
 				})}></span>
-				<Popup visible={showDropdown} className={dropdownCls} destroyOnClose={dropdownDestroyOnClose} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
+				<Popup visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnClose} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
 					{this.getSelectOptions()}
 				</Popup>
 			</div>
