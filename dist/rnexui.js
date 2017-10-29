@@ -4142,12 +4142,12 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			    children = props.children,
 			    options = props.options,
 			    dropdownCls = props.dropdownCls,
-			    dropdownDestroyOnClose = props.dropdownDestroyOnClose,
-			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'inline', 'disabled', 'readOnly', 'arrowCls', 'children', 'options', 'dropdownCls', 'dropdownDestroyOnClose']);
+			    dropdownDestroyOnHide = props.dropdownDestroyOnHide,
+			    others = objectWithoutProperties(props, ['prefixCls', 'tabIndex', 'inline', 'disabled', 'readOnly', 'arrowCls', 'children', 'options', 'dropdownCls', 'dropdownDestroyOnHide']);
 
 			var classes = index$1((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', inline), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
-			var otherProps = omit(others, ['value', 'valueField', 'dropdownCls', 'dropdownStyle', 'dropdownDestroyOnClose', 'textField', 'optionsField', 'textInValue']);
+			var otherProps = omit(others, ['value', 'valueField', 'dropdownCls', 'dropdownStyle', 'dropdownDestroyOnHide', 'textField', 'optionsField', 'textInValue']);
 
 			return React__default.createElement(
 				'div',
@@ -4165,7 +4165,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 				React__default.createElement('span', { className: index$1((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
 				React__default.createElement(
 					Popup$1,
-					{ visible: showDropdown, className: dropdownCls, destroyOnHide: dropdownDestroyOnClose, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
+					{ visible: showDropdown, className: dropdownCls, destroyOnHide: dropdownDestroyOnHide, fixed: false, rootCls: prefixCls + '-dropdown-root', of: this.refs.select, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
 					this.getSelectOptions()
 				)
 			);
@@ -4183,7 +4183,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 	prefixCls: index.string,
 	options: index.array,
 	dropdownCls: index.string,
-	dropdownDestroyOnClose: index.bool,
+	dropdownDestroyOnHide: index.bool,
 	dropdownStyle: index.object,
 	textInValue: index.bool
 }, _class$14.defaultProps = {
@@ -4199,7 +4199,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 	optionsField: 'options',
 	dropdownCls: null,
 	dropdownStyle: null,
-	dropdownDestroyOnClose: true,
+	dropdownDestroyOnHide: true,
 	textInValue: false
 }, _initialiseProps$1 = function _initialiseProps() {
 	var _this4 = this;
