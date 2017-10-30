@@ -67,7 +67,7 @@ export default class DatePicker extends React.Component{
 
         this.state = {
             value,
-            currentShowDate: DateUtil.isDate(value) ? value : new Date,
+            currentShowDate: DateUtil.isDate(value) ? DateUtil.clone(value) : new Date,
             _ext: uuid(6),
             showYearList: false,
             showMonthList: false,
