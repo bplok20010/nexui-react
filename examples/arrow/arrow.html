@@ -1,0 +1,80 @@
+
+<!DOCTYPE html> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+    </head>
+    <body style="padding: 50px;">
+    <link rel="stylesheet" href="./../style/reset.css">
+    <link rel="stylesheet" href="./../style/style.css">
+
+    <style type="text/css">
+
+        .arrow {
+            display: inline-block;
+            border-style: solid;
+            border-color: transparent;
+            position: relative;
+            width: 0;
+            height: 0;
+        }
+
+        .popup .arrow:after {
+            display: block;
+            position: absolute;
+            border-style: solid;
+            border-color: transparent;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            content: " ";
+        }
+
+        .arrow-bottom {
+            border-width: 0 5px 5px 5px;
+            border-bottom-color: black;
+        }
+
+        .arrow-top {
+            border-width: 5px 5px 0;
+            border-top-color: black;
+        }
+
+        .arrow-left {
+            border-width: 5px 0 5px 5px;
+            border-left-color: black;
+        }
+
+        .arrow-right {
+            border-width: 5px 5px 5px 0;
+            border-right-color: black;
+        }
+
+        .popup .arrow-bottom:after {
+            border-width: 0 4px 4px 4px;
+            border-bottom-color: white;
+            margin-left: -4px;
+            top: 1px;
+        }
+
+    </style>
+
+    <div id="demo" style="padding: 100px;">
+        <div class="arrow arrow-bottom"></div>
+        <div class="arrow arrow-top"></div>
+        <div class="arrow arrow-left"></div>
+        <div class="arrow arrow-right"></div>
+        <hr />
+        <div class="popup">
+            <div class="arrow arrow-bottom"></div>
+            <div class="arrow arrow-top"></div>
+            <div class="arrow arrow-left"></div>
+            <div class="arrow arrow-right"></div>
+        </div>
+    </div>
+
+    </body>
+</html>
