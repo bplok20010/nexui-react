@@ -7,10 +7,23 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
     	<style type="text/css">
+		
+		html, body {
+			padding:0;
+			margin:	0;
+		}
+		
 		* {
 			box-sizing: border-box;	
 		}
 		td, th{ border:1px solid #ccc;}
+		
+		.fixed-test {
+			position:absolute;
+			top: 300px;
+			border:1px solid red;
+			width:100%;
+		}
 		</style>
     </head>
     <body>
@@ -31,5 +44,28 @@
         <td>3</td>
       </tr>
     </table>
+    
+    <div class="fixed-test">
+    	<table border="0" style=" width: 100%; table-layout:fixed; border-collapse:collapse; border-spacing:0;">
+          <tr>
+            <td height="40px;" >111111111111111111111111111111222</td>
+            <td>2</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>3</td>
+          </tr>
+        </table>
+    </div>
+    
+    <div style="position:absolute; left:-999999px;"></div>
+    
     </body>
 </html>
