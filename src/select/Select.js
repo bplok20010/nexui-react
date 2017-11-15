@@ -1,3 +1,7 @@
+/*
+* 问题1: 当前popup拿到的of是数据改变之前的元素，如果加搜索的画在结果改变触发位置刷新时就会出先问题 
+*/
+
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
