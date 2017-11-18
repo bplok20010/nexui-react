@@ -45,7 +45,9 @@ export default class Popup extends React.Component {
 		destroyOnHide: true,
 		//禁用每次刷新更新位置
 		disabledSetPosition: false,
-		visible: false
+		visible: false,
+		of: window,
+		collision: 'flip', // none flip fit flipfit
 	}
 	
 	constructor(props){
@@ -73,7 +75,10 @@ export default class Popup extends React.Component {
 	getPosition(type = 1){
 		let pos, dir;
 		const popup = this.refs.popup;
-		let {of, my, at, collision, using, within, fixed} = this.props;
+		let {of, my, at, collision, using, within} = this.props;
+		if( this._of ) {
+			of = this._of;	
+		}
 		const config = {
 			using: function(p, d){
 				if( using ) {
@@ -102,21 +107,44 @@ export default class Popup extends React.Component {
 			of = of();	
 		}
 		
-		position(popup, of || window, config);	
+		if( !of ) return null;
 		
+		position(popup, of, config);	
+
 		return type == 1 ? pos : ( type == 2 ? dir : _assign(pos, dir) );
 	}
 	
 	setPosition(pos){
 		const popup = this.refs.popup;
-		$(popup).css( pos || this.getPosition() );
+		
+		pos = pos || this.getPosition() || {}; 
+		
+		if( 'left' in pos ) {
+			popup.style.left = pos.left + 'px';
+		}
+		if( 'top' in pos ) {
+			popup.style.top = pos.top + 'px';
+		}
+		if( 'right' in pos ) {
+			popup.style.right = pos.right + 'px';
+		}
+		if( 'bottom' in pos ) {
+			popup.style.bottom = pos.bottom + 'px';
+		}
+	}
+	
+	_of = null
+	updatePosition(of = null){
+		this._of = of;
+		this.setPosition();
+		this._of = null;
 	}
 	
 	componentDidMount(){
 		const { visible } = this.props;
 		
 		if( visible ) {
-			this.doShow();
+			this.showPopup();
 		}
 		
 		this.state.isInit = false;
@@ -124,29 +152,38 @@ export default class Popup extends React.Component {
 	
 	componentWillReceiveProps({visible}){
 		this.setState({
-			visible	
+			visible
 		});
 	}
 	
 	componentDidUpdate(){
 		const { visible } = this.props;
 		const { popup, mask } = this.refs;
+		const { isHidden } = this.state;
 		if( visible ) {
-			if( this.state.isHidden ) {
-				$(popup).show();
-				$(mask).show();		
+			if( isHidden ) {
+				if( popup ) {
+					popup.style.display = "";	
+				}
+				if( mask ) {
+					mask.style.display = "";	
+				}	
 			}
 			
-			this.doShow();
+			this.showPopup();
 			
-			if( this.state.isHidden ) {
+			if( isHidden ) {
 				this.state.isHidden = false;
 				this.animateAppear();
 			}
-		} else if( this.state.isHidden ) {
+		} else if( isHidden ) {
 			this.animateLeave(null, ()=> {
-				$(popup).hide();
-				$(mask).hide();	
+				if( popup ) {
+					popup.style.display = "none";	
+				}
+				if( mask ) {
+					mask.style.display = "none";	
+				}
 			});	
 		}
 	}
@@ -183,7 +220,7 @@ export default class Popup extends React.Component {
 		}
 	}
 	
-	doShow(){
+	showPopup(){
 		if( this.state.isInit || !this.props.disabledSetPosition ) {
 			this.setPosition();	
 		}
@@ -210,15 +247,24 @@ export default class Popup extends React.Component {
 	}
 	
 	getRenderComponent(){
-		const {prefixCls, className, destroyOnHide, fixed, mask, 
-			animate={}, renderTo, container, rootCls, ..._others
+		const {
+			prefixCls, 
+			className, 
+			destroyOnHide, 
+			fixed, 
+			mask, 
+			animate={}, 
+			renderTo, 
+			container, 
+			rootCls, 
+			..._others
 		} = this.props;
 		
 		let { visible, isInit } = this.state;
 		
-		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
-		
 		let PortalConf = {};
+		
+		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
 		
 		if( renderTo ) {
 			PortalConf.renderTo = renderTo;

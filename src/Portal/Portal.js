@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM, {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import Identity from './Identity';
 import {getDom, createContainer, removeContainer} from './util';
 
 export default class Portal extends React.Component {
@@ -32,10 +33,33 @@ export default class Portal extends React.Component {
 		}
 		
 		this.renderPortal();
-		
+
 		if( animate.appear ) {
 			animate.appear(findDOMNode(this._instance));	
 		}
+	}
+	
+	componentWillReceiveProps(nextProps){
+		if( nextProps.container && this._container !== nextProps.container ) {
+			this.removePortal();
+			this._container = nextProps.container;
+		}
+	}
+	
+	_lastPortalDOM = null
+	
+	onPortalRender = (inst) => {
+		const { animate={} } = this.props;
+		
+		const portalDOM = findDOMNode(inst);
+		
+		if( portalDOM && this._lastPortalDOM === null ) {
+			if( animate.appear ) {
+				animate.appear(portalDOM);	
+			}	
+		}
+		
+		this._lastPortalDOM = portalDOM;
 	}
 	
 	renderPortal(){
@@ -44,9 +68,9 @@ export default class Portal extends React.Component {
 		
 		this._container.className = classNames( prefixCls, className );
 		
-		this._instance = ReactDOM.unstable_renderSubtreeIntoContainer(
+		ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
-			children,
+			<Identity ref={this.onPortalRender}>{children}</Identity>,
 			this._container,
 			this.props.onUpdate
 		);
@@ -55,9 +79,11 @@ export default class Portal extends React.Component {
 	removePortal(){
 		const container = this._container;
 		ReactDOM.unmountComponentAtNode(container);
-		removeContainer(container);
+		if( !this.props.container ) {
+			removeContainer(container);
+		}
 		this._container = null;	
-		this._instance = null;	
+		this._lastPortalDOM = null;	
 	}
 
 	componentWillUnmount() {
@@ -67,8 +93,8 @@ export default class Portal extends React.Component {
 			this.removePortal();		
 		}
 		
-		if( animate.leave ) {
-			animate.leave(findDOMNode(this._instance), done)	
+		if( this._lastPortalDOM && animate.leave ) {
+			animate.leave(this._lastPortalDOM, done)	
 		} else {
 			done();
 		}
