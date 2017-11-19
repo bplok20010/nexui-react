@@ -1,15 +1,15 @@
 @import "./mixins/compatibility.scss";
 
-$inputHeight: 28px;
-$inputSmallHeight: 22px;
-$inputLargeHeight: 32px;
+$inputHeight: 28px !default;
+$inputSmallHeight: 22px !default;
+$inputLargeHeight: 32px !default;
 
-$inputBorderRadius: 3px;//3px
-$inputColor: rgba(0,0,0,.8);
-$inputBGColor: #FFF;
-$inputBorderColor: #d9d9d9;
-$inputPlaceholderColor: #ccc;
-$inputHoverBorderColor: #49a9ee;
+$inputBorderRadius: 3px !default;//3px
+$inputColor: rgba(0,0,0,.8) !default;
+$inputBGColor: #FFF !default;
+$inputBorderColor: #d9d9d9 !default;
+$inputPlaceholderColor: #ccc !default;
+$inputHoverBorderColor: #49a9ee !default;
 
 input[type="text"]::-ms-clear{
     display:none;
@@ -18,26 +18,26 @@ input[type="text"]::-ms-clear{
 .nex-input {
 	position:relative;
 	display:inline-block;
-	padding:3px 7px;
+	padding:0 7px;
 	width:100%;
 	height:$inputHeight;
 	cursor:text;
 	font-size:12px;
-	line-height:1.5;
+	line-height:$inputHeight - 2;
 	color:$inputColor;
 	background-color:#fff;
 	background-image:none;
 	border:1px solid $inputBorderColor;
 	border-radius:$inputBorderRadius;
 	vertical-align: middle;
-	//-webkit-transition:all .3s;
-	//transition:all .3s;
+	transition:all .3s;
 	
 	@include placeholder($inputPlaceholderColor);
 	
 }
 
-.nex-input:focus,.nex-input:hover {
+.nex-input:focus,
+.nex-input:hover {
 	border-color:$inputHoverBorderColor;
 }
 .nex-input:focus {
@@ -59,12 +59,12 @@ textarea.nex-input {
 	vertical-align:bottom;
 }
 .nex-input-lg {
-	padding:6px 7px;
-	height:$inputLargeHeight
+	height:$inputLargeHeight;
+	line-height:$inputLargeHeight - 2;
 }
 .nex-input-sm {
-	padding:1px 7px;
-	height:$inputSmallHeight
+	height:$inputSmallHeight;
+	line-height:$inputSmallHeight - 2;
 }
 
 .nex-form-input-group {
@@ -79,18 +79,18 @@ textarea.nex-input {
 	border-collapse: separate;
     border-spacing: 0;
 	//vertical-align:middle;
-	& > * {
+	> * {
 		display:table-cell;
 		vertical-align:middle;
 	}
-	& > .nex-input-inner {
+	> .nex-input-inner {
 		width:100%;
 		float:left;
 		.nex-input {
 			vertical-align:baseline;
 		}
 	}
-	& > .nex-input-addon {
+	> .nex-input-addon {
 		width:1px;
 		font-weight: 400;
 		text-align: center;
@@ -100,11 +100,11 @@ textarea.nex-input {
 		border-radius:$inputBorderRadius;
 	}
 
-	&>textarea{
+	>textarea{
 		resize: none;
 	}
 
-	&>textarea.nex-input-autosize {
+	>textarea.nex-input-autosize {
 		resize: both;
 	}
 	
@@ -145,7 +145,7 @@ textarea.nex-input {
 	position:relative;
 	display:inline-block;
 	
-	&>* {
+	>* {
 		position:relative;
 		display:inline-block;
 		vertical-align:middle;
@@ -153,42 +153,42 @@ textarea.nex-input {
 		width:auto;
 	}
 	
-	&>*:focus,
-	&>*:hover {
+	>*:focus,
+	>*:hover {
 		z-index:2
 	}
 	
-	&>*:not(:first-child) {
+	>*:not(:first-child) {
 		margin-left:-1px
 	}
 	
-	&>*:not(:first-child):not(:last-child) .nex-input {
+	>*:not(:first-child):not(:last-child) .nex-input {
 		border-radius:0;
 	}
 	
-	&>*:first-child {
+	>*:first-child {
 		margin-left:0
 	}
 	
-	&>*:first-child:not(:last-child)  .nex-input {
+	>*:first-child:not(:last-child)  .nex-input {
 		border-bottom-right-radius:0;
 		border-top-right-radius:0;
 	}
-	&>*:last-child:not(:first-child)  .nex-input {
+	>*:last-child:not(:first-child)  .nex-input {
 		border-bottom-left-radius:0;
 		border-top-left-radius:0;
 	}
 }
 
 .nex-input-group-lg {
-	& .nex-input {
+	.nex-input {
 		padding:6px 7px;
 		height:$inputLargeHeight	
 	}	
 }
 
 .nex-input-group-sm {
-	& .nex-input {
+	.nex-input {
 		padding:1px 7px;
 		height:$inputSmallHeight
 	}	

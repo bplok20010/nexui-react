@@ -4,18 +4,19 @@ input[type="text"]::-ms-clear {
 .nex-input {
   position: relative;
   display: inline-block;
-  padding: 3px 7px;
+  padding: 0 7px;
   width: 100%;
   height: 28px;
   cursor: text;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 26px;
   color: rgba(0, 0, 0, 0.8);
   background-color: #fff;
   background-image: none;
   border: 1px solid #d9d9d9;
   border-radius: 3px;
-  vertical-align: middle; }
+  vertical-align: middle;
+  transition: all .3s; }
   .nex-input::-moz-placeholder {
     color: #ccc;
     opacity: 1; }
@@ -24,7 +25,8 @@ input[type="text"]::-ms-clear {
   .nex-input::-webkit-input-placeholder {
     color: #ccc; }
 
-.nex-input:focus, .nex-input:hover {
+.nex-input:focus,
+.nex-input:hover {
   border-color: #49a9ee; }
 
 .nex-input:focus {
@@ -46,12 +48,12 @@ textarea.nex-input {
   vertical-align: bottom; }
 
 .nex-input-lg {
-  padding: 6px 7px;
-  height: 32px; }
+  height: 32px;
+  line-height: 30px; }
 
 .nex-input-sm {
-  padding: 1px 7px;
-  height: 22px; }
+  height: 22px;
+  line-height: 20px; }
 
 .nex-form-input-group {
   position: relative;
