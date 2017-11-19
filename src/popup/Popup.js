@@ -12,6 +12,7 @@ const propTypes = {
 		prefixCls: PropTypes.string,
 		rootCls: PropTypes.string,
 		className: PropTypes.string,
+		mask: PropTypes.bool,
 		maskCls: PropTypes.string,
 		destroyOnHide: PropTypes.bool,
 		visible: PropTypes.bool,
@@ -45,7 +46,7 @@ export default class Popup extends React.Component {
 		destroyOnHide: true,
 		//禁用每次刷新更新位置
 		disabledSetPosition: false,
-		visible: false,
+		visible: true,
 		of: window,
 		collision: 'flip', // none flip fit flipfit
 	}

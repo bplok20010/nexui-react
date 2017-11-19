@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export default class Button extends PureComponent{
-	
 	static propTypes = {
 		type: PropTypes.string,
 		size: PropTypes.string,
