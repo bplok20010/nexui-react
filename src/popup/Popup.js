@@ -134,11 +134,16 @@ export default class Popup extends React.Component {
 		}
 	}
 	
+	_initAppear = false;
 	_of = null
 	updatePosition(of = null){
 		this._of = of;
 		this.setPosition();
 		this._of = null;
+		
+		if( !this._initAppear ) {
+			this.animateAppear();
+		}
 	}
 	
 	componentDidMount(){
@@ -146,6 +151,7 @@ export default class Popup extends React.Component {
 		
 		if( visible ) {
 			this.showPopup();
+			this.animateAppear();
 		}
 		
 		this.state.isInit = false;
@@ -176,6 +182,8 @@ export default class Popup extends React.Component {
 			if( isHidden ) {
 				this.state.isHidden = false;
 				this.animateAppear();
+			} else if( !this._initAppear ) {
+				this.animateAppear();	
 			}
 		} else if( isHidden ) {
 			this.animateLeave(null, ()=> {
@@ -197,6 +205,8 @@ export default class Popup extends React.Component {
 	
 	animateAppear = () => {
 		const {popupAnimate, maskAnimate} = this.props;
+		
+		this._initAppear = true;
 		
 		if( popupAnimate && popupAnimate.appear ) {
 			popupAnimate.appear(this.refs.popup);	
@@ -287,13 +297,13 @@ export default class Popup extends React.Component {
 			visible = true;
 			this.state.isHidden = true;	
 		}
-		
+	
 		return visible ? (
 			<Portal 
 				{...PortalConf}
 				className={`${prefixCls}-root ${rootCls}`} 
 				animate={{
-					appear: this.animateAppear,
+					appear: noop, //css3动画效果和position执行顺序问题
 					leave: this.animateLeave	
 				}} 
 			>{popup}</Portal>
