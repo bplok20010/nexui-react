@@ -8,6 +8,9 @@ import ScrollView from '../scrollview/ScrollView';
 import ListItem from './ListItem';
 import ListItemGroup from './ListItemGroup';
 import {isArray, isUndefined, toArray, isEqual} from '../shared/util';
+import {hasClass, addClass, removeClass} from '../shared/dom';
+
+function noop(){}
 
 function copy(data){
 	return isArray(data) ? [].concat(data) : data;
@@ -24,7 +27,6 @@ export default class ListBox extends React.Component{
 		textField: PropTypes.string,
 		itemsField: PropTypes.string,
 		items: PropTypes.array,
-		filter: PropTypes.func,
 		multiple: PropTypes.bool,
 		width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -57,6 +59,10 @@ export default class ListBox extends React.Component{
 		if( value ) {
 			selectedValue.push(...value);
 		}
+		//聚焦索引id
+		this._activeIndex = 0;
+		//item 索引id
+		this._itemIndex = 0;
 		
 		this.state = {
 			selectedValue,
@@ -67,7 +73,7 @@ export default class ListBox extends React.Component{
 	componentWillReceiveProps({value}){
 		if( !isUndefined(value) ) {
 			this.setState({
-				selectedValue: isArray(value) ? value : [value]
+				selectedValue: isArray(value) ? copy(value) : [value]
 			});
 		}
 	}
@@ -145,8 +151,41 @@ export default class ListBox extends React.Component{
 		
 	}
 	
+	getListItemProps(){
+			
+	}
+	
+	getListItemList
+	
+	onKeyDown = (e) => {
+		if( e.keyCode == 33 ) {//UP
+		} else if( e.keyCode == 34 ) {//DOWN
+		}
+	}
+	
+	onItemMouseEnter(index){
+		const {prefixCls} = this.props;
+		const selector = `.${prefixCls}-item:not(.${prefixCls}-item-disabled)`;
+		const activeCls = `${prefixCls}-item-active`;
+		let list = null;
+		
+		return (e) => {
+			//const dom = findDOMNode(this);
+//			if( !list ) {
+//				list = dom.querySelectorAll(selector);
+//			}
+//		
+//			list.forEach( (el, i) => {
+//				removeClass(el, activeCls)	
+//			} );
+			
+			addClass(e.currentTarget, activeCls)
+			
+		}
+	}
+	
 	renderListItems(items, markMap){
-		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
+		const {textField, valueField, itemsField, prefixCls} = this.props;
 		const {itemsMap} = this.state;
 		
 		return items.map(item=>{
@@ -160,11 +199,21 @@ export default class ListBox extends React.Component{
 			const isGroup = item[itemsField];
 			const itemPrefixCls = `${prefixCls}-item`;
 			
+			let onMouseEnter = noop;
+			let onMouseLeave = noop;
+			
 			if( !isGroup ) {
-				itemsMap[item[valueField]] = item;	
+				itemsMap[item[valueField]] = item;
+				if( !item.disabled ) {
+					onMouseEnter = this.onItemMouseEnter(this._itemIndex++);
+					onMouseLeave = e => {
+						const activeCls = `${prefixCls}-item-active`;
+						removeClass(e.currentTarget, activeCls)	
+					}
+				}
 			}
 			
-			return (filter && !isGroup ? filter(item) : true) ? (!isGroup ? (
+			return !isGroup ? (
 				<ListItem 
 					key={item[valueField]}
 					value={item[valueField]}
@@ -174,6 +223,8 @@ export default class ListBox extends React.Component{
 					onClick={this.onItemClick}
 					onSelect={this.onItemSelect}
 					onDeselect={this.onItemDeselect}
+					onMouseEnter={onMouseEnter}
+					onMouseLeave={onMouseLeave}
 				>
 					{item[textField]}
 				</ListItem>		
@@ -181,12 +232,12 @@ export default class ListBox extends React.Component{
 				<ListItemGroup prefixCls={`${itemPrefixCls}-group`} key={item[textField]} label={item[textField]}>
 					{this.renderListItems(item[itemsField] || [], markMap)}
 				</ListItemGroup>
-			)) : null;
+			);
 		});
 	}
 	
 	renderListChild(children, markMap){
-		const {textField, valueField, itemsField, prefixCls, filter} = this.props;
+		const {textField, valueField, itemsField, prefixCls} = this.props;
 		const {itemsMap} = this.state;
 		
 		const itemPrefixCls = `${prefixCls}-item`;
@@ -217,14 +268,16 @@ export default class ListBox extends React.Component{
 		this.state.itemsMap = {};
 		
 		const markMap = {};
-		
 		selectedValue.forEach( v => markMap[v] = true);	
+		this._itemIndex = 0;
 		
-		return items.length ? this.renderListItems(items, markMap) : this.renderListChild(children, markMap);
+		return items.length ? 
+				this.renderListItems(items, markMap) : 
+				this.renderListChild(children, markMap);
 	}
 	
 	render(){
-		const {filter, className, value, prefixCls, items, width, height, style={}, scrollViewBodyStyle={}} = this.props;
+		const {className, value, prefixCls, items, width, height, style={}, scrollViewBodyStyle={}} = this.props;
 		
 		if( width ) {
 			style.width = width;
@@ -234,7 +287,15 @@ export default class ListBox extends React.Component{
 		}
 		
 		return (
-			<ScrollView ref="listbox" tabIndex={-1} scrollViewBodyCls={`${prefixCls}-body`} scrollViewBodyStyle={scrollViewBodyStyle} className={classNames(`${prefixCls}`, className)} style={style}>
+			<ScrollView 
+				ref="listbox" 
+				tabIndex={-1} 
+				scrollViewBodyCls={`${prefixCls}-body`} 
+				scrollViewBodyStyle={scrollViewBodyStyle} 
+				className={classNames(`${prefixCls}`, className)} 
+				onKeyDown={this.onKeyDown}
+				style={style}
+			>
 				{this.getListItems()}
 			</ScrollView>
 		);

@@ -1,19 +1,37 @@
 import React, {PureComponent} from 'react';
+//import {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import omit from 'omit.js';
 import shallowEqual from 'shallowequal';
+import omit from 'omit.js';
 
 export default class ListItem extends React.Component{
+	
+	static propTypes = {
+		prefixCls: PropTypes.string,
+		value: PropTypes.any,
+		onSelect: PropTypes.func,
+		onDeselect: PropTypes.func,
+		onClick: PropTypes.func,
+		selected: PropTypes.bool,
+		//active: PropTypes.bool,
+		disabled: PropTypes.bool,
+	}
 
 	static defaultProps = {
 		prefixCls: 'nex-listbox-item',
 		value: '',
 		selected: false,
+		//active: false,
 		disabled: false,
-	};
+	}
 	
 	static isListItem = true;
+	
+	shouldComponentUpdate(nextProps, nextState, nextContext) {
+		return !shallowEqual(this.props, nextProps) ||
+			   !shallowEqual(this.state, nextState);
+	}
 	
 	handleItemClick=(e)=>{
 		const {onSelect, onDeselect, onClick, selected, disabled, value, children} = this.props;
@@ -35,20 +53,25 @@ export default class ListItem extends React.Component{
 		}
 	}
 	
-	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		return !shallowEqual(this.props, nextProps) ||
-			   !shallowEqual(this.state, nextState);
-	}
-	
 	render(){
-		const {value, prefixCls, disabled, selected, children} = this.props;
+		const {prefixCls, disabled, selected, active, children} = this.props;
 		const classes = classNames({
 			[`${prefixCls}`]: true,
 			[`${prefixCls}-selected`]: selected,
+			//[`${prefixCls}-active`]: active,
 			[`${prefixCls}-disabled`]: disabled,
 		});
-
-		return <div ref="item" className={classes} onClick={this.handleItemClick}>{children}</div>;
+		
+		const others = omit( this.props, Object.keys(ListItem.propTypes));
+		
+		return <div 
+					{...others}
+					ref="item" 
+					className={classes} 
+					onClick={this.handleItemClick}
+				>
+					{children}
+				</div>;
 	}
 		
 }

@@ -50,7 +50,6 @@ gulp.task('rollup', async function() {
                 "babelrc": false,
                 "plugins": [
                     "external-helpers",
-					"transform-proto-to-assign",
                     "transform-es3-property-literals",
                     "transform-es3-member-expression-literals",
                     "transform-decorators-legacy"

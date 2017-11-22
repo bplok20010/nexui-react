@@ -74,8 +74,8 @@ define(['../../dist/rnexui'], function (_rnexui) {
 
 			_this.filterMsg = '';
 
-			_this.search = function (e) {
-				_this.filterMsg = e.target.value;
+			_this.search = function (value) {
+				_this.filterMsg = value;
 				_this.forceUpdate();
 			};
 

@@ -15,6 +15,7 @@
       height: 26px;
       white-space: nowrap;
       overflow: hidden; }
+    .nex-listbox .nex-listbox-body .nex-listbox-item-active,
     .nex-listbox .nex-listbox-body .nex-listbox-item:hover {
       background: #e4e8f1; }
     .nex-listbox .nex-listbox-body .nex-listbox-item-selected {

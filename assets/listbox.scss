@@ -1,5 +1,5 @@
-$listboxItemPadding: 0 10px;
-$listboxItemHeight: 26px;
+$listboxItemPadding: 0 10px !default;
+$listboxItemHeight: 26px !default;
 
 .nex-listbox {
 	background:#FFF;
@@ -22,6 +22,7 @@ $listboxItemHeight: 26px;
 			overflow:hidden;
 		}
 		
+		.nex-listbox-item-active,
 		.nex-listbox-item:hover {
 			background: #e4e8f1;
 		}
@@ -30,6 +31,7 @@ $listboxItemHeight: 26px;
 			background: #20a0ff;
 			color: #FFF;
 		}
+	
 		.nex-listbox-item-selected:hover {
 			background: #1c8de0;
 		}

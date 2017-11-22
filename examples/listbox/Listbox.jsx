@@ -26,8 +26,8 @@ class App extends React.Component{
 	
 	filterMsg = ''
 	
-	search=(e)=>{
-		this.filterMsg = e.target.value;
+	search=(value)=>{
+		this.filterMsg = value;
 		this.forceUpdate()
 	}
 	
