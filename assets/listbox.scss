@@ -22,8 +22,8 @@ $listboxItemHeight: 26px !default;
 			overflow:hidden;
 		}
 		
-		.nex-listbox-item-active,
-		.nex-listbox-item:hover {
+		//.nex-listbox-item:hover,
+		.nex-listbox-item-active {
 			background: #e4e8f1;
 		}
 		
@@ -32,7 +32,8 @@ $listboxItemHeight: 26px !default;
 			color: #FFF;
 		}
 	
-		.nex-listbox-item-selected:hover {
+		//.nex-listbox-item-selected:hover,
+		.nex-listbox-item-selected.nex-listbox-item-active {
 			background: #1c8de0;
 		}
 		

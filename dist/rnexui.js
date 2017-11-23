@@ -3698,13 +3698,11 @@ var ListItem$1 = (_temp2$2 = _class$18 = function (_React$Component) {
 	onDeselect: propTypes.func,
 	onClick: propTypes.func,
 	selected: propTypes.bool,
-	//active: PropTypes.bool,
 	disabled: propTypes.bool
 }, _class$18.defaultProps = {
 	prefixCls: 'nex-listbox-item',
 	value: '',
 	selected: false,
-	//active: false,
 	disabled: false
 }, _class$18.isListItem = true, _temp2$2);
 
@@ -3781,10 +3779,12 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 		if (value) {
 			selectedValue.push.apply(selectedValue, toConsumableArray(value));
 		}
-		//聚焦索引id
-		_this._activeIndex = 0;
+
 		//item 索引id
 		_this._itemIndex = 0;
+		//索引值对应的item.value
+		_this._indexValueMap = {};
+		_this._activeIndex = null;
 
 		_this.state = {
 			selectedValue: selectedValue,
@@ -3831,34 +3831,82 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 			return value;
 		}
 	}, {
-		key: 'getListItemProps',
-		value: function getListItemProps() {}
-	}, {
-		key: 'onItemMouseEnter',
-		value: function onItemMouseEnter(index) {
+		key: 'onKeyDown',
+		value: function onKeyDown() {
+			var _this2 = this;
+
 			var prefixCls = this.props.prefixCls;
 
 			var selector = '.' + prefixCls + '-item:not(.' + prefixCls + '-item-disabled)';
 			var activeCls = prefixCls + '-item-active';
+			var selectCls = prefixCls + '-item-selected';
 			var list = null;
 
-			return function (e) {
-				//const dom = findDOMNode(this);
-				//			if( !list ) {
-				//				list = dom.querySelectorAll(selector);
-				//			}
-				//		
-				//			list.forEach( (el, i) => {
-				//				removeClass(el, activeCls)	
-				//			} );
+			function getActiveIndex(keyCode) {
+				var idx = -1;
+				var UP = keyCode === 38;
+				var DOWN = keyCode === 40;
 
-				addClass(e.currentTarget, activeCls);
+				if (list) {
+					list.forEach(function (item, i) {
+						if (hasClass(item, activeCls)) {
+							removeClass(item, activeCls);
+							if (UP) {
+								if (idx === -1) idx = i;
+							} else {
+								idx = i;
+							}
+						} else if (idx === -1 && hasClass(item, selectCls)) {
+							idx = i;
+						}
+					});
+				}
+
+				return idx;
+			}
+
+			return function (e) {
+				var scrollview = _this2.refs.listbox;
+				var dom = ReactDOM.findDOMNode(_this2);
+				var UP = e.keyCode === 38;
+				var DOWN = e.keyCode === 40;
+				var ENTER = e.keyCode === 13;
+
+				if (!list) {
+					list = dom.querySelectorAll(selector);
+				}
+
+				if (!list.length) return;
+
+				var minIndex = 0;
+				var maxIndex = list.length - 1;
+
+				if (UP || DOWN) {
+					e.preventDefault();
+					var idx = getActiveIndex(e.keyCode);
+
+					if (UP) {
+						idx = idx === -1 ? maxIndex : --idx;
+						if (idx < 0) idx = maxIndex;
+						addClass(list[idx], activeCls);
+					} else {
+						idx = idx === -1 ? minIndex : ++idx;
+						if (idx > maxIndex) idx = 0;
+						addClass(list[idx], activeCls);
+					}
+
+					_this2._activeIndex = idx;
+
+					scrollview.scrollIntoView(list[idx]);
+				} else if (ENTER) {
+					console.log(_this2._activeIndex);
+				}
 			};
 		}
 	}, {
 		key: 'renderListItems',
 		value: function renderListItems(items, markMap) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var _props = this.props,
 			    textField = _props.textField,
@@ -3877,16 +3925,20 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 
 				var isGroup = item[itemsField];
 				var itemPrefixCls = prefixCls + '-item';
-
+				var activeCls = prefixCls + '-item-active';
 				var onMouseEnter = noop$2;
 				var onMouseLeave = noop$2;
+				var itemIndex = _this3._itemIndex++;
 
 				if (!isGroup) {
 					itemsMap[item[valueField]] = item;
+					_this3._indexValueMap[itemIndex] = item[valueField];
+
 					if (!item.disabled) {
-						onMouseEnter = _this2.onItemMouseEnter(_this2._itemIndex++);
+						onMouseEnter = function onMouseEnter(e) {
+							addClass(e.currentTarget, activeCls);
+						};
 						onMouseLeave = function onMouseLeave(e) {
-							var activeCls = prefixCls + '-item-active';
 							removeClass(e.currentTarget, activeCls);
 						};
 					}
@@ -3900,9 +3952,10 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 						prefixCls: itemPrefixCls,
 						selected: markMap[item[valueField]],
 						disabled: item.disabled,
-						onClick: _this2.onItemClick,
-						onSelect: _this2.onItemSelect,
-						onDeselect: _this2.onItemDeselect,
+						'data-index': itemIndex,
+						onClick: _this3.onItemClick,
+						onSelect: _this3.onItemSelect,
+						onDeselect: _this3.onItemDeselect,
 						onMouseEnter: onMouseEnter,
 						onMouseLeave: onMouseLeave
 					},
@@ -3910,14 +3963,14 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 				) : React$1__default.createElement(
 					ItemGroup,
 					{ prefixCls: itemPrefixCls + '-group', key: item[textField], label: item[textField] },
-					_this2.renderListItems(item[itemsField] || [], markMap)
+					_this3.renderListItems(item[itemsField] || [], markMap)
 				);
 			});
 		}
 	}, {
 		key: 'renderListChild',
 		value: function renderListChild(children, markMap) {
-			var _this3 = this;
+			var _this4 = this;
 
 			var _props2 = this.props,
 			    textField = _props2.textField,
@@ -3928,22 +3981,39 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 
 
 			var itemPrefixCls = prefixCls + '-item';
+			var activeCls = prefixCls + '-item-active';
 
 			return React$1__default.Children.map(children, function (child) {
 				var props = child.props;
 
 				if (child.type.isListItemGroup) {
-					return React$1__default.cloneElement(child, {}, _this3.renderListChild(props.children, markMap));
+					return React$1__default.cloneElement(child, {}, _this4.renderListChild(props.children, markMap));
 				}
 
+				var onMouseEnter = noop$2;
+				var onMouseLeave = noop$2;
+				var itemIndex = _this4._itemIndex++;
+
 				itemsMap[props[valueField]] = objectAssign({}, omit(props, ['children', 'selected', 'prefixCls']), defineProperty({}, textField, props.children));
+				_this4._indexValueMap[itemIndex] = props[valueField];
+
+				if (!props.disabled) {
+					onMouseEnter = function onMouseEnter(e) {
+						addClass(e.currentTarget, activeCls);
+					};
+					onMouseLeave = function onMouseLeave(e) {
+						removeClass(e.currentTarget, activeCls);
+					};
+				}
 
 				return React$1__default.cloneElement(child, {
 					selected: markMap[props[valueField]],
 					prefixCls: itemPrefixCls,
-					onClick: _this3.onItemClick,
-					onSelect: _this3.onItemSelect,
-					onDeselect: _this3.onItemDeselect
+					onClick: _this4.onItemClick,
+					onSelect: _this4.onItemSelect,
+					onDeselect: _this4.onItemDeselect,
+					onMouseEnter: onMouseEnter,
+					onMouseLeave: onMouseLeave
 				});
 			});
 		}
@@ -3966,7 +4036,10 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 			selectedValue.forEach(function (v) {
 				return markMap[v] = true;
 			});
+
 			this._itemIndex = 0;
+			this._indexValueMap = {};
+			this._activeIndex = null;
 
 			return items.length ? this.renderListItems(items, markMap) : this.renderListChild(children, markMap);
 		}
@@ -3997,11 +4070,11 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 				ScrollView,
 				{
 					ref: 'listbox',
-					tabIndex: -1,
+					tabIndex: 0,
 					scrollViewBodyCls: prefixCls + '-body',
 					scrollViewBodyStyle: scrollViewBodyStyle,
 					className: classnames('' + prefixCls, className),
-					onKeyDown: this.onKeyDown,
+					onKeyDown: this.onKeyDown(),
 					style: style
 				},
 				this.getListItems()
@@ -4032,21 +4105,21 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 	labelInValue: false,
 	items: []
 }, _initialiseProps$2 = function _initialiseProps() {
-	var _this4 = this;
+	var _this5 = this;
 
 	this.onItemClick = function (item, e) {
-		var onItemClick = _this4.props.onItemClick;
+		var onItemClick = _this5.props.onItemClick;
 
-		_this4.refs.listbox.scrollIntoView(e.target);
+		_this5.refs.listbox.scrollIntoView(e.target);
 
 		if (onItemClick) onItemClick(item);
 	};
 
 	this.onItemSelect = function (item, el) {
-		var _props5 = _this4.props,
+		var _props5 = _this5.props,
 		    multiple = _props5.multiple,
 		    onChange = _props5.onChange;
-		var _state = _this4.state,
+		var _state = _this5.state,
 		    selectedValue = _state.selectedValue,
 		    itemsMap = _state.itemsMap;
 
@@ -4058,23 +4131,23 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 
 		selectedValue.push(item[valueField]);
 
-		if (!('value' in _this4.props)) {
-			_this4.setState({
+		if (!('value' in _this5.props)) {
+			_this5.setState({
 				selectedValue: selectedValue
 			});
 		}
 
 		if (onChange) {
-			onChange(_this4.transformChangeValue(multiple ? copy(selectedValue) : selectedValue[0]));
+			onChange(_this5.transformChangeValue(multiple ? copy(selectedValue) : selectedValue[0]));
 		}
 	};
 
 	this.onItemDeselect = function (item, el) {
-		var _props6 = _this4.props,
+		var _props6 = _this5.props,
 		    multiple = _props6.multiple,
 		    onChange = _props6.onChange,
 		    labelInValue = _props6.labelInValue;
-		var selectedValue = _this4.state.selectedValue;
+		var selectedValue = _this5.state.selectedValue;
 
 		var valueField = 'value';
 
@@ -4084,20 +4157,14 @@ var ListBox$1 = (_temp$13 = _class$15 = function (_React$Component) {
 			return !isEqual(item[valueField], d);
 		});
 
-		if (!('value' in _this4.props)) {
-			_this4.setState({
+		if (!('value' in _this5.props)) {
+			_this5.setState({
 				selectedValue: newSelectedValue
 			});
 		}
 
 		if (onChange) {
-			onChange(_this4.transformChangeValue(copy(newSelectedValue)));
-		}
-	};
-
-	this.onKeyDown = function (e) {
-		if (e.keyCode == 33) {//UP
-		} else if (e.keyCode == 34) {//DOWN
+			onChange(_this5.transformChangeValue(copy(newSelectedValue)));
 		}
 	};
 }, _temp$13);

@@ -14,7 +14,6 @@ export default class ListItem extends React.Component{
 		onDeselect: PropTypes.func,
 		onClick: PropTypes.func,
 		selected: PropTypes.bool,
-		//active: PropTypes.bool,
 		disabled: PropTypes.bool,
 	}
 
@@ -22,7 +21,6 @@ export default class ListItem extends React.Component{
 		prefixCls: 'nex-listbox-item',
 		value: '',
 		selected: false,
-		//active: false,
 		disabled: false,
 	}
 	
@@ -58,7 +56,6 @@ export default class ListItem extends React.Component{
 		const classes = classNames({
 			[`${prefixCls}`]: true,
 			[`${prefixCls}-selected`]: selected,
-			//[`${prefixCls}-active`]: active,
 			[`${prefixCls}-disabled`]: disabled,
 		});
 		

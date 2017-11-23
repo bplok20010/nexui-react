@@ -36,7 +36,7 @@ class App extends React.Component{
 		return 	<div>
 			<Input placeholder="搜素..." onChange={this.search} />
 			<ListBox
-				multiple
+				
 					style={{
 						maxWidth: 300,
 						maxHeight: 400,	

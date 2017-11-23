@@ -59,10 +59,13 @@ export default class ListBox extends React.Component{
 		if( value ) {
 			selectedValue.push(...value);
 		}
-		//聚焦索引id
-		this._activeIndex = 0;
+	
 		//item 索引id
 		this._itemIndex = 0;
+		//索引值对应的item.value
+		this._indexValueMap = {};
+		this._activeIndex = null;
+		
 		
 		this.state = {
 			selectedValue,
@@ -151,37 +154,73 @@ export default class ListBox extends React.Component{
 		
 	}
 	
-	getListItemProps(){
-			
-	}
-	
-	getListItemList
-	
-	onKeyDown = (e) => {
-		if( e.keyCode == 33 ) {//UP
-		} else if( e.keyCode == 34 ) {//DOWN
-		}
-	}
-	
-	onItemMouseEnter(index){
+	onKeyDown(){
 		const {prefixCls} = this.props;
 		const selector = `.${prefixCls}-item:not(.${prefixCls}-item-disabled)`;
 		const activeCls = `${prefixCls}-item-active`;
+		const selectCls = `${prefixCls}-item-selected`;
 		let list = null;
 		
-		return (e) => {
-			//const dom = findDOMNode(this);
-//			if( !list ) {
-//				list = dom.querySelectorAll(selector);
-//			}
-//		
-//			list.forEach( (el, i) => {
-//				removeClass(el, activeCls)	
-//			} );
+		function getActiveIndex(keyCode){
+			let idx = -1;
+			const UP = keyCode === 38;
+			const DOWN = keyCode === 40;
 			
-			addClass(e.currentTarget, activeCls)
+			if( list ) {
+				list.forEach( (item, i) => {
+					if( hasClass( item, activeCls) ) {
+						removeClass(item, activeCls);
+						if( UP ) {
+							if( idx === -1 ) idx = i;	
+						} else {
+							idx = i;
+						}
+					} else if( idx === -1 && hasClass(item, selectCls) ) {
+						idx = i;	
+					}
+				} )	
+			}	
 			
+			return idx;
 		}
+		
+		return (e) => {
+			const scrollview = this.refs.listbox;
+			const dom = findDOMNode(this);
+			const UP = e.keyCode === 38;
+			const DOWN = e.keyCode === 40;
+			const ENTER = e.keyCode === 13;
+			
+			if( !list ) {
+				list = dom.querySelectorAll(selector);
+			}
+			
+			if( !list.length ) return;
+			
+			const minIndex = 0;
+			const maxIndex = list.length - 1;
+			
+			if( UP || DOWN ) {
+				e.preventDefault();
+				let idx = getActiveIndex(e.keyCode);
+				
+				if( UP ) {
+					idx = idx === -1 ? maxIndex : --idx;
+					if( idx < 0 ) idx = maxIndex;
+					addClass(list[idx], activeCls);
+				} else {
+					idx = idx === -1 ? minIndex : ++idx;
+					if( idx > maxIndex ) idx = 0;
+					addClass(list[idx], activeCls);		
+				}
+				
+				this._activeIndex = idx;
+		
+				scrollview.scrollIntoView( list[idx] );
+			} else if( ENTER ) {
+				console.log(this._activeIndex);	
+			}
+		}	
 	}
 	
 	renderListItems(items, markMap){
@@ -198,17 +237,21 @@ export default class ListBox extends React.Component{
 			
 			const isGroup = item[itemsField];
 			const itemPrefixCls = `${prefixCls}-item`;
-			
+			const activeCls = `${prefixCls}-item-active`;
 			let onMouseEnter = noop;
 			let onMouseLeave = noop;
+			let itemIndex = this._itemIndex++;
 			
 			if( !isGroup ) {
 				itemsMap[item[valueField]] = item;
+				this._indexValueMap[itemIndex] = item[valueField];
+				
 				if( !item.disabled ) {
-					onMouseEnter = this.onItemMouseEnter(this._itemIndex++);
+					onMouseEnter = e => {
+						addClass(e.currentTarget, activeCls);
+					}
 					onMouseLeave = e => {
-						const activeCls = `${prefixCls}-item-active`;
-						removeClass(e.currentTarget, activeCls)	
+						removeClass(e.currentTarget, activeCls);
 					}
 				}
 			}
@@ -220,6 +263,7 @@ export default class ListBox extends React.Component{
 					prefixCls={itemPrefixCls}
 					selected={markMap[item[valueField]]}
 					disabled={item.disabled}
+					data-index={itemIndex}
 					onClick={this.onItemClick}
 					onSelect={this.onItemSelect}
 					onDeselect={this.onItemDeselect}
@@ -241,6 +285,7 @@ export default class ListBox extends React.Component{
 		const {itemsMap} = this.state;
 		
 		const itemPrefixCls = `${prefixCls}-item`;
+		const activeCls = `${prefixCls}-item-active`;
 		
 		return React.Children.map(children, child=>{
 			const props = child.props;
@@ -248,8 +293,22 @@ export default class ListBox extends React.Component{
 			if( child.type.isListItemGroup ) {
 				return React.cloneElement(child, {}, this.renderListChild(props.children, markMap));
 			}
-	
+			
+			let onMouseEnter = noop;
+			let onMouseLeave = noop;
+			let itemIndex = this._itemIndex++;
+			
 			itemsMap[props[valueField]] = _assign({}, omit(props, ['children', 'selected', 'prefixCls']), { [textField]: props.children });
+			this._indexValueMap[itemIndex] = props[valueField];
+			
+			if( !props.disabled ) {
+				onMouseEnter = e => {
+					addClass(e.currentTarget, activeCls);
+				}
+				onMouseLeave = e => {
+					removeClass(e.currentTarget, activeCls);
+				}
+			}
 			
 			return React.cloneElement(child, {
 				selected: markMap[props[valueField]],
@@ -257,6 +316,8 @@ export default class ListBox extends React.Component{
 				onClick: this.onItemClick,
 				onSelect: this.onItemSelect,
 				onDeselect: this.onItemDeselect,
+				onMouseEnter,
+				onMouseLeave,
 			});
 		});
 	}
@@ -269,7 +330,10 @@ export default class ListBox extends React.Component{
 		
 		const markMap = {};
 		selectedValue.forEach( v => markMap[v] = true);	
+		
 		this._itemIndex = 0;
+		this._indexValueMap = {};
+		this._activeIndex = null;
 		
 		return items.length ? 
 				this.renderListItems(items, markMap) : 
@@ -289,11 +353,11 @@ export default class ListBox extends React.Component{
 		return (
 			<ScrollView 
 				ref="listbox" 
-				tabIndex={-1} 
+				tabIndex={0} 
 				scrollViewBodyCls={`${prefixCls}-body`} 
 				scrollViewBodyStyle={scrollViewBodyStyle} 
 				className={classNames(`${prefixCls}`, className)} 
-				onKeyDown={this.onKeyDown}
+				onKeyDown={this.onKeyDown()}
 				style={style}
 			>
 				{this.getListItems()}

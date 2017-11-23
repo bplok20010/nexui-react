@@ -96,7 +96,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					null,
 					React.createElement(_rnexui.Input, { placeholder: '\u641C\u7D20...', onChange: this.search }),
 					React.createElement(_rnexui.ListBox, {
-						multiple: true,
+
 						style: {
 							maxWidth: 300,
 							maxHeight: 400
