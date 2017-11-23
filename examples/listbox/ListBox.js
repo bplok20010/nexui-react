@@ -96,11 +96,11 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					null,
 					React.createElement(_rnexui.Input, { placeholder: '\u641C\u7D20...', onChange: this.search }),
 					React.createElement(_rnexui.ListBox, {
-
 						style: {
 							maxWidth: 300,
 							maxHeight: 400
 						},
+						autoFocus: true,
 						value: this.state.value,
 						onChange: this.handleChange,
 						items: data,
@@ -112,6 +112,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 						_rnexui.ListBox,
 						{
 							multiple: true,
+							disabled: true,
 							labelInValue: true,
 							onChange: this.handleChange2,
 							defaultValue: 'V03',
@@ -208,7 +209,8 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		for (var j = 0; j < 40; j++) {
 			var _d = {
 				value: uuid++,
-				text: '选项' + (j + 1)
+				text: '选项' + (j + 1),
+				disabled: j % 2
 			};
 			items.push(_d);
 		}

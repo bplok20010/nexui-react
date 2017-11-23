@@ -36,11 +36,11 @@ class App extends React.Component{
 		return 	<div>
 			<Input placeholder="搜素..." onChange={this.search} />
 			<ListBox
-				
 					style={{
 						maxWidth: 300,
 						maxHeight: 400,	
 					}}
+					autoFocus
 					value={this.state.value}
 					onChange={this.handleChange}
 					items={data}
@@ -49,6 +49,7 @@ class App extends React.Component{
 				  
 				<ListBox
 					multiple
+					disabled
 					labelInValue
 					onChange={this.handleChange2}
 					defaultValue="V03"
@@ -97,7 +98,8 @@ for( let i=0;i<10;i++ ) {
 	for( let j=0;j<40;j++ ) {
 		let d = {
 			value: uuid++,
-			text: '选项' + (j+1)
+			text: '选项' + (j+1),
+			disabled: j % 2
 		}
 		items.push(d)
 	}
