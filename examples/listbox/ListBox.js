@@ -103,10 +103,10 @@ define(['../../dist/rnexui'], function (_rnexui) {
 						autoFocus: true,
 						value: this.state.value,
 						onChange: this.handleChange,
-						items: data,
-						filter: function filter(item, i) {
-							return item.text.indexOf(_this2.filterMsg) >= 0;
-						}
+						items: data.filter(function (item, i) {
+							return item.label.indexOf(_this2.filterMsg) >= 0;
+						}),
+						emptyLabel: '\u65E0\u5339\u914D\u9879'
 					}),
 					React.createElement(
 						_rnexui.ListBox,
@@ -191,9 +191,9 @@ define(['../../dist/rnexui'], function (_rnexui) {
 	}(React.Component);
 
 	var data = [
-		//{value: 1, text: '选项一'},
-		//{value: 2, text: '选项二'},
-		//{value: 3, text: '选项三'}
+		//{value: 1, label: '选项一'},
+		//{value: 2, label: '选项二'},
+		//{value: 3, label: '选项三'}
 	];
 
 	var uuid = 100;
@@ -202,14 +202,14 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		var items = [];
 		var d = {
 			items: items,
-			text: '分组' + (i + 1)
+			label: '分组' + (i + 1)
 		};
 		data.push(d);
 
 		for (var j = 0; j < 40; j++) {
 			var _d = {
 				value: uuid++,
-				text: '选项' + (j + 1),
+				label: '选项' + (j + 1),
 				disabled: j % 2
 			};
 			items.push(_d);

@@ -24,7 +24,7 @@ export default class Select extends React.Component{
 		dropdownCls: PropTypes.string,
 		dropdownDestroyOnHide: PropTypes.bool,
 		dropdownStyle: PropTypes.object,
-		textInValue: PropTypes.bool,
+		labelInValue: PropTypes.bool,
 	};
 
 	static defaultProps = {
@@ -36,12 +36,12 @@ export default class Select extends React.Component{
 		prefixCls: 'nex-select',
 		arrowCls: 'fa fa-caret-down',
 		valueField: 'value',
-		textField: 'text',
+		labelField: 'text',
 		optionsField: 'options',
 		dropdownCls: null,
 		dropdownStyle: null,
 		dropdownDestroyOnHide: true,
-		textInValue: false,
+		labelInValue: false,
 	};
 	
 	constructor(props){
@@ -99,7 +99,7 @@ export default class Select extends React.Component{
 	}
 	
 	updateOptionsMap(props){
-		const {options, children, valueField, textField, optionsField} = props;	
+		const {options, children, valueField, labelField, optionsField} = props;	
 		const maps = {};
 		
 		function parseOptions(list){
@@ -119,7 +119,7 @@ export default class Select extends React.Component{
 				if( child.type.isOptOption ) {
 					parseChildren(props.children);
 				} else {
-					maps[props[valueField]] = _assign(omit(props, ['children']), { [textField]: props.children });
+					maps[props[valueField]] = _assign(omit(props, ['children']), { [labelField]: props.children });
 				}
 			});	
 		}
@@ -139,19 +139,19 @@ export default class Select extends React.Component{
 	}
 	
 	getSelectText(){
-		const {options, valueField, textField} = this.props;
+		const {options, valueField, labelField} = this.props;
 		const value = this.state.value;
 		
 		const ret = this.state.optionsMap[value];
 		
-		return ret ? ret[textField] : value;
+		return ret ? ret[labelField] : value;
 	}
 	
 	transformChangeValue(value){
-		const { textInValue } = this.props;
+		const { labelInValue } = this.props;
 		const { optionsMap } = this.state;
 		
-		if( textInValue ) {
+		if( labelInValue ) {
 			return isArray(value) ? 
 					value.map(v => optionsMap[v]) :
 					optionsMap[value];
@@ -181,14 +181,15 @@ export default class Select extends React.Component{
 	}
 	
 	getSelectOptions(){
-		const {valueField, textField, optionsField, options, children} = this.props;
+		const {valueField, labelField, optionsField, options, children} = this.props;
 		const value = this.state.value;
 			
 		return (
 			<ListBox
+				autoFocus
 				ref={this.handleDropdownCreate}
 				valueField={valueField}
-				textField={textField}
+				labelField={labelField}
 				itemsField={optionsField}
 				value={value}
 				items={options}
@@ -199,13 +200,13 @@ export default class Select extends React.Component{
 	}
 	
 	renderSelectChild(children){
-		const {textField, valueField} = this.props;
+		const {labelField, valueField} = this.props;
 		
 		return React.Children.map(children, child=>{
 			const props = child.props;
 			
 			if( child.type.isOptOption ) {
-				return <ListItemGroup label={props[textField]}>{this.renderSelectChild(props.children)}</ListItemGroup>;
+				return <ListItemGroup label={props[labelField]}>{this.renderSelectChild(props.children)}</ListItemGroup>;
 			}
 			
 			return <ListItem {...props} />;
@@ -259,9 +260,9 @@ export default class Select extends React.Component{
 			'dropdownCls',
 			'dropdownStyle',
 			'dropdownDestroyOnHide',
-			'textField',
+			'labelField',
 			'optionsField',
-			'textInValue',
+			'labelInValue',
 		]);
 		
 		return (

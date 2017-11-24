@@ -37,7 +37,7 @@ export default class ListItem extends React.Component{
 		
 		const item = {
 			value,
-			text: children	
+			label: children	
 		};
 		
 		if( onClick ) {

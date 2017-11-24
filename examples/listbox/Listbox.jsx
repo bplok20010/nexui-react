@@ -43,8 +43,8 @@ class App extends React.Component{
 					autoFocus
 					value={this.state.value}
 					onChange={this.handleChange}
-					items={data}
-					filter={(item, i) => item.text.indexOf( this.filterMsg ) >= 0}
+					items={data.filter((item, i) => item.label.indexOf( this.filterMsg ) >= 0)}
+					emptyLabel = "无匹配项"
 				  />
 				  
 				<ListBox
@@ -80,9 +80,9 @@ class App extends React.Component{
 }
 
 const data = [
-     //{value: 1, text: '选项一'},
-     //{value: 2, text: '选项二'},
-     //{value: 3, text: '选项三'}
+     //{value: 1, label: '选项一'},
+     //{value: 2, label: '选项二'},
+     //{value: 3, label: '选项三'}
 ];
 
 var uuid = 100;
@@ -91,14 +91,14 @@ for( let i=0;i<10;i++ ) {
 	const items = [];
 	const d = {
 		items,
-		text: '分组' + (i+1)
+		label: '分组' + (i+1)
 	}
 	data.push(d)
 	
 	for( let j=0;j<40;j++ ) {
 		let d = {
 			value: uuid++,
-			text: '选项' + (j+1),
+			label: '选项' + (j+1),
 			disabled: j % 2
 		}
 		items.push(d)

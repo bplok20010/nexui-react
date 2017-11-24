@@ -49,6 +49,7 @@ gulp.task('rollup', async function() {
                 ],
                 "babelrc": false,
                 "plugins": [
+					"lodash",
                     "external-helpers",
                     "transform-es3-property-literals",
                     "transform-es3-member-expression-literals",
