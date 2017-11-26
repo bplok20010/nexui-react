@@ -112,6 +112,40 @@ export function isVisible(el){
 	return true;
 }
 
+export function matches(node, selector){
+	if( node === selector ) return true;
+	
+	if( node.matches ) return node.matches(selector);
+	
+	const matches = node.matchesSelector || node.msMatchesSelector || node.webkitMatchesSelector;
+	if( matches ) {
+		return matches.call(node, selector);
+	}
+	
+	return false;
+}
+
+function _closest(node, selector){
+	while (node) {
+		if (matches(node, selector)) {
+			return node;
+		}
+		else {
+			node = node.parentElement;
+		}
+	}
+	
+	return node;
+}
+
+export function closest(node, selector){
+	if( node.closest && typeof selector === 'string') {
+		return node.closest(selector);	
+	} else {
+		return _closest(node, selector);	
+	}
+}
+
 /*class*/
 export function hasClass(element, className) {
 	if ( element.classList)

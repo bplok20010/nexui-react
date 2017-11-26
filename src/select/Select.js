@@ -1,17 +1,14 @@
-/*
-* 问题1: 当前popup拿到的of是数据改变之前的元素，如果加搜索的画在结果改变触发位置刷新时就会出先问题 
-*/
-
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {findDOMNode} from 'react-dom';
 import classNames from 'classnames';
 import omit from 'omit.js';
-import _assign from 'object-assign';
+import assign from 'object-assign';
+//import {omit, assign} from 'lodash';
 import {uuid, isUndefined, isArray} from '../shared/util';
+import {on, off, contains} from '../shared/dom';
 import Popup from '../popup/Popup';
 import ListBox from '../listbox/index';
-
 
 const {ListItem, ListItemGroup} = ListBox;
 
@@ -51,7 +48,6 @@ export default class Select extends React.Component{
 			value: props.value || props.defaultValue,
 			showDropdown: false,
 			optionsMap: {},
-			_ext: uuid(6),
 		}
 		
 		this.updateOptionsMap(props);
@@ -66,36 +62,41 @@ export default class Select extends React.Component{
 			});	
 		}
 	}
-	//使用jquery的position做定位，所以这时候jquery是必定存在的
+
 	componentDidMount(){
-		const ext = this.state._ext;
 		
-		$(window).on(`resize.${ext}`, ()=>{
+		this.updatePopupPosition();
+		
+		this.__resizeHandle = ()=>{
 			if( this.state.showDropdown ) {
 				this.hideDropdown();	
 			}	
-		});
+		};
 		
-		$(document.body).on(`mousewheel.${ext} DOMMouseScroll.${ext}`, (e)=>{
-			if( this.state.showDropdown && (!$(e.target).closest(this.refs.dropdown).length ) ) {
-				if( $(e.target).closest(this.refs.select).length ) return;
+		this.__mousedownHandle = (e)=>{
+			if( this.state.showDropdown && !contains(this.refs.dropdown, e.target) ) {
+				if( contains(this.refs.select, e.target) ) return;
 				this.hideDropdown();	
 			}
-		});
+		};
 		
-		$(document).on(`mousedown.${ext}`, (e)=>{
-			if( this.state.showDropdown && (!$(e.target).closest(this.refs.dropdown).length ) ) {
-				if( $(e.target).closest(this.refs.select).length ) return;
-				this.hideDropdown();	
-			}
-		});
+		on(window, 'resize', this.__resizeHandle);
+		
+		on(document, 'mousedown', this.__mousedownHandle);
+	}
+	
+	componentDidUpdate(){
+		this.updatePopupPosition();	
 	}
 	
 	componentWillUnmount(){
-		const ext = this.state._ext;
-		$(window).off(`.${ext}`);	
-		$(document.body).off(`.${ext}`);
-		$(document).off(`.${ext}`);
+		if( this.__resizeHandle ) {
+			off(window, 'resize', this.__resizeHandle);
+		}
+		
+		if( this.__mousedownHandle ) {
+			off(document, 'mousedown', this.__mousedownHandle);
+		}
 	}
 	
 	updateOptionsMap(props){
@@ -119,7 +120,7 @@ export default class Select extends React.Component{
 				if( child.type.isOptOption ) {
 					parseChildren(props.children);
 				} else {
-					maps[props[valueField]] = _assign(omit(props, ['children']), { [labelField]: props.children });
+					maps[props[valueField]] = assign(omit(props, ['children']), { [labelField]: props.children });
 				}
 			});	
 		}
@@ -240,7 +241,13 @@ export default class Select extends React.Component{
 			dropdownStyle.maxHeight = Math.max(rect.top, window.innerHeight - rect.top - selectEl.offsetHeight) - 10;
 		}	
 		
-		return _assign(dropdownStyle, this.props.dropdownStyle);
+		return assign(dropdownStyle, this.props.dropdownStyle);
+	}
+	
+	updatePopupPosition(){
+		if( this.state.showDropdown ) {
+			this.refs.popup.updatePosition(findDOMNode(this));	
+		}	
 	}
 	
 	renderSelect(){
@@ -278,7 +285,7 @@ export default class Select extends React.Component{
 					[`${prefixCls}-arrow`]: true,
 					[arrowCls]: true	
 				})}></span>
-				<Popup visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnHide} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={this.refs.select} my="left top" at="left bottom" style={this.getPopupStyle()}>
+				<Popup ref="popup" visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnHide} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={null} my="left top" at="left bottom" style={this.getPopupStyle()}>
 					{this.getSelectOptions()}
 				</Popup>
 			</div>
