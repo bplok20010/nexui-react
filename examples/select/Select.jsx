@@ -33,7 +33,7 @@ class App extends React.Component{
 				/>
 				--------------
 				{ this.state.value == 0 ? '??' :
-					<Select textInValue onChange={v=>console.log(v)} defaultValue={this.state.value}>
+					<Select  onChange={v=>console.log(v)} defaultValue={this.state.value}>
 						<Option value="1">测试1</Option>
 						<Option value="2">测试2</Option>
 						<Option value="3">测试3</Option>

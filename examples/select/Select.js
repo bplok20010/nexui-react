@@ -91,7 +91,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					'--------------',
 					this.state.value == 0 ? '??' : React.createElement(
 						_rnexui.Select,
-						{ textInValue: true, onChange: function onChange(v) {
+						{ onChange: function onChange(v) {
 								return console.log(v);
 							}, defaultValue: this.state.value },
 						React.createElement(

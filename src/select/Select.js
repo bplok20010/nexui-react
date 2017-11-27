@@ -226,6 +226,14 @@ export default class Select extends React.Component{
 		});	
 	}
 	
+	onKeyDown = (e) => {
+		if( e.keyCode === 40 && !this.state.showDropdown ) {
+			this.setState({
+				showDropdown: !this.state.showDropdown
+			});		
+		}	
+	}
+	
 	getPopupStyle(){
 		const {showDropdown} = this.state;
 		const selectEl = this.refs.select;
@@ -279,6 +287,7 @@ export default class Select extends React.Component{
 				className={classes} 
 				tabIndex={tabIndex} 
 				onClick={this.handleClick}
+				onKeyDown={this.onKeyDown}
 			>
 				<div className={`${prefixCls}-text`}>{this.getSelectText()}</div>
 				<span className={classNames({
