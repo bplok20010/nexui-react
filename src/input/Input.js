@@ -12,12 +12,6 @@ function fixControlledValue(value) {
 
 const propTypes = {
 		size: PropTypes.oneOf(['small', 'default', 'large']),
-		addonBefore: PropTypes.any,
-		addonBeforeCls: PropTypes.string,
-		addonBeforeStyle: PropTypes.object,
-		addonAfter: PropTypes.any,
-		addonAfterCls: PropTypes.string,
-		addonAfterStyle: PropTypes.object,
 		type: PropTypes.string, //text textarea hidden
 		inline: PropTypes.bool,
 		prefixCls: PropTypes.string,
@@ -74,62 +68,57 @@ export default class Input extends PureComponent{
 	}
 	
 	getInputClassName() {
-		const { prefixCls, size, disabled } = this.props;
+		const { prefixCls, size, disabled, inputCls } = this.props;
 		return classNames(prefixCls, {
 			[`${prefixCls}-sm`]: size === 'small',
 			[`${prefixCls}-lg`]: size === 'large',
-			[`${prefixCls}-disabled`]: disabled
+			[`${prefixCls}-disabled`]: disabled,
+			[inputCls]: inputCls,
 		});
 	}
+	
 	renderInput(){
 		const props = this.props;
-		const { className, inputStyle, type, addonBeforeCls, addonAfterCls, addonBeforeStyle, addonAfterStyle, style={}, ...others } = props;
+		const {
+			className, 
+			inputStyle, 
+			type,
+			style={}, 
+			...others 
+		} = props;
+		
 		const otherProps = omit(others, Object.keys(propTypes));
 		
 		if( props.type === 'hidden' ) {
 			style.display = 'none';		
 		}
 		
-		if ('value' in props) {
+		if ('value' in this.props) {
 			otherProps.value = fixControlledValue(props.value);
 			
 			delete otherProps.defaultValue;
 		}
 		
-		const classname = classNames(`${props.prefixCls}-wrapper`, {
-			[`${props.prefixCls}-wrapper-inline`] : props.inline,
+		const classname = classNames({
+			[`${props.prefixCls}-wrapper`]: true,
+			[`${props.prefixCls}-wrapper-block`]: !props.inline,
 			[className]: className,
 		});
 		
-		const addonBefore = props.addonBefore ? (
-			<span className={classNames({
-				[`${props.prefixCls}-addon ${props.prefixCls}-addon-before`]: true,
-				[addonBeforeCls]: addonBeforeCls	
-			})} style={addonBeforeStyle}>{props.addonBefore}</span>
-		) : null;
-		
-		const addonAfter = props.addonAfter ? (
-			<span className={classNames({
-				[`${props.prefixCls}-addon ${props.prefixCls}-addon-after`]: true,
-				[addonAfterCls]: addonAfterCls	
-			})} style={addonAfterStyle}>{props.addonAfter}</span>
-		) : null;
-		
 		return (
-			<div className={classname} style={style}>
-            	{addonBefore}
-				<span className={`${props.prefixCls}-inner`}>
-					<input 
-						{...otherProps} 
-						ref="input" 
-						type={type}
-						style={inputStyle}
-						onChange={this.handleChange}
-						className={classNames(this.getInputClassName())} 
-						onKeyDown={this.handleKeyDown}
-					/>
-				</span>
-				{addonAfter}
+			<div 
+				className={classname} 
+				style={style}
+			>
+				<input 
+					{...otherProps} 
+					ref="input" 
+					type={type}
+					style={inputStyle}
+					onChange={this.handleChange}
+					className={this.getInputClassName()} 
+					onKeyDown={this.handleKeyDown}
+				/>
             </div>
 		);
 	}
@@ -153,7 +142,7 @@ export default class Input extends PureComponent{
 		}
 		
 		const classname = classNames(`${prefixCls}-wrapper`, {
-			[`${prefixCls}-wrapper-inline`] : inline,
+			[`${prefixCls}-wrapper-block`] : !inline,
 			[className]: className
 		});
 		

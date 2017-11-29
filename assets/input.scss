@@ -4,10 +4,10 @@ $inputHeight: 28px !default;
 $inputSmallHeight: 22px !default;
 $inputLargeHeight: 32px !default;
 
-$inputBorderRadius: 3px !default;//3px
+$inputBorderRadius: 0 !default;//3px
 $inputColor: rgba(0,0,0,.8) !default;
 $inputBGColor: #FFF !default;
-$inputBorderColor: #d9d9d9 !default;
+$inputBorderColor: #c1c1c1 #d9d9d9 #d9d9d9 !default;
 $inputPlaceholderColor: #ccc !default;
 $inputHoverBorderColor: #49a9ee !default;
 
@@ -21,16 +21,19 @@ input[type="text"]::-ms-clear{
 	padding:0 7px;
 	width:100%;
 	height:$inputHeight;
+	line-height:$inputHeight - 2;
 	cursor:text;
 	font-size:12px;
-	line-height:$inputHeight - 2;
 	color:$inputColor;
 	background-color:#fff;
 	background-image:none;
-	border:1px solid $inputBorderColor;
 	border-radius:$inputBorderRadius;
-	vertical-align: middle;
+	//vertical-align: middle;
 	transition:all .3s;
+	
+	border-width: 1px;
+    border-style: solid;
+    border-color: $inputBorderColor;
 	
 	@include placeholder($inputPlaceholderColor);
 	
@@ -44,13 +47,17 @@ input[type="text"]::-ms-clear{
 	outline:0;
 }
 .nex-input[disabled] {
+	/*
 	background-color:#f7f7f7;
 	opacity:1;
 	cursor:not-allowed;
-	color:rgba(0,0,0,.25)
+	color:rgba(0,0,0,.25);
+	*/
+	opacity: .5;
+	cursor:default;
 }
 .nex-input[disabled]:hover {
-	border-color:#e2e2e2
+	border-color: $inputBorderColor;
 }
 textarea.nex-input {
 	min-width: 80px;
@@ -67,51 +74,22 @@ textarea.nex-input {
 	line-height:$inputSmallHeight - 2;
 }
 
-.nex-form-input-group {
-	position:relative;
-	display:inline-block;
-	vertical-align:middle;	
-}
-
 .nex-input-wrapper {
-	display: table;
+	position:relative;
+	display: inline-block;
 	width:100%;
-	border-collapse: separate;
-    border-spacing: 0;
-	//vertical-align:middle;
-	> * {
-		display:table-cell;
-		vertical-align:middle;
-	}
-	> .nex-input-inner {
-		width:100%;
-		float:left;
-		.nex-input {
-			vertical-align:baseline;
-		}
-	}
-	> .nex-input-addon {
-		width:1px;
-		font-weight: 400;
-		text-align: center;
-		padding:0 6px;
-		background-color: #eee;
-    	border: 1px solid #d9d9d9;
-		border-radius:$inputBorderRadius;
-	}
+	vertical-align:middle;
 
-	>textarea{
+	> textarea{
 		resize: none;
 	}
 
-	>textarea.nex-input-autosize {
+	> textarea.nex-input-autosize {
 		resize: both;
 	}
 	
-	&.nex-input-wrapper-inline {
-		display:inline-table;
-		vertical-align: top;
-		width:auto;
+	&.nex-input-wrapper-block {
+		display: block;
 	}
 }
 
@@ -128,15 +106,15 @@ textarea.nex-input {
 	border-top-left-radius: 0;
 }
 .nex-input-wrapper>.nex-input-addon:not(:first-child):not(:last-child),
-.nex-input-wrapper>.nex-input-inner:not(:first-child):not(:last-child) > .nex-input {
+.nex-input-wrapper>.nex-input:not(:first-child):not(:last-child) {
 	border-radius:0;
 }
 
-.nex-input-wrapper>.nex-input-inner:first-child:not(:last-child) > .nex-input {
+.nex-input-wrapper>.nex-input:first-child:not(:last-child) {
 	border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
-.nex-input-wrapper>.nex-input-inner:last-child:not(:first-child) > .nex-input {
+.nex-input-wrapper>.nex-input:last-child:not(:first-child) {
 	border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
@@ -144,6 +122,7 @@ textarea.nex-input {
 .nex-input-group {
 	position:relative;
 	display:inline-block;
+	width:100%;
 	
 	>* {
 		position:relative;
@@ -182,14 +161,16 @@ textarea.nex-input {
 
 .nex-input-group-lg {
 	.nex-input {
-		padding:6px 7px;
-		height:$inputLargeHeight	
+		padding:0 7px;
+		height: $inputLargeHeight;
+		line-height: $inputLargeHeight - 2;
 	}	
 }
 
 .nex-input-group-sm {
 	.nex-input {
-		padding:1px 7px;
-		height:$inputSmallHeight
+		padding:0 7px;
+		height:$inputSmallHeight;
+		line-height: $inputSmallHeight - 2;
 	}	
 }
