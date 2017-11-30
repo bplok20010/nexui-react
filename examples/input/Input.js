@@ -4,12 +4,14 @@ define(["../../dist/rnexui"], function (_rnexui) {
 	ReactDOM.render(React.createElement(
 		"div",
 		null,
-		React.createElement(_rnexui.Input, { addonBefore: "test...", style: { width: 200 }, placeholder: "\u8BF7\u8F93\u5165...", ref: function ref(Input) {
+		React.createElement(_rnexui.Input, { style: { width: 150 }, placeholder: "\u8BF7\u8F93\u5165...", value: "nobo.zhou", disabled: true, readOnly: true, size: "large" }),
+		React.createElement(_rnexui.Input, { style: { width: 150 }, placeholder: "\u8BF7\u8F93\u5165...", ref: function ref(Input) {
 				return Input.focus();
-			}, onPressEnter: function onPressEnter() {
+			}, prefix: "+", suffix: "-", onPressEnter: function onPressEnter() {
 				return console.log('enter');
 			} }),
-		React.createElement(_rnexui.Input, { inline: false, addonAfter: "test...", onChange: function onChange(v) {
+		React.createElement(_rnexui.Input, { style: { width: 150 }, placeholder: "\u8BF7\u8F93\u5165...", size: "small" }),
+		React.createElement(_rnexui.Input, { inline: false, onChange: function onChange(v) {
 				return console.log(v);
 			}, onFocus: function onFocus() {
 				return console.log('focus...');

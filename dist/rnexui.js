@@ -1193,21 +1193,18 @@ function fixControlledValue(value) {
 
 var propTypes$1 = {
 	size: propTypes.oneOf(['small', 'default', 'large']),
-	addonBefore: propTypes.any,
-	addonBeforeCls: propTypes.string,
-	addonBeforeStyle: propTypes.object,
-	addonAfter: propTypes.any,
-	addonAfterCls: propTypes.string,
-	addonAfterStyle: propTypes.object,
-	type: propTypes.string, //text textarea hidden
+	type: propTypes.string, //text textarea
 	inline: propTypes.bool,
 	prefixCls: propTypes.string,
+	className: propTypes.string,
 	onPressEnter: propTypes.func,
 	onKeyDown: propTypes.func,
 	onChange: propTypes.func,
 	autoFocus: propTypes.bool,
 	inputCls: propTypes.string,
-	inputStyle: propTypes.object
+	inputStyle: propTypes.object,
+	prefix: propTypes.any,
+	suffix: propTypes.any
 };
 
 var Input = (_temp2 = _class$1 = function (_PureComponent) {
@@ -1270,32 +1267,20 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			var _props = this.props,
 			    prefixCls = _props.prefixCls,
 			    size = _props.size,
-			    disabled = _props.disabled;
+			    disabled = _props.disabled,
+			    inputCls = _props.inputCls;
 
-			return classnames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-sm', size === 'small'), defineProperty(_classNames, prefixCls + '-lg', size === 'large'), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+			return classnames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-sm', size === 'small'), defineProperty(_classNames, prefixCls + '-lg', size === 'large'), defineProperty(_classNames, prefixCls + '-disabled', disabled), defineProperty(_classNames, inputCls, inputCls), _classNames));
 		}
 	}, {
 		key: 'renderInput',
 		value: function renderInput() {
-			var _classNames2, _classNames3, _classNames4;
-
 			var props = this.props;
-			var className = props.className,
-			    inputStyle = props.inputStyle,
-			    type = props.type,
-			    addonBeforeCls = props.addonBeforeCls,
-			    addonAfterCls = props.addonAfterCls,
-			    addonBeforeStyle = props.addonBeforeStyle,
-			    addonAfterStyle = props.addonAfterStyle,
-			    _props$style = props.style,
-			    style = _props$style === undefined ? {} : _props$style,
-			    others = objectWithoutProperties(props, ['className', 'inputStyle', 'type', 'addonBeforeCls', 'addonAfterCls', 'addonBeforeStyle', 'addonAfterStyle', 'style']);
+			var inputStyle = props.inputStyle,
+			    type = props.type;
 
-			var otherProps = omit(others, Object.keys(propTypes$1));
 
-			if (props.type === 'hidden') {
-				style.display = 'none';
-			}
+			var otherProps = omit(props, Object.keys(propTypes$1));
 
 			if ('value' in props) {
 				otherProps.value = fixControlledValue(props.value);
@@ -1303,89 +1288,126 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 				delete otherProps.defaultValue;
 			}
 
-			var classname = classnames(props.prefixCls + '-wrapper', (_classNames2 = {}, defineProperty(_classNames2, props.prefixCls + '-wrapper-inline', props.inline), defineProperty(_classNames2, className, className), _classNames2));
-
-			var addonBefore = props.addonBefore ? React$1__default.createElement(
-				'span',
-				{ className: classnames((_classNames3 = {}, defineProperty(_classNames3, props.prefixCls + '-addon ' + props.prefixCls + '-addon-before', true), defineProperty(_classNames3, addonBeforeCls, addonBeforeCls), _classNames3)), style: addonBeforeStyle },
-				props.addonBefore
-			) : null;
-
-			var addonAfter = props.addonAfter ? React$1__default.createElement(
-				'span',
-				{ className: classnames((_classNames4 = {}, defineProperty(_classNames4, props.prefixCls + '-addon ' + props.prefixCls + '-addon-after', true), defineProperty(_classNames4, addonAfterCls, addonAfterCls), _classNames4)), style: addonAfterStyle },
-				props.addonAfter
-			) : null;
-
-			return React$1__default.createElement(
-				'div',
-				{ className: classname, style: style },
-				addonBefore,
-				React$1__default.createElement(
-					'span',
-					{ className: props.prefixCls + '-inner' },
-					React$1__default.createElement('input', _extends({}, otherProps, {
-						ref: 'input',
-						type: type,
-						style: inputStyle,
-						onChange: this.handleChange,
-						className: classnames(this.getInputClassName()),
-						onKeyDown: this.handleKeyDown
-					}))
-				),
-				addonAfter
-			);
+			return this.wrapInput(React$1__default.createElement('input', _extends({}, otherProps, {
+				ref: 'input',
+				type: type,
+				style: inputStyle,
+				onChange: this.handleChange,
+				className: this.getInputClassName(),
+				onKeyDown: this.handleKeyDown
+			})));
 		}
 	}, {
 		key: 'getTextareaClassName',
 		value: function getTextareaClassName() {
-			var _classNames5;
+			var _classNames2;
 
 			var _props2 = this.props,
 			    prefixCls = _props2.prefixCls,
 			    disabled = _props2.disabled,
 			    inputCls = _props2.inputCls;
 
-			return classnames(prefixCls, (_classNames5 = {}, defineProperty(_classNames5, prefixCls + '-disabled', disabled), defineProperty(_classNames5, inputCls, inputCls), _classNames5));
+			return classnames((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-disabled', disabled), defineProperty(_classNames2, inputCls, inputCls), _classNames2));
 		}
 	}, {
 		key: 'renderTextarea',
 		value: function renderTextarea() {
-			var _classNames6;
-
+			var props = this.props;
 			var _props3 = this.props,
-			    prefixCls = _props3.prefixCls,
-			    className = _props3.className,
-			    inline = _props3.inline,
 			    inputStyle = _props3.inputStyle,
-			    style = _props3.style,
-			    others = objectWithoutProperties(_props3, ['prefixCls', 'className', 'inline', 'inputStyle', 'style']);
+			    _props3$style = _props3.style,
+			    style = _props3$style === undefined ? {} : _props3$style;
 
-			var otherProps = omit(others, Object.keys(propTypes$1));
 
-			if ('value' in this.props) {
-				otherProps.value = fixControlledValue(this.props.value);
+			var otherProps = omit(props, Object.keys(propTypes$1));
+
+			if ('value' in props) {
+				otherProps.value = fixControlledValue(props.value);
 
 				delete otherProps.defaultValue;
 			}
 
-			var classname = classnames(prefixCls + '-wrapper', (_classNames6 = {}, defineProperty(_classNames6, prefixCls + '-wrapper-inline', inline), defineProperty(_classNames6, className, className), _classNames6));
-
 			var height = style.height;
 
+
+			return this.wrapInput(React$1__default.createElement('textarea', _extends({}, otherProps, {
+				ref: 'input',
+				style: _extends({
+					height: height
+				}, inputStyle),
+				className: this.getTextareaClassName(),
+				onChange: this.handleChange,
+				onKeyDown: this.handleKeyDown
+			})));
+		}
+	}, {
+		key: 'getPrefix',
+		value: function getPrefix() {
+			var _props4 = this.props,
+			    prefix = _props4.prefix,
+			    prefixCls = _props4.prefixCls;
+
+
+			if (typeof prefix === 'function') {
+				prefix = prefix();
+			}
+
+			if (prefix) {
+				return React$1__default.createElement(
+					'span',
+					{ className: prefixCls + '-prefix' },
+					prefix
+				);
+			}
+
+			return null;
+		}
+	}, {
+		key: 'getSuffix',
+		value: function getSuffix() {
+			var _props5 = this.props,
+			    suffix = _props5.suffix,
+			    prefixCls = _props5.prefixCls;
+
+
+			if (typeof suffix === 'function') {
+				suffix = suffix();
+			}
+
+			if (suffix) {
+				return React$1__default.createElement(
+					'span',
+					{ className: prefixCls + '-suffix' },
+					suffix
+				);
+			}
+
+			return null;
+		}
+	}, {
+		key: 'wrapInput',
+		value: function wrapInput(input) {
+			var _classNames3;
+
+			var _props6 = this.props,
+			    prefixCls = _props6.prefixCls,
+			    className = _props6.className,
+			    inline = _props6.inline,
+			    _props6$style = _props6.style,
+			    style = _props6$style === undefined ? {} : _props6$style;
+
+
+			var prefix = this.getPrefix();
+			var suffix = this.getSuffix();
+
+			var classname = classnames((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-wrapper', true), defineProperty(_classNames3, prefixCls + '-wrapper-block', !inline), defineProperty(_classNames3, className, className), _classNames3));
 
 			return React$1__default.createElement(
 				'div',
 				{ className: classname, style: style },
-				React$1__default.createElement('textarea', _extends({}, otherProps, {
-					ref: 'input',
-					style: _extends({
-						height: height
-					}, inputStyle),
-					className: classnames(this.getTextareaClassName()),
-					onChange: this.handleChange,
-					onKeyDown: this.handleKeyDown
-				}))
+				prefix,
+				input,
+				suffix
 			);
 		}
 	}, {
@@ -1415,7 +1437,7 @@ var InputGroup = function InputGroup(props) {
 	    _props$className = props.className,
 	    className = _props$className === undefined ? '' : _props$className;
 
-	var cls = classNames$1(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), _classNames), className);
+	var cls = classnames((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), defineProperty(_classNames, className, className), _classNames));
 	return React$1__default.createElement(
 		'div',
 		{ className: cls, style: props.style },

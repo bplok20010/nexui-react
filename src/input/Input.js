@@ -12,15 +12,18 @@ function fixControlledValue(value) {
 
 const propTypes = {
 		size: PropTypes.oneOf(['small', 'default', 'large']),
-		type: PropTypes.string, //text textarea hidden
+		type: PropTypes.string, //text textarea
 		inline: PropTypes.bool,
 		prefixCls: PropTypes.string,
+		className: PropTypes.string,
 		onPressEnter: PropTypes.func,
 		onKeyDown: PropTypes.func,
 		onChange: PropTypes.func,
 		autoFocus: PropTypes.bool,
 		inputCls: PropTypes.string,
 		inputStyle: PropTypes.object,
+		prefix: PropTypes.any,
+		suffix: PropTypes.any,
 	};
 
 export default class Input extends PureComponent{
@@ -80,89 +83,115 @@ export default class Input extends PureComponent{
 	renderInput(){
 		const props = this.props;
 		const {
-			className, 
 			inputStyle, 
 			type,
-			style={}, 
-			...others 
 		} = props;
 		
-		const otherProps = omit(others, Object.keys(propTypes));
+		const otherProps = omit(props, Object.keys(propTypes));
 		
-		if( props.type === 'hidden' ) {
-			style.display = 'none';		
-		}
-		
-		if ('value' in this.props) {
+		if ('value' in props) {
 			otherProps.value = fixControlledValue(props.value);
 			
 			delete otherProps.defaultValue;
 		}
 		
-		const classname = classNames({
-			[`${props.prefixCls}-wrapper`]: true,
-			[`${props.prefixCls}-wrapper-block`]: !props.inline,
-			[className]: className,
-		});
-		
-		return (
-			<div 
-				className={classname} 
-				style={style}
-			>
-				<input 
-					{...otherProps} 
-					ref="input" 
-					type={type}
-					style={inputStyle}
-					onChange={this.handleChange}
-					className={this.getInputClassName()} 
-					onKeyDown={this.handleKeyDown}
-				/>
-            </div>
+		return this.wrapInput(
+			<input 
+				{...otherProps} 
+				ref="input" 
+				type={type}
+				style={inputStyle}
+				onChange={this.handleChange}
+				className={this.getInputClassName()} 
+				onKeyDown={this.handleKeyDown}
+			/>
 		);
 	}
 	
 	getTextareaClassName() {
 		const { prefixCls, disabled, inputCls } = this.props;
-		return classNames(prefixCls, {
+		return classNames({
+			[`${prefixCls}`]: true,
 			[`${prefixCls}-disabled`]: disabled,
 			[inputCls]: inputCls,
 		});
 	}
 	
 	renderTextarea(){
-		const {prefixCls, className, inline, inputStyle, style, ...others} = this.props;
-		const otherProps = omit(others, Object.keys(propTypes));
+		const props = this.props;
+		const {
+			inputStyle,
+			style={}
+		} = this.props;
 		
-		if ('value' in this.props) {
-			otherProps.value = fixControlledValue(this.props.value);
+		const otherProps = omit(props, Object.keys(propTypes));
+		
+		if ('value' in props) {
+			otherProps.value = fixControlledValue(props.value);
 			
 			delete otherProps.defaultValue;
 		}
 		
-		const classname = classNames(`${prefixCls}-wrapper`, {
-			[`${prefixCls}-wrapper-block`] : !inline,
+		const {height} = style;
+		
+		return this.wrapInput(
+			<textarea
+				{...otherProps}
+				ref="input"
+				style={{
+					height,
+					...inputStyle	
+				}}
+				className={this.getTextareaClassName()}
+				onChange={this.handleChange}
+				onKeyDown={this.handleKeyDown}
+			/>
+		);
+	}
+	
+	getPrefix(){
+		let {prefix, prefixCls} = this.props;
+		
+		if( typeof prefix === 'function' ) {
+			prefix = prefix();	
+		}
+		
+		if( prefix ) {
+			return <span className={`${prefixCls}-prefix`}>{prefix}</span>	
+		}
+		
+		return null;
+	}
+	
+	getSuffix(){
+		let {suffix, prefixCls} = this.props;
+		
+		if( typeof suffix === 'function' ) {
+			suffix = suffix();	
+		}
+		
+		if( suffix ) {
+			return <span className={`${prefixCls}-suffix`}>{suffix}</span>	
+		}
+		
+		return null;
+	}
+	
+	
+	
+	wrapInput(input){
+		const {prefixCls, className, inline, style={}} = this.props;
+		
+		const prefix = this.getPrefix();
+		const suffix = this.getSuffix();
+		
+		const classname = classNames({
+			[`${prefixCls}-wrapper`]: true,
+			[`${prefixCls}-wrapper-block`]: !inline,
 			[className]: className
 		});
 		
-		const {height} = style;
-		
-		return (
-			<div className={classname} style={style}>
-				<textarea
-					{...otherProps}
-					ref="input"
-					style={{
-						height,
-						...inputStyle	
-					}}
-					className={classNames(this.getTextareaClassName())}
-					onChange={this.handleChange}
-					onKeyDown={this.handleKeyDown}
-				/>
-			</div>
-		);
+		return <div className={classname} style={style}>{prefix}{input}{suffix}</div>;	
 	}
 	
 	render(){

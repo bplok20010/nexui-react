@@ -4,7 +4,7 @@ $inputHeight: 28px !default;
 $inputSmallHeight: 22px !default;
 $inputLargeHeight: 32px !default;
 
-$inputBorderRadius: 0 !default;//3px
+$inputBorderRadius: 2px !default;//3px
 $inputColor: rgba(0,0,0,.8) !default;
 $inputBGColor: #FFF !default;
 $inputBorderColor: #c1c1c1 #d9d9d9 #d9d9d9 !default;
@@ -28,7 +28,6 @@ input[type="text"]::-ms-clear{
 	background-color:#fff;
 	background-image:none;
 	border-radius:$inputBorderRadius;
-	//vertical-align: middle;
 	transition:all .3s;
 	
 	border-width: 1px;
@@ -80,43 +79,47 @@ textarea.nex-input {
 	width:100%;
 	vertical-align:middle;
 
-	> textarea{
+	textarea{
 		resize: none;
 	}
 
-	> textarea.nex-input-autosize {
+	textarea.nex-input-autosize {
 		resize: both;
 	}
 	
 	&.nex-input-wrapper-block {
 		display: block;
 	}
-}
+	
+	&:hover .nex-input {
+		border-color:$inputHoverBorderColor;
+	}
+	
+	.nex-input-prefix,
+	.nex-input-suffix {
+		position:absolute;
+		top:50%;
+		transform: translateY(-50%);
+		z-index:2;
+	}
+	
+	.nex-input-prefix {
+		left:7px;	
+	}
+	
+	.nex-input-suffix {
+		right:7px;	
+	}
+	
+	.nex-input:not(:last-child) {
+		padding-right: 24px;
+		z-index:1;
+	}
 
-		
-.nex-input-wrapper>.nex-input-addon:first-child {
-	border-right: 0;
-	border-bottom-right-radius: 0;
-	border-top-right-radius: 0;
-}
-
-.nex-input-wrapper>.nex-input-addon:last-child {
-	border-left: 0;
-	border-bottom-left-radius: 0;
-	border-top-left-radius: 0;
-}
-.nex-input-wrapper>.nex-input-addon:not(:first-child):not(:last-child),
-.nex-input-wrapper>.nex-input:not(:first-child):not(:last-child) {
-	border-radius:0;
-}
-
-.nex-input-wrapper>.nex-input:first-child:not(:last-child) {
-	border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-}
-.nex-input-wrapper>.nex-input:last-child:not(:first-child) {
-	border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
+	.nex-input:not(:first-child) {
+		padding-left: 24px;
+		z-index:1;
+	}
 }
 
 .nex-input-group {
@@ -128,6 +131,7 @@ textarea.nex-input {
 		position:relative;
 		display:inline-block;
 		vertical-align:middle;
+		float:none;
 		z-index:1;
 		width:auto;
 	}
@@ -149,11 +153,11 @@ textarea.nex-input {
 		margin-left:0
 	}
 	
-	>*:first-child:not(:last-child)  .nex-input {
+	>*:first-child:not(:last-child) .nex-input {
 		border-bottom-right-radius:0;
 		border-top-right-radius:0;
 	}
-	>*:last-child:not(:first-child)  .nex-input {
+	>*:last-child:not(:first-child) .nex-input {
 		border-bottom-left-radius:0;
 		border-top-left-radius:0;
 	}
