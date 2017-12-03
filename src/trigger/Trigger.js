@@ -1,21 +1,34 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, {findDOMNode} from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import getZIndex from '../shared/getZIndex';
 import omit from 'omit.js';
 import Popup from '../popup/Popup';
 import _assign from 'object-assign';
+import {on, off, contains} from '../shared/dom';
+import placements from './placements';
 
 function noop(){}
 
 const propTypes = {
 		popupVisible: PropTypes.bool,
 		defaultPopupVisible: PropTypes.bool,
-		action: PropTypes.oneOf(['click', 'focus', 'hover']),
+		action: PropTypes.oneOf(['click', 'focus', 'hover', 'contextMenu']),
 		onPopupVisibleChange: PropTypes.func,
 		destroyPopupOnHide: PropTypes.bool,
-		content: PropTypes.any,
+		zIndex: PropTypes.number,
+		popup: PropTypes.oneOfType([
+			PropTypes.node,
+			PropTypes.func,
+		]).isRequired,
+		popupClassName: PropTypes.string,
+		popupAnimate: PropTypes.object,
+		popupMaskAnimate: PropTypes.object,
+		popupStyle: PropTypes.object,
+		popupProps: PropTypes.object,
+		mask: PropTypes.bool,
+		maskClosable: PropTypes.bool,
+		placement: PropTypes.string,
 	};
 
 export default class Trigger extends React.Component {
@@ -25,6 +38,9 @@ export default class Trigger extends React.Component {
 		onPopupVisibleChange: noop,
 		destroyPopupOnHide: false,
 		action: 'click',
+		mask: false,
+		maskClosable: true,
+		placement: 'BottomLeft'
 	}
 	
 	constructor(props){
@@ -49,14 +65,24 @@ export default class Trigger extends React.Component {
 		this.componentDidUpdate();
 	}
 	
-	componentWillReceiveProps(){
+	componentWillReceiveProps(nextProps){
+		
+		if( 'popupVisible' in nextProps ) {
+			this.setState({
+				popupVisible: nextProps.popupVisible		
+			})	
+		}
 	}
 	
 	componentDidUpdate(){
 		this.createPopup();
+		this.createPopupEvents();
 	}
 	
 	componentWillUnmount(){
+		if( this._container ) {
+			ReactDOM.unmountComponentAtNode(this._container);	
+		}
 	}
 	
 	setPopupVisible(popupVisible){
@@ -78,16 +104,31 @@ export default class Trigger extends React.Component {
 		const { popupVisible } = this.state;
 		const {onClick = noop } = child.props;
 		
+		if( action !== 'click' ) return;
+		
 		return {
 			onClick: (e)=>{
-				
-				if( action === 'click' ) {
-					this.setPopupVisible(!popupVisible);
-				}
-				
 				onClick(e);	
+				this.setPopupVisible(!popupVisible);
 			}	
 		}	
+	}
+	
+	getContextMenuTriggerProps(child){
+		const { action } = this.props;
+		const { popupVisible } = this.state;
+		const { onContextMenu = noop } = child.props;	
+		
+		if( action !== 'contextMenu' ) return;
+		
+		return {
+			onContextMenu: (e)=>{
+				e.preventDefault();
+				onContextMenu(e);
+				if( !popupVisible )
+					this.setPopupVisible(true);
+			}		
+		}
 	}
 	
 	getHoverTriggerProps(child){
@@ -95,18 +136,16 @@ export default class Trigger extends React.Component {
 		const { popupVisible } = this.state;
 		const {onMouseEnter = noop, onMouseLeave = noop } = child.props;
 		
+		if( action !== 'hover' ) return;
+		
 		return {
 			onMouseEnter: (e)=>{
-				if( action === 'hover' ) {
-					this.setPopupVisible(true);
-				}
-				onMouseEnter(e);	
+				onMouseEnter(e);
+				this.setPopupVisible(true);
 			},
 			onMouseLeave: (e)=>{
-				if( action === 'hover' ) {
-					this.setPopupVisible(false);
-				}
-				onMouseLeave(e);	
+				onMouseLeave(e);
+				this.setPopupVisible(false);
 			}		
 		}	
 	}
@@ -116,28 +155,78 @@ export default class Trigger extends React.Component {
 		const { popupVisible } = this.state;
 		const {onFocus = noop, onBlur = noop } = child.props;
 		
+		if( action !== 'focus' ) return;
+		
 		return {
 			onFocus: (e)=>{
-				if( action === 'focus' ) {
-					this.setPopupVisible(true);
-				}
-				onFocus(e);	
+				onFocus(e);
+				this.setPopupVisible(true);
 			},
 			onBlur: (e)=>{
-				if( action === 'focus' ) {
-					this.setPopupVisible(false);
-				}
 				onBlur(e);	
+				this.setPopupVisible(false);
 			}		
 		}	
 	}
 	
-	createPopup(){
-		const {content, destroyPopupOnHide, style={}, ...others} = this.props;
+	getPopupAlign(){
+			
+	}
+	
+	onMaskClick = () => {
+		const {maskClosable} = this.props;
+		
+		if(maskClosable) {
+			this.setPopupVisible(false);	
+		}
+	}
+	
+	savePopup= (node)=>{
+		this._popup = node;	
+	}
+	
+	getComponent(){
+		const {
+			popup, 
+			destroyPopupOnHide, 
+			zIndex,
+			mask,
+			popupClassName,
+			popupStyle, 
+			popupAnimate,
+			popupMaskAnimate, 
+			popupProps,
+			placement,
+		} = this.props;
 		const {popupVisible} = this.state;
 		const triggerNode = ReactDOM.findDOMNode(this.refs.trigger);
-		
-		const otherPorps = omit(others, Object.keys(propTypes));
+
+		return (
+			<Popup 
+				{...placements(placement)}
+				popupAnimate={popupAnimate}
+				maskAnimate={popupMaskAnimate}
+				className={popupClassName}
+				style={{
+					zIndex: zIndex,
+					...popupStyle,	
+				}}
+				rootCls="nex-trigger-popup-root"
+				of={triggerNode}
+				destroyOnHide = {destroyPopupOnHide}
+				mask={mask}
+				onMaskClick={this.onMaskClick}
+				{...popupProps}
+				visible={popupVisible}
+				ref={this.savePopup}
+			>
+				{typeof popup === 'function' ? popup() : popup}
+			</Popup>
+		);	
+	}
+	
+	createPopup(){
+		const {popupVisible} = this.state;
 		
 		if( !this._container && !popupVisible ) return null;
 		
@@ -145,38 +234,78 @@ export default class Trigger extends React.Component {
 			this._container = document.createElement('div');	
 		}
 		
-		const popup = (
-			<Popup 
-				at="center top"
-				my="center bottom-5"
-				{...otherPorps}
-				rootCls="nex-trigger-popup-root"
-				style={{
-					zIndex: getZIndex(),
-					...style,	
-				}}
-				of={triggerNode}
-				destroyOnHide = {destroyPopupOnHide}
-				visible={popupVisible}
-			>
-				{typeof content === 'function' ? content() : content}
-			</Popup>
-		);	
-		
 		ReactDOM.unstable_renderSubtreeIntoContainer(
 			this, 
-			popup, 
+			this.getComponent(), 
 			this._container
 		);
 	}
 	
+	getPopupDomNode(){
+		return this._popup ? this._popup.getPopupDomNode() : null;
+	}
+	
+	//创建相关的close事件
+	createPopupEvents(){
+		const {action} = this.props;
+		const {popupVisible} = this.state;
+		const popup = this._popup;
+		
+		if( popupVisible ) {
+			
+			if( !this.__resizeHandle ) {
+				this.__resizeHandle = ()=>{
+					popup.updatePosition();
+				};
+				on(window, 'resize', this.__resizeHandle);
+			}
+			
+			if( !this.__mousedownHandle ) { 
+				this.__mousedownHandle = (e)=>{
+					if( action === 'click' || action === 'contextMenu' ) {
+						const target = e.target;
+						const root = findDOMNode(this);
+						const popupNode = this.getPopupDomNode();
+						
+						if (!contains(root, target) && !contains(popupNode, target)) {
+							this.setPopupVisible(false);
+						}
+						
+						if (action === 'contextMenu' && !contains(popupNode, target)) {
+							this.setPopupVisible(false);
+						}		
+					}
+				};
+				on(document, 'mousedown', this.__mousedownHandle);
+			}
+			
+			return;
+		}
+		
+		this.clearPopupEvents();
+	}
+	
+	clearPopupEvents(){
+		if( this.__resizeHandle ) {
+			this.__resizeHandle = null;
+			off(window, 'resize', this.__resizeHandle);
+		}
+		
+		if( this.__mousedownHandle ) {
+			this.__mousedownHandle = null;
+			off(document, 'mousedown', this.__mousedownHandle);
+		}	
+		
+	}
+	
 	render() {
 		const {children} = this.props;
-		
+
 		const child = React.Children.only(children);
 		
 		const trigger = React.cloneElement(child, {
 			...this.getClickTriggerProps(child),
+			...this.getContextMenuTriggerProps(child),
 			...this.getHoverTriggerProps(child),
 			...this.getFocusTriggerProps(child),
 			key: 'trigger', 

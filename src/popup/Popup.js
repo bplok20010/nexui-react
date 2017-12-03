@@ -176,7 +176,7 @@ export default class Popup extends React.Component {
 					mask.style.display = "";	
 				}	
 			}
-			
+
 			this.showPopup();
 			
 			if( isHidden ) {
@@ -257,6 +257,14 @@ export default class Popup extends React.Component {
 		);	
 	}
 	
+	savePopup=(node)=>{
+		this._popupNode = node;	
+	}
+	
+	getPopupDomNode(){
+		return this._popupNode;
+	}
+	
 	getRenderComponent(){
 		const {
 			prefixCls, 
@@ -287,7 +295,7 @@ export default class Popup extends React.Component {
 		const others = omit(_others, Object.keys(propTypes));
 		
 		const popup = (
-			<div>
+			<div ref={this.savePopup}>
 				{mask ? this.getMaskComponent() : null}
 				<div {...others} ref="popup" className={classes} tabIndex={-1}></div>
 			</div>
