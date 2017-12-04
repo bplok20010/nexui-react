@@ -1,8 +1,8 @@
 {
   "_from": "react-dom",
-  "_id": "react-dom@15.6.1",
+  "_id": "react-dom@16.2.0",
   "_inBundle": false,
-  "_integrity": "sha1-LLDtQZEDjlPCCes6eaI+Kkz5lHA=",
+  "_integrity": "sha512-zpGAdwHVn9K0091d+hr+R0qrjoJ84cIBFL2uU60KvWBPfZ7LPSrfqviTxGHWN0sjPZb2hxWzMexwrvJdKePvjg==",
   "_location": "/react-dom",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,13 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/react-dom/-/react-dom-15.6.1.tgz",
-  "_shasum": "2cb0ed4191038e53c209eb3a79a23e2a4cf99470",
+  "_resolved": "https://registry.npmjs.org/react-dom/-/react-dom-16.2.0.tgz",
+  "_shasum": "69003178601c0ca19b709b33a83369fe6124c044",
   "_spec": "react-dom",
-  "_where": "D:\\wamp\\www\\github-project\\nexui",
+  "_where": "D:\\wamp\\www\\github-project\\nexui-react",
+  "browser": {
+    "./server.js": "./server.browser.js"
+  },
   "browserify": {
     "transform": [
       "loose-envify"
@@ -33,32 +36,34 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "fbjs": "^0.8.9",
+    "fbjs": "^0.8.16",
     "loose-envify": "^1.1.0",
-    "object-assign": "^4.1.0",
-    "prop-types": "^15.5.10"
+    "object-assign": "^4.1.1",
+    "prop-types": "^15.6.0"
   },
   "deprecated": false,
   "description": "React package for working with the DOM.",
   "files": [
     "LICENSE",
-    "PATENTS",
     "README.md",
-    "dist/",
-    "lib/",
     "index.js",
     "server.js",
-    "test-utils.js"
+    "server.browser.js",
+    "server.node.js",
+    "test-utils.js",
+    "unstable-native-dependencies.js",
+    "cjs/",
+    "umd/"
   ],
-  "homepage": "https://facebook.github.io/react/",
+  "homepage": "https://reactjs.org/",
   "keywords": [
     "react"
   ],
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "main": "index.js",
   "name": "react-dom",
   "peerDependencies": {
-    "react": "^15.6.1"
+    "react": "^16.0.0"
   },
   "repository": {
     "type": "git",
@@ -67,5 +72,5 @@
   "scripts": {
     "start": "node server.js"
   },
-  "version": "15.6.1"
+  "version": "16.2.0"
 }

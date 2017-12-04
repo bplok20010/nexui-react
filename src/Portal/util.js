@@ -8,6 +8,7 @@ export function getDom(selector){
 
 export function createContainer(parent) {
   const div = document.createElement('div');
+  div.__portal = true;
   return parent.appendChild(div);
 }
 

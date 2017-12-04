@@ -58,7 +58,7 @@ class App extends React.Component {
 				idx : ++this.state.idx
 			});
 		},1000);*/
-		this.updatePopupPosition();
+		//this.updatePopupPosition();
 	}
 	
 	updatePopupPosition(){
@@ -68,7 +68,7 @@ class App extends React.Component {
 	}
 	
 	componentDidUpdate(){
-		this.updatePopupPosition();	
+		//this.updatePopupPosition();	
 	}
 	
 	getButtonEl(){
@@ -81,46 +81,37 @@ class App extends React.Component {
 		<div style={{ padding: '400px 10px'}}>
 			<Button onClick={this.togglChange} ref="button">
 				显示{idx}
-				<Popup ref="popup" mask={false} destroyOnHide={false} visible={this.state.visible} 
-					of={null} 
-					maskAnimate={{
-						appear: (el) => {
-							$(el).hide().stop(true, true).fadeIn(500);	
-						},
-						leave: (el, done) => {
-							$(el).stop(true, true).fadeOut(500,done);		
-						}	
-					}} 
-					popupAnimate={{
-						appear: (el) => {
-							$(el).hide().stop(true, true).fadeIn(500);	
-						},
-						leave: (el, done) => {
-							$(el).stop(true, true).fadeOut(500,done);		
-						}	
-					}} 
-					className="demo-popup" 
-					my="left bottom" 
-					at="left top"
-				>
-					test....{this.state.idx}<br/>
-					test....<br/>
-					test....<br/>
-					<span className="icon-close" onClick={this.close}>X</span>
-				</Popup>
 			</Button>
+			<Popup ref="popup" mask={false} destroyOnHide={false} visible={this.state.visible} 
+				of={()=> findDOMNode(this.refs.button)} 
+				maskAnimate={{
+					appear: (el) => {
+						$(el).hide().stop(true, true).fadeIn(500);	
+					},
+					leave: (el, done) => {
+						$(el).stop(true, true).fadeOut(500,done);		
+					}	
+				}} 
+				popupAnimate={{
+					appear: (el) => {
+						$(el).hide().stop(true, true).fadeIn(500);	
+					},
+					leave: (el, done) => {
+						$(el).stop(true, true).fadeOut(500,done);		
+					}	
+				}} 
+				className="demo-popup" 
+				my="left bottom" 
+				at="left top"
+			>
+				test....{this.state.idx}<br/>
+				test....<br/>
+				test....<br/>
+				<span className="icon-close" onClick={this.close}>X</span>
+			</Popup>
 			<Button onClick={()=> this.setState( { destroy: true, visible: false } )} >销毁{idx}</Button>
 			<Button onClick={this.showPopup} ref="cp">触发是弹窗</Button>
-			
-			
-			<Popup my="center" visible={this.state.visible} fixed at="center" using={(a,b) => console.log(a, b)}>
-				popupa....
-			</Popup>
-			
-			<Popup>
-				<p>Hello Popup</p>
-			</Popup>
-		</div>
+		</div>	
     );
   }
 }

@@ -11,6 +11,7 @@ function noop(){}
 const propTypes = {
 		prefixCls: PropTypes.string,
 		rootCls: PropTypes.string,
+		container: PropTypes.node.isRequired,
 		className: PropTypes.string,
 		mask: PropTypes.bool,
 		maskCls: PropTypes.string,
@@ -18,10 +19,11 @@ const propTypes = {
 		visible: PropTypes.bool,
 		fixed: PropTypes.bool,
 		disabledSetPosition: PropTypes.bool,
+		onUpdate: PropTypes.func,
 		onMaskClick: PropTypes.func,
 		popupAnimate: PropTypes.shape({
-			appear: PropTypes.func,
-			leave: PropTypes.func	
+			appear: PropTypes.func,//enter
+			leave: PropTypes.func	//exit
 		}),
 		maskAnimate: PropTypes.shape({
 			appear: PropTypes.func,
@@ -41,6 +43,7 @@ export default class Popup extends React.Component {
 	static defaultProps = {
 		prefixCls: 'nex-popup',
 		rootCls: '',
+		container: document.body,
 		mask: false,
 		fixed: false,
 		destroyOnHide: true,
@@ -58,7 +61,8 @@ export default class Popup extends React.Component {
 			visible: props.visible,
 			isInit: true,
 			isHidden: false,
-			enableAnim: true
+			enableAnim: true,
+			status: !props.visible ? 'unmount' : 'mount',
 		}	
 	}
 	
@@ -146,15 +150,26 @@ export default class Popup extends React.Component {
 		}
 	}
 	
+	onUpdate=()=>{
+		return;
+	}
+	
 	componentDidMount(){
-		const { visible } = this.props;
+		const {visible} = this.props;//使用props.visible进行控制
 		
 		if( visible ) {
 			this.showPopup();
-			this.animateAppear();
+			//this.animateAppear();
 		}
 		
 		this.state.isInit = false;
+	}
+	
+	componentDidUpdate(){
+		const {visible} = this.props;
+		if( visible ) {
+			this.showPopup();
+		}	
 	}
 	
 	componentWillReceiveProps({visible}){
@@ -163,7 +178,7 @@ export default class Popup extends React.Component {
 		});
 	}
 	
-	componentDidUpdate(){
+	componentDidUpdate1(){
 		const { visible } = this.props;
 		const { popup, mask } = this.refs;
 		const { isHidden } = this.state;
@@ -244,6 +259,20 @@ export default class Popup extends React.Component {
 		}	
 	}
 	
+	
+	
+	savePopup=(node)=>{
+		this._popupNode = node;	
+	}
+	
+	getPopupMaskDomNode(){
+		//return this._popupNode;
+	}
+	
+	getPopupDomNode(){
+		return this._popupNode;
+	}
+	
 	getMaskComponent(){
 		const {prefixCls, mask, maskCls} = this.props;
 		
@@ -257,45 +286,53 @@ export default class Popup extends React.Component {
 		);	
 	}
 	
-	savePopup=(node)=>{
-		this._popupNode = node;	
-	}
-	
-	getPopupDomNode(){
-		return this._popupNode;
+	getPopupComponent(){
+		const {
+			prefixCls, 
+			className,
+			container,
+			fixed, 
+			mask, 
+			rootCls, 
+			style,
+			children,
+		} = this.props;
+		
+		const classes = classNames(prefixCls, fixed ? prefixCls + '-fixed' : '', className);
+		
+		return (
+			<Portal 
+				container={container}
+			>
+				<div ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootCls)}>
+					{mask ? this.getMaskComponent() : null}
+					<div ref="popup" className={classes} tabIndex={-1} style={style}>{children}</div>
+				</div>
+			</Portal>
+		);	
 	}
 	
 	getRenderComponent(){
 		const {
 			prefixCls, 
 			className, 
+			container,
 			destroyOnHide, 
 			fixed, 
 			mask, 
 			animate={}, 
-			renderTo, 
-			container, 
 			rootCls, 
 			..._others
 		} = this.props;
 		
 		let { visible, isInit } = this.state;
 		
-		let PortalConf = {};
-		
 		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
-		
-		if( renderTo ) {
-			PortalConf.renderTo = renderTo;
-		}
-		if( container ) {
-			PortalConf.container = container;
-		}
 		
 		const others = omit(_others, Object.keys(propTypes));
 		
 		const popup = (
-			<div ref={this.savePopup}>
+			<div ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootCls)}>
 				{mask ? this.getMaskComponent() : null}
 				<div {...others} ref="popup" className={classes} tabIndex={-1}></div>
 			</div>
@@ -308,17 +345,29 @@ export default class Popup extends React.Component {
 	
 		return visible ? (
 			<Portal 
-				{...PortalConf}
-				className={`${prefixCls}-root ${rootCls}`} 
-				animate={{
-					appear: noop, //css3动画效果和position执行顺序问题
-					leave: this.animateLeave	
-				}} 
+				container={container}
 			>{popup}</Portal>
 		) : null;
 	}
-
-	render() {
+	
+	render(){
+		const {visible} = this.state;
+		return visible ? this.getPopupComponent() : null;
+	}
+	
+	render1(){
+		const {destroyOnHide} = this.props;
+		let {visible, isInit, status} = this.state;
+		
+		if( !visible && !destroyOnHide && !isInit ) {
+			visible = true;
+			this.state.isHidden = true;	
+		}
+		
+		return status === 'unmount' ? null : this.getPopupComponent();
+	}
+	
+	render2() {
 		return this.getRenderComponent();
 	}
 }

@@ -1,8 +1,8 @@
 {
   "_from": "react",
-  "_id": "react@15.6.1",
+  "_id": "react@16.2.0",
   "_inBundle": false,
-  "_integrity": "sha1-uqhDTsZ4C96ZfNw4C3nNM7ljk98=",
+  "_integrity": "sha512-ZmIomM7EE1DvPEnSFAHZn9Vs9zJl5A9H7el0EGTE6ZbW9FKe/14IYAlPbC8iH25YarEQxZL+E8VW7Mi7kfQrDQ==",
   "_location": "/react",
   "_phantomChildren": {},
   "_requested": {
@@ -19,10 +19,10 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/react/-/react-15.6.1.tgz",
-  "_shasum": "baa8434ec6780bde997cdc380b79cd33b96393df",
+  "_resolved": "https://registry.npmjs.org/react/-/react-16.2.0.tgz",
+  "_shasum": "a31bd2dab89bff65d42134fa187f24d054c273ba",
   "_spec": "react",
-  "_where": "D:\\wamp\\www\\github-project\\nexui",
+  "_where": "D:\\wamp\\www\\github-project\\nexui-react",
   "browserify": {
     "transform": [
       "loose-envify"
@@ -33,11 +33,10 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "create-react-class": "^15.6.0",
-    "fbjs": "^0.8.9",
+    "fbjs": "^0.8.16",
     "loose-envify": "^1.1.0",
-    "object-assign": "^4.1.0",
-    "prop-types": "^15.5.10"
+    "object-assign": "^4.1.1",
+    "prop-types": "^15.6.0"
   },
   "deprecated": false,
   "description": "React is a JavaScript library for building user interfaces.",
@@ -46,23 +45,21 @@
   },
   "files": [
     "LICENSE",
-    "PATENTS",
-    "addons.js",
-    "react.js",
-    "addons/",
-    "dist/",
-    "lib/"
+    "README.md",
+    "index.js",
+    "cjs/",
+    "umd/"
   ],
-  "homepage": "https://facebook.github.io/react/",
+  "homepage": "https://reactjs.org/",
   "keywords": [
     "react"
   ],
-  "license": "BSD-3-Clause",
-  "main": "react.js",
+  "license": "MIT",
+  "main": "index.js",
   "name": "react",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/facebook/react.git"
   },
-  "version": "15.6.1"
+  "version": "16.2.0"
 }

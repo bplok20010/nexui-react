@@ -127,7 +127,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
     		idx : ++this.state.idx
     	});
     },1000);*/
-				this.updatePopupPosition();
+				//this.updatePopupPosition();
 			}
 		}, {
 			key: 'updatePopupPosition',
@@ -139,7 +139,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		}, {
 			key: 'componentDidUpdate',
 			value: function componentDidUpdate() {
-				this.updatePopupPosition();
+				//this.updatePopupPosition();	
 			}
 		}, {
 			key: 'getButtonEl',
@@ -163,43 +163,45 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						_rnexui.Button,
 						{ onClick: this.togglChange, ref: 'button' },
 						'\u663E\u793A',
-						idx,
-						_react2['default'].createElement(
-							_rnexui.Popup,
-							{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible,
-								of: null,
-								maskAnimate: {
-									appear: function appear(el) {
-										$(el).hide().stop(true, true).fadeIn(500);
-									},
-									leave: function leave(el, done) {
-										$(el).stop(true, true).fadeOut(500, done);
-									}
-								},
-								popupAnimate: {
-									appear: function appear(el) {
-										$(el).hide().stop(true, true).fadeIn(500);
-									},
-									leave: function leave(el, done) {
-										$(el).stop(true, true).fadeOut(500, done);
-									}
-								},
-								className: 'demo-popup',
-								my: 'left bottom',
-								at: 'left top'
+						idx
+					),
+					_react2['default'].createElement(
+						_rnexui.Popup,
+						{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible,
+							of: function of() {
+								return (0, _reactDom.findDOMNode)(_this2.refs.button);
 							},
-							'test....',
-							this.state.idx,
-							_react2['default'].createElement('br', null),
-							'test....',
-							_react2['default'].createElement('br', null),
-							'test....',
-							_react2['default'].createElement('br', null),
-							_react2['default'].createElement(
-								'span',
-								{ className: 'icon-close', onClick: this.close },
-								'X'
-							)
+							maskAnimate: {
+								appear: function appear(el) {
+									$(el).hide().stop(true, true).fadeIn(500);
+								},
+								leave: function leave(el, done) {
+									$(el).stop(true, true).fadeOut(500, done);
+								}
+							},
+							popupAnimate: {
+								appear: function appear(el) {
+									$(el).hide().stop(true, true).fadeIn(500);
+								},
+								leave: function leave(el, done) {
+									$(el).stop(true, true).fadeOut(500, done);
+								}
+							},
+							className: 'demo-popup',
+							my: 'left bottom',
+							at: 'left top'
+						},
+						'test....',
+						this.state.idx,
+						_react2['default'].createElement('br', null),
+						'test....',
+						_react2['default'].createElement('br', null),
+						'test....',
+						_react2['default'].createElement('br', null),
+						_react2['default'].createElement(
+							'span',
+							{ className: 'icon-close', onClick: this.close },
+							'X'
 						)
 					),
 					_react2['default'].createElement(
@@ -214,22 +216,6 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						_rnexui.Button,
 						{ onClick: this.showPopup, ref: 'cp' },
 						'\u89E6\u53D1\u662F\u5F39\u7A97'
-					),
-					_react2['default'].createElement(
-						_rnexui.Popup,
-						{ my: 'center', visible: this.state.visible, fixed: true, at: 'center', using: function using(a, b) {
-								return console.log(a, b);
-							} },
-						'popupa....'
-					),
-					_react2['default'].createElement(
-						_rnexui.Popup,
-						null,
-						_react2['default'].createElement(
-							'p',
-							null,
-							'Hello Popup'
-						)
 					)
 				);
 			}
