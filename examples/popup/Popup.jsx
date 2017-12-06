@@ -2,13 +2,20 @@ import { Popup,Button,Col } from '../../dist/rnexui';
 import React from 'react';
 import {findDOMNode} from 'react-dom';
 
+class Test extends React.Component{
+	
+	render(){
+		return  <div>label:{this.props.text}</div>		
+	}
+}
+
 class App extends React.Component {
 	
 	constructor(props){
 		super(props)
 		this.state = {
 			idx: 1,
-			visible: true,
+			visible: false,
 			destroy: false,
 		}	
 	}
@@ -16,6 +23,7 @@ class App extends React.Component {
 	togglChange = (e)=>{
 		this.setState( {
 			destroy: false,
+			idx: this.state.idx+ 1 ,
 			visible: !this.state.visible
 		} )
 	}
@@ -77,6 +85,12 @@ class App extends React.Component {
 	//
   render() {
 	 const {visible, idx, destroy} = this.state;
+	 
+	 const tProps = {};
+	 
+	 if( idx % 2 ) 
+	 	tProps.text = idx;
+	 
     return (
 		<div style={{ padding: '400px 10px'}}>
 			<Button onClick={this.togglChange} ref="button">
@@ -110,7 +124,19 @@ class App extends React.Component {
 				<span className="icon-close" onClick={this.close}>X</span>
 			</Popup>
 			<Button onClick={()=> this.setState( { destroy: true, visible: false } )} >销毁{idx}</Button>
-			<Button onClick={this.showPopup} ref="cp">触发是弹窗</Button>
+			<Button ref="cp">22222</Button>
+			<Popup ref="popup2" mask={false} destroyOnHide={true} visible={this.state.visible} 
+				of={()=> findDOMNode(this.refs.cp)} 
+				className="demo-popup" 
+				at="left bottom"
+				my="left top" 
+			>
+				test....{this.state.idx}<br/>
+				test....<br/>
+				test....<br/>
+				<span className="icon-close" onClick={this.close}>X</span>
+			</Popup>
+			<Test {...tProps} />
 		</div>	
     );
   }

@@ -8,6 +8,11 @@ import position from '../shared/position';
 
 function noop(){}
 
+const UNMOUNTED = 'unmounted';
+const ENTERED = 'entered';
+const EXITING = 'exiting';
+const EXITED = 'exited';
+
 const propTypes = {
 		prefixCls: PropTypes.string,
 		rootCls: PropTypes.string,
@@ -21,6 +26,10 @@ const propTypes = {
 		disabledSetPosition: PropTypes.bool,
 		onUpdate: PropTypes.func,
 		onMaskClick: PropTypes.func,
+		//popup显示时触发func(node)
+		enterHandle: PropTypes.func,
+		//popup关闭是触发func(node, cb)
+		exitHandle: PropTypes.func,
 		popupAnimate: PropTypes.shape({
 			appear: PropTypes.func,//enter
 			leave: PropTypes.func	//exit
@@ -57,17 +66,15 @@ export default class Popup extends React.Component {
 	constructor(props){
 		super(props);
 		
+		let initialStatus;
+		
+		initialStatus = UNMOUNTED;
+		
 		this.state = {
 			visible: props.visible,
-			isInit: true,
-			isHidden: false,
 			enableAnim: true,
-			status: !props.visible ? 'unmount' : 'mount',
+			status: props.visible ? ENTERED : UNMOUNTED,
 		}	
-	}
-	
-	shouldComponentUpdate({ visible }) {
-		return !!(this.props.visible || visible);
 	}
 	
 	/**
@@ -155,66 +162,91 @@ export default class Popup extends React.Component {
 	}
 	
 	componentDidMount(){
-		const {visible} = this.props;//使用props.visible进行控制
+		const {visible} = this.state;
 		
 		if( visible ) {
-			this.showPopup();
-			//this.animateAppear();
+			this.setPosition();
+			this.animateAppear();
+		}
+	}
+	
+	componentWillReceiveProps({visible, destroyOnHide, exitHandle}){
+		//隐藏popup
+		if( this.state.visible && !visible ) {
+			this.setState({
+				visible: true	
+			});	
 		}
 		
-		this.state.isInit = false;
+		
+	}
+	
+	shouldComponentUpdate({visible}) {
+		//if( !this.state.visible && !visible ) return false;
+		return !!(this.state.visible || visible);
 	}
 	
 	componentDidUpdate(){
-		const {visible} = this.props;
-		if( visible ) {
-			this.showPopup();
-		}	
-	}
-	
-	componentWillReceiveProps({visible}){
-		this.setState({
-			visible
-		});
-	}
-	
-	componentDidUpdate1(){
-		const { visible } = this.props;
 		const { popup, mask } = this.refs;
-		const { isHidden } = this.state;
-		if( visible ) {
-			if( isHidden ) {
-				if( popup ) {
-					popup.style.display = "";	
-				}
-				if( mask ) {
-					mask.style.display = "";	
-				}	
+		const { status, visible } = this.state;
+		
+		if( !visible ) return;
+		
+		if( status === EXITING ) {
+			if( popup ) {
+				popup.style.display = "none";	
 			}
-
+			if( mask ) {
+				mask.style.display = "none";	
+			}	
+			
+			this.state.status = EXITED;
+		} else if( status === EXITED ) {
+			if( popup ) {
+				popup.style.display = "";	
+			}
+			if( mask ) {
+				mask.style.display = "";	
+			}	
+			
 			this.showPopup();
 			
-			if( isHidden ) {
-				this.state.isHidden = false;
-				this.animateAppear();
-			} else if( !this._initAppear ) {
-				this.animateAppear();	
-			}
-		} else if( isHidden ) {
-			this.animateLeave(null, ()=> {
-				if( popup ) {
-					popup.style.display = "none";	
-				}
-				if( mask ) {
-					mask.style.display = "none";	
-				}
-			});	
+			this.animateAppear();
+			
+			this.state.status = ENTERED;	
+		} else {
+			this.showPopup();	
 		}
 	}
 	
 	componentWillUnmount(){
 		if( this.state.isHidden ) {
 			this.state.enableAnim = false;
+		}
+	}
+	
+	enterHandle(){
+			
+	}
+	
+	exitHandle(){
+		const {exitHandle} = this.props;
+		const {popup, mask} = this.refs;
+		
+		const cb = () => {
+			if( popup ) {
+				popup.style.display = "none";	
+			}
+			if( mask ) {
+				mask.style.display = "none";	
+			}	
+			this.state.status = EXITED;
+		}
+		
+		if( exitHandle ) {
+				
+		} else {
+			cb();	
 		}
 	}
 	
@@ -247,7 +279,7 @@ export default class Popup extends React.Component {
 	}
 	
 	showPopup(){
-		if( this.state.isInit || !this.props.disabledSetPosition ) {
+		if( !this.props.disabledSetPosition ) {
 			this.setPosition();	
 		}
 	}
@@ -312,62 +344,8 @@ export default class Popup extends React.Component {
 		);	
 	}
 	
-	getRenderComponent(){
-		const {
-			prefixCls, 
-			className, 
-			container,
-			destroyOnHide, 
-			fixed, 
-			mask, 
-			animate={}, 
-			rootCls, 
-			..._others
-		} = this.props;
-		
-		let { visible, isInit } = this.state;
-		
-		const classes = classNames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
-		
-		const others = omit(_others, Object.keys(propTypes));
-		
-		const popup = (
-			<div ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootCls)}>
-				{mask ? this.getMaskComponent() : null}
-				<div {...others} ref="popup" className={classes} tabIndex={-1}></div>
-			</div>
-		);
-		
-		if( !visible && !destroyOnHide && !isInit ) {
-			visible = true;
-			this.state.isHidden = true;	
-		}
-	
-		return visible ? (
-			<Portal 
-				container={container}
-			>{popup}</Portal>
-		) : null;
-	}
-	
 	render(){
 		const {visible} = this.state;
 		return visible ? this.getPopupComponent() : null;
-	}
-	
-	render1(){
-		const {destroyOnHide} = this.props;
-		let {visible, isInit, status} = this.state;
-		
-		if( !visible && !destroyOnHide && !isInit ) {
-			visible = true;
-			this.state.isHidden = true;	
-		}
-		
-		return status === 'unmount' ? null : this.getPopupComponent();
-	}
-	
-	render2() {
-		return this.getRenderComponent();
 	}
 }

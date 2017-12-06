@@ -2193,6 +2193,11 @@ var position = function (target, source, config) {
 var _class$11;
 var _temp$10;
 
+var UNMOUNTED = 'unmounted';
+var ENTERED = 'entered';
+var EXITING = 'exiting';
+var EXITED = 'exited';
+
 var propTypes$2 = {
 	prefixCls: propTypes.string,
 	rootCls: propTypes.string,
@@ -2206,6 +2211,10 @@ var propTypes$2 = {
 	disabledSetPosition: propTypes.bool,
 	onUpdate: propTypes.func,
 	onMaskClick: propTypes.func,
+	//popup显示时触发func(node)
+	enterHandle: propTypes.func,
+	//popup关闭是触发func(node, cb)
+	exitHandle: propTypes.func,
 	popupAnimate: propTypes.shape({
 		appear: propTypes.func, //enter
 		leave: propTypes.func //exit
@@ -2284,33 +2293,28 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			_this._popupNode = node;
 		};
 
+		var initialStatus = void 0;
+
+		initialStatus = UNMOUNTED;
+
 		_this.state = {
 			visible: props.visible,
-			isInit: true,
-			isHidden: false,
 			enableAnim: true,
-			status: !props.visible ? 'unmount' : 'mount'
+			status: props.visible ? ENTERED : UNMOUNTED
 		};
 		return _this;
 	}
 
+	/**
+ * 获取显示方位 
+ *  @param number 1 默认 
+ *	- 1 位置
+ *	- 2 方位
+ *	- 0 包含位置和方位
+ */
+
+
 	createClass(Popup, [{
-		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(_ref) {
-			var visible = _ref.visible;
-
-			return !!(this.props.visible || visible);
-		}
-
-		/**
-  * 获取显示方位 
-  *  @param number 1 默认 
-  *	- 1 位置
-  *	- 2 方位
-  *	- 0 包含位置和方位
-  */
-
-	}, {
 		key: 'getPosition',
 		value: function getPosition() {
 			var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
@@ -2399,69 +2403,73 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var visible = this.props.visible; //使用props.visible进行控制
+			var visible = this.state.visible;
+
 
 			if (visible) {
-				this.showPopup();
-				//this.animateAppear();
-			}
-
-			this.state.isInit = false;
-		}
-	}, {
-		key: 'componentDidUpdate',
-		value: function componentDidUpdate() {
-			var visible = this.props.visible;
-
-			if (visible) {
-				this.showPopup();
+				this.setPosition();
+				this.animateAppear();
 			}
 		}
 	}, {
 		key: 'componentWillReceiveProps',
-		value: function componentWillReceiveProps(_ref2) {
-			var visible = _ref2.visible;
+		value: function componentWillReceiveProps(_ref) {
+			var visible = _ref.visible,
+			    destroyOnHide = _ref.destroyOnHide,
+			    exitHandle = _ref.exitHandle;
 
-			this.setState({
-				visible: visible
-			});
+			//隐藏popup
+			if (this.state.visible && !visible) {
+				this.setState({
+					visible: true
+				});
+			}
 		}
 	}, {
-		key: 'componentDidUpdate1',
-		value: function componentDidUpdate1() {
-			var visible = this.props.visible;
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(_ref2) {
+			var visible = _ref2.visible;
+
+			//if( !this.state.visible && !visible ) return false;
+			return !!(this.state.visible || visible);
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
 			var _refs = this.refs,
 			    popup = _refs.popup,
 			    mask = _refs.mask;
-			var isHidden = this.state.isHidden;
+			var _state = this.state,
+			    status = _state.status,
+			    visible = _state.visible;
 
-			if (visible) {
-				if (isHidden) {
-					if (popup) {
-						popup.style.display = "";
-					}
-					if (mask) {
-						mask.style.display = "";
-					}
+
+			if (!visible) return;
+
+			if (status === EXITING) {
+				if (popup) {
+					popup.style.display = "none";
+				}
+				if (mask) {
+					mask.style.display = "none";
+				}
+
+				this.state.status = EXITED;
+			} else if (status === EXITED) {
+				if (popup) {
+					popup.style.display = "";
+				}
+				if (mask) {
+					mask.style.display = "";
 				}
 
 				this.showPopup();
 
-				if (isHidden) {
-					this.state.isHidden = false;
-					this.animateAppear();
-				} else if (!this._initAppear) {
-					this.animateAppear();
-				}
-			} else if (isHidden) {
-				this.animateLeave(null, function () {
-					if (popup) {
-						popup.style.display = "none";
-					}
-					if (mask) {
-						mask.style.display = "none";
-					}
-				});
+				this.animateAppear();
+
+				this.state.status = ENTERED;
+			} else {
+				this.showPopup();
 			}
 		}
 	}, {
@@ -2472,9 +2480,37 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'enterHandle',
+		value: function enterHandle() {}
+	}, {
+		key: 'exitHandle',
+		value: function exitHandle() {
+			var _this2 = this;
+
+			var exitHandle = this.props.exitHandle;
+			var _refs2 = this.refs,
+			    popup = _refs2.popup,
+			    mask = _refs2.mask;
+
+
+			var cb = function cb() {
+				if (popup) {
+					popup.style.display = "none";
+				}
+				if (mask) {
+					mask.style.display = "none";
+				}
+				_this2.state.status = EXITED;
+			};
+
+			if (exitHandle) {} else {
+				cb();
+			}
+		}
+	}, {
 		key: 'showPopup',
 		value: function showPopup() {
-			if (this.state.isInit || !this.props.disabledSetPosition) {
+			if (!this.props.disabledSetPosition) {
 				this.setPosition();
 			}
 		}
@@ -2537,77 +2573,11 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			);
 		}
 	}, {
-		key: 'getRenderComponent',
-		value: function getRenderComponent() {
-			var _props4 = this.props,
-			    prefixCls = _props4.prefixCls,
-			    className = _props4.className,
-			    container = _props4.container,
-			    destroyOnHide = _props4.destroyOnHide,
-			    fixed = _props4.fixed,
-			    mask = _props4.mask,
-			    _props4$animate = _props4.animate,
-			    animate = _props4$animate === undefined ? {} : _props4$animate,
-			    rootCls = _props4.rootCls,
-			    _others = objectWithoutProperties(_props4, ['prefixCls', 'className', 'container', 'destroyOnHide', 'fixed', 'mask', 'animate', 'rootCls']);
-
-			var _state = this.state,
-			    visible = _state.visible,
-			    isInit = _state.isInit;
-
-
-			var classes = classnames(prefixCls, className, fixed ? prefixCls + '-fixed' : '');
-
-			var others = omit(_others, Object.keys(propTypes$2));
-
-			var popup = React__default.createElement(
-				'div',
-				{ ref: this.savePopup, className: classnames(prefixCls + '-root', rootCls) },
-				mask ? this.getMaskComponent() : null,
-				React__default.createElement('div', _extends({}, others, { ref: 'popup', className: classes, tabIndex: -1 }))
-			);
-
-			if (!visible && !destroyOnHide && !isInit) {
-				visible = true;
-				this.state.isHidden = true;
-			}
-
-			return visible ? React__default.createElement(
-				Portal,
-				{
-					container: container
-				},
-				popup
-			) : null;
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 			var visible = this.state.visible;
 
 			return visible ? this.getPopupComponent() : null;
-		}
-	}, {
-		key: 'render1',
-		value: function render1() {
-			var destroyOnHide = this.props.destroyOnHide;
-			var _state2 = this.state,
-			    visible = _state2.visible,
-			    isInit = _state2.isInit,
-			    status = _state2.status;
-
-
-			if (!visible && !destroyOnHide && !isInit) {
-				visible = true;
-				this.state.isHidden = true;
-			}
-
-			return status === 'unmount' ? null : this.getPopupComponent();
-		}
-	}, {
-		key: 'render2',
-		value: function render2() {
-			return this.getRenderComponent();
 		}
 	}]);
 	return Popup;

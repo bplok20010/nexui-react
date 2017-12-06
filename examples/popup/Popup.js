@@ -57,45 +57,70 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
-	var App = function (_React$Component) {
-		_inherits(App, _React$Component);
+	var Test = function (_React$Component) {
+		_inherits(Test, _React$Component);
+
+		function Test() {
+			_classCallCheck(this, Test);
+
+			return _possibleConstructorReturn(this, (Test.__proto__ || Object.getPrototypeOf(Test)).apply(this, arguments));
+		}
+
+		_createClass(Test, [{
+			key: 'render',
+			value: function render() {
+				return _react2['default'].createElement(
+					'div',
+					null,
+					'label:',
+					this.props.text
+				);
+			}
+		}]);
+
+		return Test;
+	}(_react2['default'].Component);
+
+	var App = function (_React$Component2) {
+		_inherits(App, _React$Component2);
 
 		function App(props) {
 			_classCallCheck(this, App);
 
-			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+			var _this2 = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-			_this.togglChange = function (e) {
-				_this.setState({
+			_this2.togglChange = function (e) {
+				_this2.setState({
 					destroy: false,
-					visible: !_this.state.visible
+					idx: _this2.state.idx + 1,
+					visible: !_this2.state.visible
 				});
 			};
 
-			_this.onClose = function () {
+			_this2.onClose = function () {
 				console.log('onClose');
-				_this.setState({
+				_this2.setState({
 					visible: false
 				});
 			};
 
-			_this.close = function () {
-				_this.setState({
+			_this2.close = function () {
+				_this2.setState({
 					visible: false
 				});
 			};
 
-			_this.popup = null;
+			_this2.popup = null;
 
-			_this.showPopup = function () {
-				if (_this.popup) {
-					_this.popup.toggle();
+			_this2.showPopup = function () {
+				if (_this2.popup) {
+					_this2.popup.toggle();
 					return;
 				}
-				_this.popup = _rnexui.Popup.create({
-					parentComponent: _this,
+				_this2.popup = _rnexui.Popup.create({
+					parentComponent: _this2,
 					destroyOnHide: false,
-					of: (0, _reactDom.findDOMNode)(_this.refs.cp),
+					of: (0, _reactDom.findDOMNode)(_this2.refs.cp),
 					my: 'left top',
 					at: 'left bottom',
 					content: function content() {
@@ -103,7 +128,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							'div',
 							{ style: { padding: 10, border: '1px solid green', background: '#FFF' } },
 							'test....',
-							_this.state.idx
+							_this2.state.idx
 						);
 					}
 				});
@@ -111,12 +136,12 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 				//setTimeout(this.popup.close, 1000)
 			};
 
-			_this.state = {
+			_this2.state = {
 				idx: 1,
-				visible: true,
+				visible: false,
 				destroy: false
 			};
-			return _this;
+			return _this2;
 		}
 
 		_createClass(App, [{
@@ -149,12 +174,17 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
+				var _this3 = this;
 
 				var _state = this.state,
 				    visible = _state.visible,
 				    idx = _state.idx,
 				    destroy = _state.destroy;
+
+
+				var tProps = {};
+
+				if (idx % 2) tProps.text = idx;
 
 				return _react2['default'].createElement(
 					'div',
@@ -169,7 +199,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						_rnexui.Popup,
 						{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible,
 							of: function of() {
-								return (0, _reactDom.findDOMNode)(_this2.refs.button);
+								return (0, _reactDom.findDOMNode)(_this3.refs.button);
 							},
 							maskAnimate: {
 								appear: function appear(el) {
@@ -207,16 +237,40 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					_react2['default'].createElement(
 						_rnexui.Button,
 						{ onClick: function onClick() {
-								return _this2.setState({ destroy: true, visible: false });
+								return _this3.setState({ destroy: true, visible: false });
 							} },
 						'\u9500\u6BC1',
 						idx
 					),
 					_react2['default'].createElement(
 						_rnexui.Button,
-						{ onClick: this.showPopup, ref: 'cp' },
-						'\u89E6\u53D1\u662F\u5F39\u7A97'
-					)
+						{ ref: 'cp' },
+						'22222'
+					),
+					_react2['default'].createElement(
+						_rnexui.Popup,
+						{ ref: 'popup2', mask: false, destroyOnHide: true, visible: this.state.visible,
+							of: function of() {
+								return (0, _reactDom.findDOMNode)(_this3.refs.cp);
+							},
+							className: 'demo-popup',
+							at: 'left bottom',
+							my: 'left top'
+						},
+						'test....',
+						this.state.idx,
+						_react2['default'].createElement('br', null),
+						'test....',
+						_react2['default'].createElement('br', null),
+						'test....',
+						_react2['default'].createElement('br', null),
+						_react2['default'].createElement(
+							'span',
+							{ className: 'icon-close', onClick: this.close },
+							'X'
+						)
+					),
+					_react2['default'].createElement(Test, tProps)
 				);
 			}
 		}]);
