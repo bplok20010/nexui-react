@@ -2193,39 +2193,36 @@ var position = function (target, source, config) {
 var _class$11;
 var _temp$10;
 
-var UNMOUNTED = 'unmounted';
-var ENTERED = 'entered';
-var EXITING = 'exiting';
-var EXITED = 'exited';
+function noop$1() {}
 
 var propTypes$2 = {
 	prefixCls: propTypes.string,
-	rootCls: propTypes.string,
+	rootClassName: propTypes.string,
 	container: propTypes.node.isRequired,
 	className: propTypes.string,
 	mask: propTypes.bool,
-	maskCls: propTypes.string,
+	maskClassName: propTypes.string,
 	destroyOnHide: propTypes.bool,
 	visible: propTypes.bool,
 	fixed: propTypes.bool,
 	disabledSetPosition: propTypes.bool,
-	onUpdate: propTypes.func,
 	onMaskClick: propTypes.func,
-	//popup显示时触发func(node)
-	enterHandle: propTypes.func,
-	//popup关闭是触发func(node, cb)
-	exitHandle: propTypes.func,
+	onMaskMouseDown: propTypes.func,
+	rootProps: propTypes.object,
+	popupProps: propTypes.object,
+	popupMaskProps: propTypes.object,
 	popupAnimate: propTypes.shape({
 		appear: propTypes.func, //enter
 		leave: propTypes.func //exit
 	}),
-	maskAnimate: propTypes.shape({
+	popupMaskAnimate: propTypes.shape({
 		appear: propTypes.func,
 		leave: propTypes.func
 	}),
+	getPosition: propTypes.func,
 	of: propTypes.any,
-	my: propTypes.any,
 	at: propTypes.any,
+	my: propTypes.any,
 	collision: propTypes.any,
 	using: propTypes.func,
 	within: propTypes.any
@@ -2241,15 +2238,12 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 		_this._initAppear = false;
 		_this._of = null;
-
-		_this.onUpdate = function () {
-			return;
-		};
+		_this.cancelCallback = noop$1;
 
 		_this.animateAppear = function () {
 			var _this$props = _this.props,
 			    popupAnimate = _this$props.popupAnimate,
-			    maskAnimate = _this$props.maskAnimate;
+			    popupMaskAnimate = _this$props.popupMaskAnimate;
 
 
 			_this._initAppear = true;
@@ -2258,15 +2252,15 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				popupAnimate.appear(_this.refs.popup);
 			}
 
-			if (maskAnimate && maskAnimate.appear) {
-				maskAnimate.appear(_this.refs.mask);
+			if (popupMaskAnimate && popupMaskAnimate.appear) {
+				popupMaskAnimate.appear(_this.refs.mask);
 			}
 		};
 
 		_this.animateLeave = function (node, done) {
 			var _this$props2 = _this.props,
 			    popupAnimate = _this$props2.popupAnimate,
-			    maskAnimate = _this$props2.maskAnimate,
+			    popupMaskAnimate = _this$props2.popupMaskAnimate,
 			    visible = _this$props2.visible;
 
 
@@ -2276,8 +2270,8 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				done();
 			}
 
-			if (_this.state.enableAnim && maskAnimate && maskAnimate.leave) {
-				maskAnimate.leave(_this.refs.mask, function () {});
+			if (_this.state.enableAnim && popupMaskAnimate && popupMaskAnimate.leave) {
+				popupMaskAnimate.leave(_this.refs.mask, function () {});
 			}
 		};
 
@@ -2289,18 +2283,23 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		};
 
+		_this.handleMaskMouseDown = function (e) {
+			var onMaskMouseDown = _this.props.onMaskMouseDown;
+
+			if (onMaskMouseDown) {
+				onMaskMouseDown(e);
+			}
+		};
+
 		_this.savePopup = function (node) {
 			_this._popupNode = node;
 		};
 
-		var initialStatus = void 0;
-
-		initialStatus = UNMOUNTED;
-
 		_this.state = {
 			visible: props.visible,
 			enableAnim: true,
-			status: props.visible ? ENTERED : UNMOUNTED
+			hidden: !props.visible,
+			exiting: false
 		};
 		return _this;
 	}
@@ -2370,9 +2369,11 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	}, {
 		key: 'setPosition',
 		value: function setPosition(pos) {
+			var getPosition = this.props.getPosition;
+
 			var popup = this.refs.popup;
 
-			pos = pos || this.getPosition() || {};
+			pos = pos || (getPosition ? getPosition(popup) : this.getPosition()) || {};
 
 			if ('left' in pos) {
 				popup.style.left = pos.left + 'px';
@@ -2414,12 +2415,9 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(_ref) {
-			var visible = _ref.visible,
-			    destroyOnHide = _ref.destroyOnHide,
-			    exitHandle = _ref.exitHandle;
+			var visible = _ref.visible;
 
-			//隐藏popup
-			if (this.state.visible && !visible) {
+			if (this.state.visible || visible) {
 				this.setState({
 					visible: true
 				});
@@ -2430,46 +2428,78 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 		value: function shouldComponentUpdate(_ref2) {
 			var visible = _ref2.visible;
 
-			//if( !this.state.visible && !visible ) return false;
-			return !!(this.state.visible || visible);
+			var state = this.state;
+
+			if (!visible && state.hidden) return false;
+
+			return !!(state.visible || visible);
 		}
 	}, {
 		key: 'componentDidUpdate',
 		value: function componentDidUpdate() {
+			var _this2 = this;
+
+			var props = this.props;
+			var state = this.state;
 			var _refs = this.refs,
 			    popup = _refs.popup,
 			    mask = _refs.mask;
-			var _state = this.state,
-			    status = _state.status,
-			    visible = _state.visible;
 
 
-			if (!visible) return;
+			if (!state.visible) return;
 
-			if (status === EXITING) {
-				if (popup) {
-					popup.style.display = "none";
-				}
-				if (mask) {
-					mask.style.display = "none";
-				}
+			if (!props.visible) {
+				if (state.hidden) return;
 
-				this.state.status = EXITED;
-			} else if (status === EXITED) {
-				if (popup) {
-					popup.style.display = "";
-				}
-				if (mask) {
-					mask.style.display = "";
-				}
+				state.exiting = true;
+				state.hidden = true;
 
-				this.showPopup();
+				var once = false;
+				this.cancelCallback = function () {
+					if (once) return;
+					once = true;
+					//必须使用this.state
+					_this2.state.exiting = false;
+					_this2.cancelCallback = noop$1;
+					//此处props可以不用加this
+					if (props.destroyOnHide) {
+						//设置了shouldComponentUpdate
+						//此处必须用forceUpdate更新
+						_this2.state.visible = false;
+						_this2.forceUpdate();
+					} else {
+						if (popup) {
+							popup.style.display = "none";
+						}
+						if (mask) {
+							mask.style.display = "none";
+						}
+					}
+				};
 
-				this.animateAppear();
-
-				this.state.status = ENTERED;
+				this.animateLeave(null, this.cancelCallback);
 			} else {
+				if (state.exiting) {
+					this.cancelCallback();
+				}
+
+				var hidden = state.hidden;
+
+				if (hidden) {
+					state.hidden = false;
+					if (popup) {
+						popup.style.display = "";
+					}
+					if (mask) {
+						mask.style.display = "";
+					}
+				}
+
 				this.showPopup();
+				//隐藏->显示
+				if (hidden) {
+					this.animateAppear();
+				}
 			}
 		}
 	}, {
@@ -2480,34 +2510,6 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		}
 	}, {
-		key: 'enterHandle',
-		value: function enterHandle() {}
-	}, {
-		key: 'exitHandle',
-		value: function exitHandle() {
-			var _this2 = this;
-
-			var exitHandle = this.props.exitHandle;
-			var _refs2 = this.refs,
-			    popup = _refs2.popup,
-			    mask = _refs2.mask;
-
-
-			var cb = function cb() {
-				if (popup) {
-					popup.style.display = "none";
-				}
-				if (mask) {
-					mask.style.display = "none";
-				}
-				_this2.state.status = EXITED;
-			};
-
-			if (exitHandle) {} else {
-				cb();
-			}
-		}
-	}, {
 		key: 'showPopup',
 		value: function showPopup() {
 			if (!this.props.disabledSetPosition) {
@@ -2515,14 +2517,19 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'getPopupRootDomNode',
+		value: function getPopupRootDomNode() {
+			return this._popupNode;
+		}
+	}, {
 		key: 'getPopupMaskDomNode',
 		value: function getPopupMaskDomNode() {
-			//return this._popupNode;
+			return this.refs.mask;
 		}
 	}, {
 		key: 'getPopupDomNode',
 		value: function getPopupDomNode() {
-			return this._popupNode;
+			return this.refs.popup;
 		}
 	}, {
 		key: 'getMaskComponent',
@@ -2532,12 +2539,14 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			var _props2 = this.props,
 			    prefixCls = _props2.prefixCls,
 			    mask = _props2.mask,
-			    maskCls = _props2.maskCls;
+			    maskClassName = _props2.maskClassName,
+			    popupMaskProps = _props2.popupMaskProps,
+			    fixed = _props2.fixed;
 
 
-			var classes = classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, maskCls, maskCls), _classNames));
+			var classes = classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, prefixCls + '-mask-fixed', fixed), defineProperty(_classNames, maskClassName, maskClassName), _classNames));
 
-			return React__default.createElement('div', { ref: 'mask', className: classes, onClick: this.handleMaskClick });
+			return React__default.createElement('div', _extends({ onMouseDown: this.handleMaskMouseDown, onClick: this.handleMaskClick }, popupMaskProps, { ref: 'mask', className: classes }));
 		}
 	}, {
 		key: 'getPopupComponent',
@@ -2548,8 +2557,10 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			    container = _props3.container,
 			    fixed = _props3.fixed,
 			    mask = _props3.mask,
-			    rootCls = _props3.rootCls,
+			    rootClassName = _props3.rootClassName,
 			    style = _props3.style,
+			    rootProps = _props3.rootProps,
+			    popupProps = _props3.popupProps,
 			    children = _props3.children;
 
 
@@ -2562,11 +2573,11 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				},
 				React__default.createElement(
 					'div',
-					{ ref: this.savePopup, className: classnames(prefixCls + '-root', rootCls) },
+					_extends({}, rootProps, { ref: this.savePopup, className: classnames(prefixCls + '-root', rootClassName) }),
 					mask ? this.getMaskComponent() : null,
 					React__default.createElement(
 						'div',
-						{ ref: 'popup', className: classes, tabIndex: -1, style: style },
+						_extends({ tabIndex: -1, style: style }, popupProps, { ref: 'popup', className: classes }),
 						children
 					)
 				)
@@ -2575,15 +2586,13 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var visible = this.state.visible;
-
-			return visible ? this.getPopupComponent() : null;
+			return this.state.visible ? this.getPopupComponent() : null;
 		}
 	}]);
 	return Popup;
 }(React__default.Component), _class$11.propTypes = propTypes$2, _class$11.defaultProps = {
 	prefixCls: 'nex-popup',
-	rootCls: '',
+	rootClassName: '',
 	container: document.body,
 	mask: false,
 	fixed: false,
@@ -2594,99 +2603,6 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 	of: window,
 	collision: 'flip' // none flip fit flipfit
 }, _temp$10);
-
-var defaultConfig = {
-	renderTo: document.body,
-	autoShow: true,
-	content: null,
-	parentComponent: null,
-	onUpdate: null
-};
-
-var create = function (opt) {
-	var config = objectAssign({}, defaultConfig, opt);
-	var content = config.content,
-	    renderTo = config.renderTo,
-	    autoShow = config.autoShow,
-	    parentComponent = config.parentComponent,
-	    onUpdate = config.onUpdate,
-	    others = objectWithoutProperties(config, ['content', 'renderTo', 'autoShow', 'parentComponent', 'onUpdate']);
-
-
-	var visible = false;
-	var inst = void 0,
-	    isUnmount = false;
-	var children = content;
-
-	if (autoShow) {
-		visible = true;
-	}
-
-	var container = document.createElement('div');
-
-	var getPopup = function getPopup() {
-		return React__default.createElement(
-			Popup$1,
-			_extends({}, others, {
-				visible: visible
-			}),
-			typeof children === 'function' ? children() : children
-		);
-	};
-
-	var renderer = function renderer() {
-		if (parentComponent) {
-			inst = ReactDOM__default.unstable_renderSubtreeIntoContainer(parentComponent, getPopup(), container, onUpdate);
-		} else {
-			inst = ReactDOM__default.render(getPopup(), container);
-		}
-	};
-
-	if (autoShow) renderer();
-
-	var close = function close() {
-		if (isUnmount) return;
-		visible = false;
-		renderer();
-	};
-
-	var show = function show() {
-		if (isUnmount) return;
-		visible = true;
-		renderer();
-	};
-
-	var destroy = function destroy() {
-		if (isUnmount) return;
-		ReactDOM__default.unmountComponentAtNode(container);
-		var parentNode = container.parentNode;
-
-		if (parentNode) {
-			parentNode.removeChild(container);
-		}
-		inst = null;
-		isUnmount = true;
-	};
-
-	return {
-		update: function update(content) {
-			if (content) children = content;
-			visible && renderer();
-		},
-		toggle: function toggle() {
-			return visible ? close() : show();
-		},
-
-		close: close,
-		show: show,
-		destroy: destroy,
-		getInst: function getInst() {
-			return inst;
-		}
-	};
-};
-
-Popup$1.create = create;
 
 var _class$12;
 var _temp$11;

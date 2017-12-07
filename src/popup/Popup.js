@@ -8,39 +8,34 @@ import position from '../shared/position';
 
 function noop(){}
 
-const UNMOUNTED = 'unmounted';
-const ENTERED = 'entered';
-const EXITING = 'exiting';
-const EXITED = 'exited';
-
 const propTypes = {
 		prefixCls: PropTypes.string,
-		rootCls: PropTypes.string,
+		rootClassName: PropTypes.string,
 		container: PropTypes.node.isRequired,
 		className: PropTypes.string,
 		mask: PropTypes.bool,
-		maskCls: PropTypes.string,
+		maskClassName: PropTypes.string,
 		destroyOnHide: PropTypes.bool,
 		visible: PropTypes.bool,
 		fixed: PropTypes.bool,
 		disabledSetPosition: PropTypes.bool,
-		onUpdate: PropTypes.func,
 		onMaskClick: PropTypes.func,
-		//popup显示时触发func(node)
-		enterHandle: PropTypes.func,
-		//popup关闭是触发func(node, cb)
-		exitHandle: PropTypes.func,
+		onMaskMouseDown: PropTypes.func,
+		rootProps: PropTypes.object,
+		popupProps: PropTypes.object,
+		popupMaskProps: PropTypes.object,
 		popupAnimate: PropTypes.shape({
 			appear: PropTypes.func,//enter
 			leave: PropTypes.func	//exit
 		}),
-		maskAnimate: PropTypes.shape({
+		popupMaskAnimate: PropTypes.shape({
 			appear: PropTypes.func,
 			leave: PropTypes.func	
 		}),
+		getPosition: PropTypes.func,
 		of: PropTypes.any,
-		my: PropTypes.any,
 		at: PropTypes.any,
+		my: PropTypes.any,
 		collision: PropTypes.any,
 		using: PropTypes.func,
 		within: PropTypes.any,
@@ -51,7 +46,7 @@ export default class Popup extends React.Component {
 
 	static defaultProps = {
 		prefixCls: 'nex-popup',
-		rootCls: '',
+		rootClassName: '',
 		container: document.body,
 		mask: false,
 		fixed: false,
@@ -66,14 +61,11 @@ export default class Popup extends React.Component {
 	constructor(props){
 		super(props);
 		
-		let initialStatus;
-		
-		initialStatus = UNMOUNTED;
-		
 		this.state = {
 			visible: props.visible,
 			enableAnim: true,
-			status: props.visible ? ENTERED : UNMOUNTED,
+			hidden: !props.visible,
+			exiting: false,
 		}	
 	}
 	
@@ -127,9 +119,10 @@ export default class Popup extends React.Component {
 	}
 	
 	setPosition(pos){
+		const {getPosition} = this.props;
 		const popup = this.refs.popup;
 		
-		pos = pos || this.getPosition() || {}; 
+		pos = pos || (getPosition ? getPosition(popup) : this.getPosition()) || {}; 
 		
 		if( 'left' in pos ) {
 			popup.style.left = pos.left + 'px';
@@ -157,10 +150,6 @@ export default class Popup extends React.Component {
 		}
 	}
 	
-	onUpdate=()=>{
-		return;
-	}
-	
 	componentDidMount(){
 		const {visible} = this.state;
 		
@@ -170,52 +159,84 @@ export default class Popup extends React.Component {
 		}
 	}
 	
-	componentWillReceiveProps({visible, destroyOnHide, exitHandle}){
-		//隐藏popup
-		if( this.state.visible && !visible ) {
+	componentWillReceiveProps({visible}){
+		if( this.state.visible || visible ) {
 			this.setState({
 				visible: true	
 			});	
 		}
-		
-		
 	}
 	
 	shouldComponentUpdate({visible}) {
-		//if( !this.state.visible && !visible ) return false;
-		return !!(this.state.visible || visible);
+		const state = this.state;
+		
+		if( !visible && state.hidden ) return false;
+		
+		return !!(state.visible || visible);
 	}
 	
+	cancelCallback = noop
+	
 	componentDidUpdate(){
-		const { popup, mask } = this.refs;
-		const { status, visible } = this.state;
+		const props = this.props;
+		const state = this.state;
+		const { popup, mask } = this.refs; 
 		
-		if( !visible ) return;
+		if( !state.visible ) return;
 		
-		if( status === EXITING ) {
-			if( popup ) {
-				popup.style.display = "none";	
-			}
-			if( mask ) {
-				mask.style.display = "none";	
-			}	
+		if( !props.visible ) {
+			if( state.hidden ) return;
 			
-			this.state.status = EXITED;
-		} else if( status === EXITED ) {
-			if( popup ) {
-				popup.style.display = "";	
+			state.exiting = true;
+			state.hidden = true;
+			
+			let once = false;
+			this.cancelCallback = ()=>{
+				if( once ) return;
+				once = true;
+				//必须使用this.state
+				this.state.exiting = false;
+				this.cancelCallback = noop;
+				//此处props可以不用加this
+				if( props.destroyOnHide ) {
+					//设置了shouldComponentUpdate
+					//此处必须用forceUpdate更新
+					this.state.visible = false;
+					this.forceUpdate();
+				} else {
+					if( popup ) {
+						popup.style.display = "none";	
+					}
+					if( mask ) {
+						mask.style.display = "none";	
+					}
+				}
 			}
-			if( mask ) {
-				mask.style.display = "";	
-			}	
+			
+			this.animateLeave(null, this.cancelCallback);
+			
+		} else {
+			if( state.exiting ) {
+				this.cancelCallback();	
+			}
+			
+			const hidden = state.hidden; 
+			
+			if( hidden ) {
+				state.hidden = false;
+				if( popup ) {
+					popup.style.display = "";	
+				}
+				if( mask ) {
+					mask.style.display = "";	
+				}	
+			}
 			
 			this.showPopup();
-			
-			this.animateAppear();
-			
-			this.state.status = ENTERED;	
-		} else {
-			this.showPopup();	
+			//隐藏->显示
+			if(hidden) {
+				this.animateAppear();
+			}
 		}
 	}
 	
@@ -225,33 +246,8 @@ export default class Popup extends React.Component {
 		}
 	}
 	
-	enterHandle(){
-			
-	}
-	
-	exitHandle(){
-		const {exitHandle} = this.props;
-		const {popup, mask} = this.refs;
-		
-		const cb = () => {
-			if( popup ) {
-				popup.style.display = "none";	
-			}
-			if( mask ) {
-				mask.style.display = "none";	
-			}	
-			this.state.status = EXITED;
-		}
-		
-		if( exitHandle ) {
-				
-		} else {
-			cb();	
-		}
-	}
-	
 	animateAppear = () => {
-		const {popupAnimate, maskAnimate} = this.props;
+		const {popupAnimate, popupMaskAnimate} = this.props;
 		
 		this._initAppear = true;
 		
@@ -259,13 +255,13 @@ export default class Popup extends React.Component {
 			popupAnimate.appear(this.refs.popup);	
 		}
 		
-		if( maskAnimate && maskAnimate.appear ) {
-			maskAnimate.appear(this.refs.mask);	
+		if( popupMaskAnimate && popupMaskAnimate.appear ) {
+			popupMaskAnimate.appear(this.refs.mask);	
 		}
 	}
 	
 	animateLeave = (node, done)=>{
-		const {popupAnimate, maskAnimate, visible} = this.props;
+		const {popupAnimate, popupMaskAnimate, visible} = this.props;
 		
 		if( this.state.enableAnim && popupAnimate && popupAnimate.leave ) {
 			popupAnimate.leave(this.refs.popup, done);	
@@ -273,8 +269,8 @@ export default class Popup extends React.Component {
 			done();	
 		}
 		
-		if( this.state.enableAnim && maskAnimate && maskAnimate.leave ) {
-			maskAnimate.leave(this.refs.mask, ()=>{});	
+		if( this.state.enableAnim && popupMaskAnimate && popupMaskAnimate.leave ) {
+			popupMaskAnimate.leave(this.refs.mask, ()=>{});	
 		}
 	}
 	
@@ -291,30 +287,40 @@ export default class Popup extends React.Component {
 		}	
 	}
 	
-	
+	handleMaskMouseDown=(e)=>{
+		const {onMaskMouseDown} = this.props;
+		if( onMaskMouseDown ) {
+			onMaskMouseDown(e);	
+		}	
+	}
 	
 	savePopup=(node)=>{
 		this._popupNode = node;	
 	}
 	
+	getPopupRootDomNode(){
+		return this._popupNode;	
+	}
+	
 	getPopupMaskDomNode(){
-		//return this._popupNode;
+		return this.refs.mask;
 	}
 	
 	getPopupDomNode(){
-		return this._popupNode;
+		return this.refs.popup;
 	}
 	
 	getMaskComponent(){
-		const {prefixCls, mask, maskCls} = this.props;
+		const {prefixCls, mask, maskClassName, popupMaskProps, fixed} = this.props;
 		
 		const classes = classNames( {
 				[`${prefixCls}-mask`]: true,
-				[maskCls]: maskCls
+				[`${prefixCls}-mask-fixed`]: fixed,
+				[maskClassName]: maskClassName
 			} );
 		
 		return (
-			<div ref="mask" className={classes} onClick={this.handleMaskClick}></div>
+			<div onMouseDown={this.handleMaskMouseDown} onClick={this.handleMaskClick} {...popupMaskProps} ref="mask" className={classes}></div>
 		);	
 	}
 	
@@ -325,8 +331,10 @@ export default class Popup extends React.Component {
 			container,
 			fixed, 
 			mask, 
-			rootCls, 
+			rootClassName, 
 			style,
+			rootProps,
+			popupProps,
 			children,
 		} = this.props;
 		
@@ -336,16 +344,15 @@ export default class Popup extends React.Component {
 			<Portal 
 				container={container}
 			>
-				<div ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootCls)}>
+				<div {...rootProps} ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootClassName)}>
 					{mask ? this.getMaskComponent() : null}
-					<div ref="popup" className={classes} tabIndex={-1} style={style}>{children}</div>
+					<div tabIndex={-1} style={style} {...popupProps} ref="popup" className={classes}>{children}</div>
 				</div>
 			</Portal>
 		);	
 	}
 	
 	render(){
-		const {visible} = this.state;
-		return visible ? this.getPopupComponent() : null;
+		return this.state.visible ? this.getPopupComponent() : null;
 	}
 }

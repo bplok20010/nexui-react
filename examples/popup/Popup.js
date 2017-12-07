@@ -147,11 +147,13 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		_createClass(App, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				/*setInterval(()=>{
-    	this.setState({
-    		idx : ++this.state.idx
-    	});
-    },1000);*/
+				var _this3 = this;
+
+				setInterval(function () {
+					_this3.setState({
+						idx: ++_this3.state.idx
+					});
+				}, 100);
 				//this.updatePopupPosition();
 			}
 		}, {
@@ -174,7 +176,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this3 = this;
+				var _this4 = this;
 
 				var _state = this.state,
 				    visible = _state.visible,
@@ -195,26 +197,30 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						'\u663E\u793A',
 						idx
 					),
+					_react2['default'].createElement('br', null),
+					'当前显示状态: ' + (visible ? 'show' : 'hide'),
+					_react2['default'].createElement('br', null),
 					_react2['default'].createElement(
 						_rnexui.Popup,
 						{ ref: 'popup', mask: false, destroyOnHide: false, visible: this.state.visible,
 							of: function of() {
-								return (0, _reactDom.findDOMNode)(_this3.refs.button);
+								return (0, _reactDom.findDOMNode)(_this4.refs.button);
 							},
-							maskAnimate: {
+							popupMaskAnimate: {
 								appear: function appear(el) {
-									$(el).hide().stop(true, true).fadeIn(500);
+									$(el).hide().stop(true, true).fadeIn(4000);
 								},
 								leave: function leave(el, done) {
-									$(el).stop(true, true).fadeOut(500, done);
+									console.log(1123);
+									$(el).stop(true, true).fadeOut(4000, done);
 								}
 							},
 							popupAnimate: {
 								appear: function appear(el) {
-									$(el).hide().stop(true, true).fadeIn(500);
+									$(el).hide().stop(true, true).fadeIn(4000);
 								},
 								leave: function leave(el, done) {
-									$(el).stop(true, true).fadeOut(500, done);
+									$(el).stop(true, true).fadeOut(4000, done);
 								}
 							},
 							className: 'demo-popup',
@@ -237,7 +243,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 					_react2['default'].createElement(
 						_rnexui.Button,
 						{ onClick: function onClick() {
-								return _this3.setState({ destroy: true, visible: false });
+								return _this4.setState({ destroy: true, visible: false });
 							} },
 						'\u9500\u6BC1',
 						idx
@@ -251,11 +257,11 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						_rnexui.Popup,
 						{ ref: 'popup2', mask: false, destroyOnHide: true, visible: this.state.visible,
 							of: function of() {
-								return (0, _reactDom.findDOMNode)(_this3.refs.cp);
+								return (0, _reactDom.findDOMNode)(_this4.refs.cp);
 							},
 							className: 'demo-popup',
-							at: 'left bottom',
-							my: 'left top'
+							at: 'right bottom',
+							my: 'left center'
 						},
 						'test....',
 						this.state.idx,

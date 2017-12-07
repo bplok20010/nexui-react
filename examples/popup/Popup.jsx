@@ -61,11 +61,11 @@ class App extends React.Component {
 	}
 	
 	componentDidMount(){	
-		/*setInterval(()=>{
+		setInterval(()=>{
 			this.setState({
 				idx : ++this.state.idx
 			});
-		},1000);*/
+		},100);
 		//this.updatePopupPosition();
 	}
 	
@@ -96,22 +96,26 @@ class App extends React.Component {
 			<Button onClick={this.togglChange} ref="button">
 				显示{idx}
 			</Button>
+			<br />
+			{'当前显示状态: ' + (visible ? 'show' : 'hide')}
+			<br />
 			<Popup ref="popup" mask={false} destroyOnHide={false} visible={this.state.visible} 
 				of={()=> findDOMNode(this.refs.button)} 
-				maskAnimate={{
+				popupMaskAnimate={{
 					appear: (el) => {
-						$(el).hide().stop(true, true).fadeIn(500);	
+						$(el).hide().stop(true, true).fadeIn(4000);	
 					},
 					leave: (el, done) => {
-						$(el).stop(true, true).fadeOut(500,done);		
+						console.log(1123)
+						$(el).stop(true, true).fadeOut(4000,done);		
 					}	
 				}} 
 				popupAnimate={{
 					appear: (el) => {
-						$(el).hide().stop(true, true).fadeIn(500);	
+						$(el).hide().stop(true, true).fadeIn(4000);	
 					},
 					leave: (el, done) => {
-						$(el).stop(true, true).fadeOut(500,done);		
+						$(el).stop(true, true).fadeOut(4000,done);		
 					}	
 				}} 
 				className="demo-popup" 
@@ -128,8 +132,8 @@ class App extends React.Component {
 			<Popup ref="popup2" mask={false} destroyOnHide={true} visible={this.state.visible} 
 				of={()=> findDOMNode(this.refs.cp)} 
 				className="demo-popup" 
-				at="left bottom"
-				my="left top" 
+				at="right bottom"
+				my="left center" 
 			>
 				test....{this.state.idx}<br/>
 				test....<br/>
