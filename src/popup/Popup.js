@@ -32,6 +32,8 @@ const propTypes = {
 			appear: PropTypes.func,
 			leave: PropTypes.func	
 		}),
+		onShow: PropTypes.func,
+		onHide: PropTypes.func,
 		getPosition: PropTypes.func,
 		of: PropTypes.any,
 		at: PropTypes.any,
@@ -78,7 +80,8 @@ export default class Popup extends React.Component {
 	*/
 	getPosition(type = 1){
 		let pos, dir;
-		const popup = this.refs.popup;
+		const popup = this.getPopupDOM();
+		
 		let {of, my, at, collision, using, within} = this.props;
 		if( this._of ) {
 			of = this._of;	
@@ -120,7 +123,7 @@ export default class Popup extends React.Component {
 	
 	setPosition(pos){
 		const {getPosition} = this.props;
-		const popup = this.refs.popup;
+		const popup = this.getPopupDOM();
 		
 		pos = pos || (getPosition ? getPosition(popup) : this.getPosition()) || {}; 
 		
@@ -180,7 +183,7 @@ export default class Popup extends React.Component {
 	componentDidUpdate(){
 		const props = this.props;
 		const state = this.state;
-		const { popup, mask } = this.refs; 
+		const popup = this.getPopupDOM(), mask = this.getPopupMaskDOM();
 		
 		if( !state.visible ) return;
 		
@@ -247,30 +250,40 @@ export default class Popup extends React.Component {
 	}
 	
 	animateAppear = () => {
-		const {popupAnimate, popupMaskAnimate} = this.props;
+		const {popupAnimate, popupMaskAnimate, onShow} = this.props;
+		const popup = this.getPopupDOM(), mask = this.getPopupMaskDOM();
 		
 		this._initAppear = true;
 		
 		if( popupAnimate && popupAnimate.appear ) {
-			popupAnimate.appear(this.refs.popup);	
+			popupAnimate.appear(popup);	
 		}
 		
 		if( popupMaskAnimate && popupMaskAnimate.appear ) {
-			popupMaskAnimate.appear(this.refs.mask);	
+			popupMaskAnimate.appear(mask);	
+		}
+		
+		if( onShow ) {
+			onShow(popup, mask)	
 		}
 	}
 	
 	animateLeave = (node, done)=>{
-		const {popupAnimate, popupMaskAnimate, visible} = this.props;
+		const {popupAnimate, popupMaskAnimate, onHide} = this.props;
+		const popup = this.getPopupDOM(), mask = this.getPopupMaskDOM();
 		
 		if( this.state.enableAnim && popupAnimate && popupAnimate.leave ) {
-			popupAnimate.leave(this.refs.popup, done);	
+			popupAnimate.leave(popup, done);	
 		} else {
 			done();	
 		}
 		
 		if( this.state.enableAnim && popupMaskAnimate && popupMaskAnimate.leave ) {
-			popupMaskAnimate.leave(this.refs.mask, ()=>{});	
+			popupMaskAnimate.leave(mask, ()=>{});	
+		}
+		
+		if( onHide ) {
+			onHide(popup, mask)
 		}
 	}
 	
@@ -294,20 +307,28 @@ export default class Popup extends React.Component {
 		}	
 	}
 	
-	savePopup=(node)=>{
-		this._popupNode = node;	
+	saveRootDOM=(node)=>{
+		this._rootDOM = node;	
 	}
 	
-	getPopupRootDomNode(){
-		return this._popupNode;	
+	savePopupDOM = (node) =>{
+		this._popupDOM = node;		
 	}
 	
-	getPopupMaskDomNode(){
-		return this.refs.mask;
+	savePopupMaskDOM =(node) =>{
+		this._popupMaskDOM = node;		
 	}
 	
-	getPopupDomNode(){
-		return this.refs.popup;
+	getPopupRootDOM(){
+		return this._rootDOM;	
+	}
+	
+	getPopupDOM(){
+		return this._popupDOM;
+	}
+	
+	getPopupMaskDOM(){
+		return this._popupMaskDOM;
 	}
 	
 	getMaskComponent(){
@@ -320,7 +341,7 @@ export default class Popup extends React.Component {
 			} );
 		
 		return (
-			<div onMouseDown={this.handleMaskMouseDown} onClick={this.handleMaskClick} {...popupMaskProps} ref="mask" className={classes}></div>
+			<div onMouseDown={this.handleMaskMouseDown} onClick={this.handleMaskClick} {...popupMaskProps} ref={this.savePopupMaskDOM} className={classes}></div>
 		);	
 	}
 	
@@ -344,9 +365,9 @@ export default class Popup extends React.Component {
 			<Portal 
 				container={container}
 			>
-				<div {...rootProps} ref={this.savePopup} className={classNames(`${prefixCls}-root`, rootClassName)}>
+				<div {...rootProps} ref={this.saveRootDOM} className={classNames(`${prefixCls}-root`, rootClassName)}>
 					{mask ? this.getMaskComponent() : null}
-					<div tabIndex={-1} style={style} {...popupProps} ref="popup" className={classes}>{children}</div>
+					<div tabIndex={-1} style={style} {...popupProps} ref={this.savePopupDOM} className={classes}>{children}</div>
 				</div>
 			</Portal>
 		);	

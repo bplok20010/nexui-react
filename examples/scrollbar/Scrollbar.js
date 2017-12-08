@@ -117,7 +117,9 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 
 		return List;
 	}(_react2['default'].Component), _class.contextTypes = {
-		ScrollView: _react2['default'].PropTypes.object
+		ScrollView: function ScrollView(sv) {
+			return true;
+		}
 	}, _temp2);
 
 	var App = function (_React$Component2) {
@@ -147,7 +149,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 							_rnexui.ScrollView,
 							{ enablePreventDefaultOnEnd: false, overflowX: 'auto', onVScrollStart: function onVScrollStart() {
 									return console.log('//////////////');
-								}, autoSetScrollBarPadding: false, wheelDir: 'y', style: {} },
+								}, wheelDir: 'y', style: {} },
 							_react2['default'].createElement(List, null)
 						)
 					),

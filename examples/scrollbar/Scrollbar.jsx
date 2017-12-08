@@ -8,7 +8,7 @@ class List extends React.Component {
 	idx = 1
 	
 	static contextTypes = {
-		ScrollView: React.PropTypes.object,
+		ScrollView: function(sv){return true},
 	};
 	
 	componentDidMount(){
@@ -52,7 +52,7 @@ class App extends React.Component {
 			border: '1px solid #000',
 			padding: 5	
 		}}>
-			<ScrollView enablePreventDefaultOnEnd={false} overflowX="auto" onVScrollStart={()=>console.log('//////////////')} autoSetScrollBarPadding={false} wheelDir='y' style={{}}>
+			<ScrollView enablePreventDefaultOnEnd={false} overflowX="auto" onVScrollStart={()=>console.log('//////////////')} wheelDir='y' style={{}}>
 				<List />
 			</ScrollView>
 		</div>

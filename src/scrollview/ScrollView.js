@@ -65,7 +65,9 @@ export default class ScrollView extends React.Component {
 	};
 	
 	constructor(props){
-		super(props);	
+		super(props);
+		
+		this._refs = {};
 		
 		this.state = {
 			shouldComponentUpdate: true,
@@ -111,6 +113,14 @@ export default class ScrollView extends React.Component {
 	componentDidUpdate(){
 		if( !this.state.isUpdating )
 			this.updateScrollBarLayoutAndPosition();			
+	}
+	
+	saveRef(name, node){
+		this._refs[name] = node;	
+	}
+	
+	getRef(name) {
+		return this._refs[name];	
 	}
 	
 	handleWheel=(()=>{
@@ -204,7 +214,7 @@ export default class ScrollView extends React.Component {
 		}
 		const target = e.target;
 		const {scrollXRatio, scrollYRatio} = this.state;
-		const {verticalBarThumbEl, horizontalBarThumbEl} = this.refs;
+		const {verticalBarThumbEl, horizontalBarThumbEl} = this._refs;
 		const rect = target.getBoundingClientRect();
 		const isVertical = dir === 'y';
 		const proto = isVertical ? 'scrollTop' : 'scrollLeft';
@@ -332,31 +342,31 @@ export default class ScrollView extends React.Component {
 		const {hasScrollY, scrollYRatio, scrollTop, thumbYSize} = this.state;
 		if( !hasScrollY ) return;
 		
-		const {verticalBarWrapEl} = this.refs;
+		const {verticalBarWrapEl} = this._refs;
 		const minTop = 0;
 		const maxTop = verticalBarWrapEl.clientHeight - thumbYSize;
 		
-		this.refs.verticalBarThumbEl.style.top = Math.min(Math.max(scrollTop / scrollYRatio, minTop), maxTop) + 'px';
+		this._refs.verticalBarThumbEl.style.top = Math.min(Math.max(scrollTop / scrollYRatio, minTop), maxTop) + 'px';
 	}
 	
 	setThumbXPos(){
 		const {hasScrollX, scrollXRatio, scrollLeft, thumbXSize} = this.state;
 		if( !hasScrollX ) return;
 		
-		const {horizontalBarWrapEl} = this.refs;
+		const {horizontalBarWrapEl} = this._refs;
 		const minLeft = 0;
 		const maxLeft = horizontalBarWrapEl.clientWidth - thumbXSize;
 
-		this.refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';	
+		this._refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';	
 	}
 	
 	getScrollViewBody(){
-		return findDOMNode(this.refs.scrollviewBody);	
+		return findDOMNode(this._refs.scrollviewBody);	
 	}
 	
 	getThumbSize(dir = 'y'){
 		const {thumbSize, thumbMinSize, thumbMaxSize} = this.props;
-		const {verticalBarWrapEl, horizontalBarWrapEl} = this.refs;
+		const {verticalBarWrapEl, horizontalBarWrapEl} = this._refs;
 		const scrollview = this.getScrollViewBody();
 		const isVertical = dir === 'y';
 		const client = isVertical ? scrollview.clientHeight : scrollview.clientWidth,
@@ -451,8 +461,8 @@ export default class ScrollView extends React.Component {
 	
 	updateScrollBarLayout(){
 		const {scrollBarSize, scrollBarOffsetTopOrLeft, scrollBarOffsetRightOrBottom} = this.props;
-		const {verticalBarEl, horizontalBarEl, verticalBarWrapEl, horizontalBarWrapEl, verticalBarThumbEl, horizontalBarThumbEl} = this.refs;
-		const container = this.refs.scrollview;
+		const {verticalBarEl, horizontalBarEl, verticalBarWrapEl, horizontalBarWrapEl, verticalBarThumbEl, horizontalBarThumbEl} = this._refs;
+		const container = this._refs.scrollview;
 		const scrollview = this.getScrollViewBody();
 		const state = this.state;
 		const {hasScrollX, hasScrollY} = state;
@@ -495,22 +505,18 @@ export default class ScrollView extends React.Component {
 		const isVertical = dir === 'y';
 		const dirCls = `${prefixCls}-bar-${isVertical ? 'vertical' : 'horizontal'}`;
 		
-		const ScrollbarRef = (el) => {
-			this.refs[isVertical ? 'verticalBarEl' : 'horizontalBarEl'] = el;	
-		};
-		
 		const scrollbarRef = isVertical ? 'verticalBarEl' : 'horizontalBarEl',
 				scrollbarWrapRef = isVertical ? 'verticalBarWrapEl' : 'horizontalBarWrapEl',
 				scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
 				scrollbarThumbRef = isVertical ? 'verticalBarThumbEl' : 'horizontalBarThumbEl';
 		
 		return (
-			<div ref={scrollbarRef} className={classNames(`${prefixCls}-bar`, dirCls)}>
-				<div ref={scrollbarWrapRef} className={`${prefixCls}-bar-wrap`}>
+			<div ref={this.saveRef.bind(this, scrollbarRef)} className={classNames(`${prefixCls}-bar`, dirCls)}>
+				<div ref={this.saveRef.bind(this, scrollbarWrapRef)} className={`${prefixCls}-bar-wrap`}>
 					{
 						showTrack ?　
 						<div 
-							ref={scrollbarTrackRef} 
+							ref={this.saveRef.bind(this, scrollbarTrackRef)}
 							className={classNames({
 								[`${prefixCls}-bar-track`]: true,
 								[trackCls]: trackCls
@@ -520,7 +526,7 @@ export default class ScrollView extends React.Component {
 						null
 					}
 					<div 
-						ref={scrollbarThumbRef} 
+						ref={this.saveRef.bind(this, scrollbarThumbRef)}
 						className={classNames({
 							[`${prefixCls}-bar-thumb`]: true,
 							[thumbCls]: thumbCls
@@ -549,8 +555,8 @@ export default class ScrollView extends React.Component {
 		const otherProps = omit(others, Object.keys(ScrollView.defaultProps));
 		
 		return (
-			<div {...otherProps} ref="scrollview" className={classes} style={style} onWheel={this.handleWheel}>
-				<ScrollViewBody ref="scrollviewBody" className={bodyClasses} style={scrollViewBodyStyle} component={component} onScroll={this.handleScroll} shouldComponentUpdate={shouldComponentUpdate}>
+			<div {...otherProps} ref={this.saveRef.bind(this, "scrollview")} className={classes} style={style} onWheel={this.handleWheel}>
+				<ScrollViewBody ref={this.saveRef.bind(this, "scrollviewBody")} className={bodyClasses} style={scrollViewBodyStyle} component={component} onScroll={this.handleScroll} shouldComponentUpdate={shouldComponentUpdate}>
 					{children}
 				</ScrollViewBody>
 				{hasScrollX ? this.getScrollBar('x') : null}

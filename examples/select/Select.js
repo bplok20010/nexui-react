@@ -93,7 +93,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 						_rnexui.Select,
 						{ onChange: function onChange(v) {
 								return console.log(v);
-							}, defaultValue: this.state.value },
+							}, defaultValue: this.state.value, dropdownDestroyOnHide: false },
 						React.createElement(
 							Option,
 							{ value: '1' },
@@ -133,6 +133,15 @@ define(['../../dist/rnexui'], function (_rnexui) {
 								'\u6D4B\u8BD57'
 							)
 						)
+					),
+					React.createElement('hr', null),
+					React.createElement(
+						'div',
+						{ tabIndex: 1, onKeyDown: function onKeyDown(e) {
+								return console.log(e.keyCode);
+							} },
+						React.createElement('input', null),
+						'123'
 					)
 				);
 			}

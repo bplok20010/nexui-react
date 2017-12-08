@@ -51,6 +51,10 @@ export default class ListItem extends React.Component{
 		}
 	}
 	
+	saveItem = (item) => {
+		this.node = item;	
+	}
+	
 	render(){
 		const {prefixCls, disabled, selected, active, children} = this.props;
 		const classes = classNames({
@@ -63,7 +67,7 @@ export default class ListItem extends React.Component{
 		
 		return <div 
 					{...others}
-					ref="item" 
+					ref={this.saveItem}
 					className={classes} 
 					onClick={this.handleItemClick}
 				>

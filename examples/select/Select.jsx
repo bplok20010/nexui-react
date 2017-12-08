@@ -33,7 +33,7 @@ class App extends React.Component{
 				/>
 				--------------
 				{ this.state.value == 0 ? '??' :
-					<Select  onChange={v=>console.log(v)} defaultValue={this.state.value}>
+					<Select  onChange={v=>console.log(v)} defaultValue={this.state.value} dropdownDestroyOnHide={false}>
 						<Option value="1">测试1</Option>
 						<Option value="2">测试2</Option>
 						<Option value="3">测试3</Option>
@@ -45,6 +45,11 @@ class App extends React.Component{
 						</OptGroup>
 					</Select>
 				}
+				<hr />
+				<div tabIndex = {1} onKeyDown={e=>console.log(e.keyCode)}>
+					<input />
+					123
+				</div>
 			</div>
 		)
 	}	

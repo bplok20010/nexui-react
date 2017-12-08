@@ -80,6 +80,7 @@ export default class ListBox extends React.Component{
 		
 		this.state = {
 			selectedValue,
+			//items的value=>item对应表
 			itemsMap: {}
 		};	
 	}
@@ -95,7 +96,7 @@ export default class ListBox extends React.Component{
 	componentDidMount(){
 		const {prefixCls, autoFocus} = this.props;
 		const el = findDOMNode(this);
-		const scrollview = this.refs.listbox;
+		const scrollview = this.getListView();//this.refs.listbox;
 		const selector = `.${prefixCls}-item-selected`;
 		
 		if( autoFocus ) {
@@ -118,7 +119,8 @@ export default class ListBox extends React.Component{
 	
 	onItemClick=(item, e) => {
 		const { onItemClick } = this.props;
-		this.refs.listbox.scrollIntoView(e.target);	
+		if(e)
+			this.getListView().scrollIntoView(e.target);	
 		
 		if( onItemClick ) onItemClick(item);
 	}
@@ -223,7 +225,9 @@ export default class ListBox extends React.Component{
 		}
 		
 		return (e) => {
-			const scrollview = this.refs.listbox;
+			const scrollview = this.getListView();//this.refs.listbox;
+			const props = this.props;
+			const state = this.state;
 			const dom = findDOMNode(this);
 			const UP = e.keyCode === 38;
 			const DOWN = e.keyCode === 40;
@@ -258,7 +262,14 @@ export default class ListBox extends React.Component{
 		
 				scrollview.scrollIntoView( list[idx] );
 			} else if( ENTER && activeIndex !== null ) {
-				this.setValue(indexValueMap[activeIndex])
+				const value = indexValueMap[activeIndex];
+				const item = state.itemsMap[value] || {};
+				this.setValue(value);
+				//触发onItemClick
+				this.onItemClick({
+					value,
+					label: item[props.labelField]
+				});
 			}
 		}	
 	}
@@ -391,6 +402,14 @@ export default class ListBox extends React.Component{
 		return React.Children.count(childs) ? childs : emptyLabel;
 	}
 	
+	saveListView = (node)=> {
+		this._listview = node;		
+	}
+	
+	getListView(){
+		return this._listview;	
+	}
+	
 	render(){
 		const {className, value, prefixCls, items, width, height, tabIndex, disabled, onFocus, onBlur, style={}, scrollViewBodyStyle={}} = this.props;
 		
@@ -409,7 +428,7 @@ export default class ListBox extends React.Component{
 		
 		return (
 			<ScrollView 
-				ref="listbox" 
+				ref={this.saveListView} 
 				tabIndex={tabIndex} 
 				scrollViewBodyCls={`${prefixCls}-body`} 
 				scrollViewBodyStyle={scrollViewBodyStyle} 

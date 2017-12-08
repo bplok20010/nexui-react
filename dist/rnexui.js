@@ -1239,18 +1239,20 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			if (onChange) {
 				onChange(e.target.value);
 			}
+		}, _this.saveInput = function (input) {
+			_this._input = input;
 		}, _temp), possibleConstructorReturn(_this, _ret);
 	}
 
 	createClass(Input, [{
 		key: 'focus',
 		value: function focus() {
-			this.refs.input.focus();
+			this._input && this._input.focus();
 		}
 	}, {
 		key: 'blur',
 		value: function blur() {
-			this.refs.input.blur();
+			this._input && this._input.blur();
 		}
 	}, {
 		key: 'componentDidMount',
@@ -1289,7 +1291,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			}
 
 			return this.wrapInput(React__default.createElement('input', _extends({}, otherProps, {
-				ref: 'input',
+				ref: this.saveInput,
 				type: type,
 				style: inputStyle,
 				onChange: this.handleChange,
@@ -1331,7 +1333,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 
 
 			return this.wrapInput(React__default.createElement('textarea', _extends({}, otherProps, {
-				ref: 'input',
+				ref: this.saveInput,
 				style: _extends({
 					height: height
 				}, inputStyle),
@@ -2219,6 +2221,8 @@ var propTypes$2 = {
 		appear: propTypes.func,
 		leave: propTypes.func
 	}),
+	onShow: propTypes.func,
+	onHide: propTypes.func,
 	getPosition: propTypes.func,
 	of: propTypes.any,
 	at: propTypes.any,
@@ -2243,17 +2247,24 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 		_this.animateAppear = function () {
 			var _this$props = _this.props,
 			    popupAnimate = _this$props.popupAnimate,
-			    popupMaskAnimate = _this$props.popupMaskAnimate;
+			    popupMaskAnimate = _this$props.popupMaskAnimate,
+			    onShow = _this$props.onShow;
 
+			var popup = _this.getPopupDOM(),
+			    mask = _this.getPopupMaskDOM();
 
 			_this._initAppear = true;
 
 			if (popupAnimate && popupAnimate.appear) {
-				popupAnimate.appear(_this.refs.popup);
+				popupAnimate.appear(popup);
 			}
 
 			if (popupMaskAnimate && popupMaskAnimate.appear) {
-				popupMaskAnimate.appear(_this.refs.mask);
+				popupMaskAnimate.appear(mask);
+			}
+
+			if (onShow) {
+				onShow(popup, mask);
 			}
 		};
 
@@ -2261,17 +2272,23 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			var _this$props2 = _this.props,
 			    popupAnimate = _this$props2.popupAnimate,
 			    popupMaskAnimate = _this$props2.popupMaskAnimate,
-			    visible = _this$props2.visible;
+			    onHide = _this$props2.onHide;
 
+			var popup = _this.getPopupDOM(),
+			    mask = _this.getPopupMaskDOM();
 
 			if (_this.state.enableAnim && popupAnimate && popupAnimate.leave) {
-				popupAnimate.leave(_this.refs.popup, done);
+				popupAnimate.leave(popup, done);
 			} else {
 				done();
 			}
 
 			if (_this.state.enableAnim && popupMaskAnimate && popupMaskAnimate.leave) {
-				popupMaskAnimate.leave(_this.refs.mask, function () {});
+				popupMaskAnimate.leave(mask, function () {});
+			}
+
+			if (onHide) {
+				onHide(popup, mask);
 			}
 		};
 
@@ -2291,8 +2308,16 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		};
 
-		_this.savePopup = function (node) {
-			_this._popupNode = node;
+		_this.saveRootDOM = function (node) {
+			_this._rootDOM = node;
+		};
+
+		_this.savePopupDOM = function (node) {
+			_this._popupDOM = node;
+		};
+
+		_this.savePopupMaskDOM = function (node) {
+			_this._popupMaskDOM = node;
 		};
 
 		_this.state = {
@@ -2320,7 +2345,8 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 			var pos = void 0,
 			    dir = void 0;
-			var popup = this.refs.popup;
+			var popup = this.getPopupDOM();
+
 			var _props = this.props,
 			    of = _props.of,
 			    my = _props.my,
@@ -2371,7 +2397,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 		value: function setPosition(pos) {
 			var getPosition = this.props.getPosition;
 
-			var popup = this.refs.popup;
+			var popup = this.getPopupDOM();
 
 			pos = pos || (getPosition ? getPosition(popup) : this.getPosition()) || {};
 
@@ -2441,10 +2467,8 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 			var props = this.props;
 			var state = this.state;
-			var _refs = this.refs,
-			    popup = _refs.popup,
-			    mask = _refs.mask;
-
+			var popup = this.getPopupDOM(),
+			    mask = this.getPopupMaskDOM();
 
 			if (!state.visible) return;
 
@@ -2517,19 +2541,19 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 			}
 		}
 	}, {
-		key: 'getPopupRootDomNode',
-		value: function getPopupRootDomNode() {
-			return this._popupNode;
+		key: 'getPopupRootDOM',
+		value: function getPopupRootDOM() {
+			return this._rootDOM;
 		}
 	}, {
-		key: 'getPopupMaskDomNode',
-		value: function getPopupMaskDomNode() {
-			return this.refs.mask;
+		key: 'getPopupDOM',
+		value: function getPopupDOM() {
+			return this._popupDOM;
 		}
 	}, {
-		key: 'getPopupDomNode',
-		value: function getPopupDomNode() {
-			return this.refs.popup;
+		key: 'getPopupMaskDOM',
+		value: function getPopupMaskDOM() {
+			return this._popupMaskDOM;
 		}
 	}, {
 		key: 'getMaskComponent',
@@ -2546,7 +2570,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 			var classes = classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, prefixCls + '-mask-fixed', fixed), defineProperty(_classNames, maskClassName, maskClassName), _classNames));
 
-			return React__default.createElement('div', _extends({ onMouseDown: this.handleMaskMouseDown, onClick: this.handleMaskClick }, popupMaskProps, { ref: 'mask', className: classes }));
+			return React__default.createElement('div', _extends({ onMouseDown: this.handleMaskMouseDown, onClick: this.handleMaskClick }, popupMaskProps, { ref: this.savePopupMaskDOM, className: classes }));
 		}
 	}, {
 		key: 'getPopupComponent',
@@ -2573,11 +2597,11 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 				},
 				React__default.createElement(
 					'div',
-					_extends({}, rootProps, { ref: this.savePopup, className: classnames(prefixCls + '-root', rootClassName) }),
+					_extends({}, rootProps, { ref: this.saveRootDOM, className: classnames(prefixCls + '-root', rootClassName) }),
 					mask ? this.getMaskComponent() : null,
 					React__default.createElement(
 						'div',
-						_extends({ tabIndex: -1, style: style }, popupProps, { ref: 'popup', className: classes }),
+						_extends({ tabIndex: -1, style: style }, popupProps, { ref: this.savePopupDOM, className: classes }),
 						children
 					)
 				)
@@ -2877,6 +2901,8 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			}
 		};
 
+		_this._refs = {};
+
 		_this.state = {
 			shouldComponentUpdate: true,
 			hasScrollX: false,
@@ -2928,6 +2954,16 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			if (!this.state.isUpdating) this.updateScrollBarLayoutAndPosition();
 		}
 	}, {
+		key: 'saveRef',
+		value: function saveRef(name, node) {
+			this._refs[name] = node;
+		}
+	}, {
+		key: 'getRef',
+		value: function getRef(name) {
+			return this._refs[name];
+		}
+	}, {
 		key: 'handleTrackMouseDown',
 		value: function handleTrackMouseDown(e) {
 			var dir = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'y';
@@ -2939,7 +2975,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			var _state = this.state,
 			    scrollXRatio = _state.scrollXRatio,
 			    scrollYRatio = _state.scrollYRatio;
-			var _refs = this.refs,
+			var _refs = this._refs,
 			    verticalBarThumbEl = _refs.verticalBarThumbEl,
 			    horizontalBarThumbEl = _refs.horizontalBarThumbEl;
 
@@ -3092,12 +3128,12 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 
 			if (!hasScrollY) return;
 
-			var verticalBarWrapEl = this.refs.verticalBarWrapEl;
+			var verticalBarWrapEl = this._refs.verticalBarWrapEl;
 
 			var minTop = 0;
 			var maxTop = verticalBarWrapEl.clientHeight - thumbYSize;
 
-			this.refs.verticalBarThumbEl.style.top = Math.min(Math.max(scrollTop / scrollYRatio, minTop), maxTop) + 'px';
+			this._refs.verticalBarThumbEl.style.top = Math.min(Math.max(scrollTop / scrollYRatio, minTop), maxTop) + 'px';
 		}
 	}, {
 		key: 'setThumbXPos',
@@ -3110,17 +3146,17 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 
 			if (!hasScrollX) return;
 
-			var horizontalBarWrapEl = this.refs.horizontalBarWrapEl;
+			var horizontalBarWrapEl = this._refs.horizontalBarWrapEl;
 
 			var minLeft = 0;
 			var maxLeft = horizontalBarWrapEl.clientWidth - thumbXSize;
 
-			this.refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';
+			this._refs.horizontalBarThumbEl.style.left = Math.min(Math.max(scrollLeft / scrollXRatio, minLeft), maxLeft) + 'px';
 		}
 	}, {
 		key: 'getScrollViewBody',
 		value: function getScrollViewBody() {
-			return ReactDOM.findDOMNode(this.refs.scrollviewBody);
+			return ReactDOM.findDOMNode(this._refs.scrollviewBody);
 		}
 	}, {
 		key: 'getThumbSize',
@@ -3130,7 +3166,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    thumbSize = _props.thumbSize,
 			    thumbMinSize = _props.thumbMinSize,
 			    thumbMaxSize = _props.thumbMaxSize;
-			var _refs2 = this.refs,
+			var _refs2 = this._refs,
 			    verticalBarWrapEl = _refs2.verticalBarWrapEl,
 			    horizontalBarWrapEl = _refs2.horizontalBarWrapEl;
 
@@ -3252,7 +3288,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    scrollBarSize = _props4.scrollBarSize,
 			    scrollBarOffsetTopOrLeft = _props4.scrollBarOffsetTopOrLeft,
 			    scrollBarOffsetRightOrBottom = _props4.scrollBarOffsetRightOrBottom;
-			var _refs3 = this.refs,
+			var _refs3 = this._refs,
 			    verticalBarEl = _refs3.verticalBarEl,
 			    horizontalBarEl = _refs3.horizontalBarEl,
 			    verticalBarWrapEl = _refs3.verticalBarWrapEl,
@@ -3260,7 +3296,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    verticalBarThumbEl = _refs3.verticalBarThumbEl,
 			    horizontalBarThumbEl = _refs3.horizontalBarThumbEl;
 
-			var container = this.refs.scrollview;
+			var container = this._refs.scrollview;
 			var scrollview = this.getScrollViewBody();
 			var state = this.state;
 			var hasScrollX = state.hasScrollX,
@@ -3303,8 +3339,8 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 	}, {
 		key: 'getScrollBar',
 		value: function getScrollBar() {
-			var _this4 = this,
-			    _classNames,
+			var _classNames,
+			    _this4 = this,
 			    _classNames2;
 
 			var dir = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'y';
@@ -3317,10 +3353,6 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			var isVertical = dir === 'y';
 			var dirCls = prefixCls + '-bar-' + (isVertical ? 'vertical' : 'horizontal');
 
-			var ScrollbarRef = function ScrollbarRef(el) {
-				_this4.refs[isVertical ? 'verticalBarEl' : 'horizontalBarEl'] = el;
-			};
-
 			var scrollbarRef = isVertical ? 'verticalBarEl' : 'horizontalBarEl',
 			    scrollbarWrapRef = isVertical ? 'verticalBarWrapEl' : 'horizontalBarWrapEl',
 			    scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
@@ -3328,19 +3360,19 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 
 			return React__default.createElement(
 				'div',
-				{ ref: scrollbarRef, className: classnames(prefixCls + '-bar', dirCls) },
+				{ ref: this.saveRef.bind(this, scrollbarRef), className: classnames(prefixCls + '-bar', dirCls) },
 				React__default.createElement(
 					'div',
-					{ ref: scrollbarWrapRef, className: prefixCls + '-bar-wrap' },
+					{ ref: this.saveRef.bind(this, scrollbarWrapRef), className: prefixCls + '-bar-wrap' },
 					showTrack ? React__default.createElement('div', {
-						ref: scrollbarTrackRef,
+						ref: this.saveRef.bind(this, scrollbarTrackRef),
 						className: classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-bar-track', true), defineProperty(_classNames, trackCls, trackCls), _classNames)),
 						onMouseDown: function onMouseDown(e) {
 							return _this4.handleTrackMouseDown(e, dir);
 						}
 					}) : null,
 					React__default.createElement('div', {
-						ref: scrollbarThumbRef,
+						ref: this.saveRef.bind(this, scrollbarThumbRef),
 						className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-bar-thumb', true), defineProperty(_classNames2, thumbCls, thumbCls), _classNames2)),
 						onMouseDown: function onMouseDown(e) {
 							return _this4.handleThumbMouseDown(e, dir);
@@ -3380,10 +3412,10 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 
 			return React__default.createElement(
 				'div',
-				_extends({}, otherProps, { ref: 'scrollview', className: classes, style: style, onWheel: this.handleWheel }),
+				_extends({}, otherProps, { ref: this.saveRef.bind(this, "scrollview"), className: classes, style: style, onWheel: this.handleWheel }),
 				React__default.createElement(
 					ScrollViewBody,
-					{ ref: 'scrollviewBody', className: bodyClasses, style: scrollViewBodyStyle, component: component, onScroll: this.handleScroll, shouldComponentUpdate: shouldComponentUpdate },
+					{ ref: this.saveRef.bind(this, "scrollviewBody"), className: bodyClasses, style: scrollViewBodyStyle, component: component, onScroll: this.handleScroll, shouldComponentUpdate: shouldComponentUpdate },
 					children
 				),
 				hasScrollX ? this.getScrollBar('x') : null,
@@ -3489,6 +3521,8 @@ var ListItem$1 = (_temp2$1 = _class$18 = function (_React$Component) {
 			} else {
 				onDeselect && onDeselect(item, _this.refs.item);
 			}
+		}, _this.saveItem = function (item) {
+			_this.node = item;
 		}, _temp), possibleConstructorReturn(_this, _ret);
 	}
 
@@ -3516,7 +3550,7 @@ var ListItem$1 = (_temp2$1 = _class$18 = function (_React$Component) {
 			return React__default.createElement(
 				'div',
 				_extends({}, others, {
-					ref: 'item',
+					ref: this.saveItem,
 					className: classes,
 					onClick: this.handleItemClick
 				}),
@@ -3622,6 +3656,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 
 		_this.state = {
 			selectedValue: selectedValue,
+			//items的value=>item对应表
 			itemsMap: {}
 		};
 		return _this;
@@ -3646,7 +3681,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			    autoFocus = _props.autoFocus;
 
 			var el = ReactDOM.findDOMNode(this);
-			var scrollview = this.refs.listbox;
+			var scrollview = this.getListView(); //this.refs.listbox;
 			var selector = '.' + prefixCls + '-item-selected';
 
 			if (autoFocus) {
@@ -3757,7 +3792,9 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			}
 
 			return function (e) {
-				var scrollview = _this2.refs.listbox;
+				var scrollview = _this2.getListView(); //this.refs.listbox;
+				var props = _this2.props;
+				var state = _this2.state;
 				var dom = ReactDOM.findDOMNode(_this2);
 				var UP = e.keyCode === 38;
 				var DOWN = e.keyCode === 40;
@@ -3792,7 +3829,14 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 
 					scrollview.scrollIntoView(list[idx]);
 				} else if (ENTER && activeIndex !== null) {
-					_this2.setValue(indexValueMap[activeIndex]);
+					var value = indexValueMap[activeIndex];
+					var item = state.itemsMap[value] || {};
+					_this2.setValue(value);
+					//触发onItemClick
+					_this2.onItemClick({
+						value: value,
+						label: item[props.labelField]
+					});
 				}
 			};
 		}
@@ -3951,6 +3995,11 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			return React__default.Children.count(childs) ? childs : emptyLabel;
 		}
 	}, {
+		key: 'getListView',
+		value: function getListView() {
+			return this._listview;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _classNames;
@@ -3984,7 +4033,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			return React__default.createElement(
 				ScrollView,
 				{
-					ref: 'listbox',
+					ref: this.saveListView,
 					tabIndex: tabIndex,
 					scrollViewBodyCls: prefixCls + '-body',
 					scrollViewBodyStyle: scrollViewBodyStyle,
@@ -4038,7 +4087,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 	this.onItemClick = function (item, e) {
 		var onItemClick = _this5.props.onItemClick;
 
-		_this5.refs.listbox.scrollIntoView(e.target);
+		if (e) _this5.getListView().scrollIntoView(e.target);
 
 		if (onItemClick) onItemClick(item);
 	};
@@ -4073,6 +4122,10 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			onChange(_this5.transformChangeValue(copy(newSelectedValue)));
 		}
 	};
+
+	this.saveListView = function (node) {
+		_this5._listview = node;
+	};
 }, _temp$14);
 
 ListBox$1.ListItemGroup = ItemGroup;
@@ -4094,6 +4147,8 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 		var _this = possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this, props));
 
 		_initialiseProps$1.call(_this);
+
+		_this._refs = {};
 
 		_this.state = {
 			value: props.value || props.defaultValue,
@@ -4130,8 +4185,8 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			};
 
 			this.__mousedownHandle = function (e) {
-				if (_this2.state.showDropdown && !contains$1(_this2.refs.dropdown, e.target)) {
-					if (contains$1(_this2.refs.select, e.target)) return;
+				if (_this2.state.showDropdown && !contains$1(_this2._refs.dropdown, e.target)) {
+					if (contains$1(_this2._refs.select, e.target)) return;
 					_this2.hideDropdown();
 				}
 			};
@@ -4239,7 +4294,6 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			var value = this.state.value;
 
 			return React__default.createElement(ListBox$1, {
-				autoFocus: true,
 				ref: this.handleDropdownCreate,
 				valueField: valueField,
 				labelField: labelField,
@@ -4286,7 +4340,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 		value: function getPopupStyle() {
 			var showDropdown = this.state.showDropdown;
 
-			var selectEl = this.refs.select;
+			var selectEl = this._refs.select;
 			var dropdownStyle = {
 				maxWidth: 0,
 				maxHeight: 0
@@ -4305,13 +4359,15 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 		key: 'updatePopupPosition',
 		value: function updatePopupPosition() {
 			if (this.state.showDropdown) {
-				this.refs.popup.updatePosition(ReactDOM.findDOMNode(this));
+				this._refs.popup.updatePosition(ReactDOM.findDOMNode(this));
 			}
 		}
 	}, {
 		key: 'renderSelect',
 		value: function renderSelect() {
-			var _classNames, _classNames2;
+			var _classNames,
+			    _this4 = this,
+			    _classNames2;
 
 			var props = this.props;
 			var showDropdown = this.state.showDropdown;
@@ -4334,7 +4390,9 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			return React__default.createElement(
 				'div',
 				_extends({}, otherProps, {
-					ref: 'select',
+					ref: function ref(el) {
+						return _this4._refs.select = el;
+					},
 					className: classes,
 					tabIndex: tabIndex,
 					onClick: this.handleClick,
@@ -4348,7 +4406,21 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 				React__default.createElement('span', { className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
 				React__default.createElement(
 					Popup$1,
-					{ ref: 'popup', visible: showDropdown, className: dropdownCls, destroyOnHide: dropdownDestroyOnHide, fixed: false, rootCls: prefixCls + '-dropdown-root', of: null, my: 'left top', at: 'left bottom', style: this.getPopupStyle() },
+					{
+						ref: function ref(el) {
+							return _this4._refs.popup = el;
+						},
+						visible: showDropdown,
+						className: dropdownCls,
+						destroyOnHide: dropdownDestroyOnHide,
+						fixed: false,
+						rootCls: prefixCls + '-dropdown-root',
+						of: null,
+						my: 'left top',
+						at: 'left bottom',
+						style: this.getPopupStyle(),
+						onShow: this.handleDropdownShow
+					},
 					this.getSelectOptions()
 				)
 			);
@@ -4385,45 +4457,55 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 	dropdownDestroyOnHide: true,
 	labelInValue: false
 }, _initialiseProps$1 = function _initialiseProps() {
-	var _this4 = this;
+	var _this5 = this;
 
 	this.handleDropdownCreate = function (el) {
-		_this4.refs.listbox = el;
-		_this4.refs.dropdown = el ? ReactDOM.findDOMNode(el) : null;
+		_this5._refs.listbox = el;
+		_this5._refs.dropdown = el ? ReactDOM.findDOMNode(el) : null;
 	};
 
 	this.handleListItemClick = function (_ref) {
 		var value = _ref.value;
 
-		var props = _this4.props;
-		var state = _this4.state;
+		var props = _this5.props;
+		var state = _this5.state;
 
 		if (state.value + '' === value + '') {
-			_this4.hideDropdown();
+			_this5.hideDropdown();
 			return;
 		}
 
 		if (!('value' in props)) {
-			_this4.setState({
+			_this5.setState({
 				value: value
 			});
 		}
 
-		if (props.onChange) props.onChange(_this4.transformChangeValue(value));
+		if (props.onChange) props.onChange(_this5.transformChangeValue(value));
 
-		_this4.hideDropdown();
+		_this5.hideDropdown();
+	};
+
+	this.handleDropdownShow = function () {
+		_this5._refs.listbox.focus();
 	};
 
 	this.handleClick = function (e) {
-		_this4.setState({
-			showDropdown: !_this4.state.showDropdown
+		_this5.setState({
+			showDropdown: !_this5.state.showDropdown
 		});
 	};
 
 	this.onKeyDown = function (e) {
-		if (e.keyCode === 40 && !_this4.state.showDropdown) {
-			_this4.setState({
-				showDropdown: !_this4.state.showDropdown
+		if (e.keyCode === 40 && !_this5.state.showDropdown) {
+			_this5.setState({
+				showDropdown: !_this5.state.showDropdown
+			});
+		}
+
+		if (e.keyCode === 27 && _this5.state.showDropdown) {
+			_this5.setState({
+				showDropdown: false
 			});
 		}
 	};

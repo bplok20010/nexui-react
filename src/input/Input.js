@@ -39,11 +39,11 @@ export default class Input extends PureComponent{
 	};
 	
 	focus() {
-		this.refs.input.focus();
+		this._input && this._input.focus();
 	}
 	
 	blur() {
-		this.refs.input.blur();
+		this._input && this._input.blur();
 	}
 	
 	handleKeyDown = (e) => {
@@ -80,6 +80,10 @@ export default class Input extends PureComponent{
 		});
 	}
 	
+	saveInput = (input) => {
+		this._input = input;	
+	}
+	
 	renderInput(){
 		const props = this.props;
 		const {
@@ -98,7 +102,7 @@ export default class Input extends PureComponent{
 		return this.wrapInput(
 			<input 
 				{...otherProps} 
-				ref="input" 
+				ref={this.saveInput} 
 				type={type}
 				style={inputStyle}
 				onChange={this.handleChange}
@@ -137,7 +141,7 @@ export default class Input extends PureComponent{
 		return this.wrapInput(
 			<textarea
 				{...otherProps}
-				ref="input"
+				ref={this.saveInput} 
 				style={{
 					height,
 					...inputStyle	

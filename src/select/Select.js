@@ -44,6 +44,8 @@ export default class Select extends React.Component{
 	constructor(props){
 		super(props);	
 		
+		this._refs = {};
+		
 		this.state = {
 			value: props.value || props.defaultValue,
 			showDropdown: false,
@@ -74,8 +76,8 @@ export default class Select extends React.Component{
 		};
 		
 		this.__mousedownHandle = (e)=>{
-			if( this.state.showDropdown && !contains(this.refs.dropdown, e.target) ) {
-				if( contains(this.refs.select, e.target) ) return;
+			if( this.state.showDropdown && !contains(this._refs.dropdown, e.target) ) {
+				if( contains(this._refs.select, e.target) ) return;
 				this.hideDropdown();	
 			}
 		};
@@ -135,8 +137,8 @@ export default class Select extends React.Component{
 	}
 	
 	handleDropdownCreate= (el)=>{
-		this.refs.listbox = el;
-		this.refs.dropdown = el ? findDOMNode(el) : null;
+		this._refs.listbox = el;
+		this._refs.dropdown = el ? findDOMNode(el) : null;
 	}
 	
 	getSelectText(){
@@ -181,13 +183,16 @@ export default class Select extends React.Component{
 		this.hideDropdown();
 	}
 	
+	handleDropdownShow = ()=>{
+		this._refs.listbox.focus();	
+	}
+	
 	getSelectOptions(){
 		const {valueField, labelField, optionsField, options, children} = this.props;
 		const value = this.state.value;
 			
 		return (
 			<ListBox
-				autoFocus
 				ref={this.handleDropdownCreate}
 				valueField={valueField}
 				labelField={labelField}
@@ -231,12 +236,18 @@ export default class Select extends React.Component{
 			this.setState({
 				showDropdown: !this.state.showDropdown
 			});		
-		}	
+		}
+		
+		if( e.keyCode === 27 && this.state.showDropdown ) {
+			this.setState({
+				showDropdown: false
+			});		
+		}
 	}
 	
 	getPopupStyle(){
 		const {showDropdown} = this.state;
-		const selectEl = this.refs.select;
+		const selectEl = this._refs.select;
 		const dropdownStyle = {
 			maxWidth: 0,
 			maxHeight: 0,	
@@ -254,7 +265,7 @@ export default class Select extends React.Component{
 	
 	updatePopupPosition(){
 		if( this.state.showDropdown ) {
-			this.refs.popup.updatePosition(findDOMNode(this));	
+			this._refs.popup.updatePosition(findDOMNode(this));	
 		}	
 	}
 	
@@ -283,7 +294,7 @@ export default class Select extends React.Component{
 		return (
 			<div 
 				{...otherProps}
-				ref="select" 
+				ref={(el) => this._refs.select = el}
 				className={classes} 
 				tabIndex={tabIndex} 
 				onClick={this.handleClick}
@@ -294,7 +305,19 @@ export default class Select extends React.Component{
 					[`${prefixCls}-arrow`]: true,
 					[arrowCls]: true	
 				})}></span>
-				<Popup ref="popup" visible={showDropdown} className={dropdownCls} destroyOnHide={dropdownDestroyOnHide} fixed={false} rootCls={`${prefixCls}-dropdown-root`} of={null} my="left top" at="left bottom" style={this.getPopupStyle()}>
+				<Popup 
+					ref={(el) => this._refs.popup = el} 
+					visible={showDropdown} 
+					className={dropdownCls} 
+					destroyOnHide={dropdownDestroyOnHide} 
+					fixed={false} 
+					rootCls={`${prefixCls}-dropdown-root`} 
+					of={null} 
+					my="left top" 
+					at="left bottom" 
+					style={this.getPopupStyle()}
+					onShow={this.handleDropdownShow}
+				>
 					{this.getSelectOptions()}
 				</Popup>
 			</div>
