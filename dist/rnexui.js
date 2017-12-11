@@ -2,9 +2,9 @@
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom'], factory) :
 	(factory((global.rnexui = global.rnexui || {}),global.React,global.ReactDOM));
-}(this, (function (exports,React,ReactDOM) { 'use strict';
+}(this, (function (exports,React$1,ReactDOM) { 'use strict';
 
-var React__default = 'default' in React ? React['default'] : React;
+var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
 var ReactDOM__default = 'default' in ReactDOM ? ReactDOM['default'] : ReactDOM;
 
 function unwrapExports (x) {
@@ -495,15 +495,15 @@ var Button = (_temp = _class = function (_PureComponent) {
 				nodeProps['disabled'] = true;
 			}
 
-			var Icon = iconCls ? React__default.createElement('span', { className: classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-icon', true), defineProperty(_classNames, iconCls, true), _classNames)) }) : null;
+			var Icon = iconCls ? React$1__default.createElement('span', { className: classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-icon', true), defineProperty(_classNames, iconCls, true), _classNames)) }) : null;
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'button',
 				_extends({}, nodeProps, { type: htmlType, onClick: function onClick(e) {
 						return _this2.handleClick(e);
 					}, className: classnames((_classNames2 = {}, defineProperty(_classNames2, '' + prefixCls, true), defineProperty(_classNames2, prefixCls + '-' + type, type), defineProperty(_classNames2, prefixCls + '-block', !inline), defineProperty(_classNames2, prefixCls + '-inline', inline), defineProperty(_classNames2, prefixCls + '-sm', size === 'small'), defineProperty(_classNames2, prefixCls + '-lg', size === 'large'), defineProperty(_classNames2, prefixCls + '-disabled', disabled), defineProperty(_classNames2, className, true), _classNames2)) }),
 				Icon,
-				this.props.children ? React__default.createElement(
+				this.props.children ? React$1__default.createElement(
 					'span',
 					{ className: 'nex-btn-text' },
 					this.props.children
@@ -512,7 +512,7 @@ var Button = (_temp = _class = function (_PureComponent) {
 		}
 	}]);
 	return Button;
-}(React.PureComponent), _class.propTypes = {
+}(React$1.PureComponent), _class.propTypes = {
 	type: propTypes.string,
 	size: propTypes.string,
 	htmlType: propTypes.oneOf(['button', 'submit', 'reset']),
@@ -766,7 +766,7 @@ var ButtonGroup = function ButtonGroup(props) {
 
 	var classes = classNames$1(prefixCls, defineProperty({}, prefixCls + '-' + sizeCls, sizeCls), className);
 
-	return React__default.createElement('div', _extends({}, others, { className: classes }));
+	return React$1__default.createElement('div', _extends({}, others, { className: classes }));
 };
 
 var _global = createCommonjsModule(function (module) {
@@ -1290,7 +1290,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 				delete otherProps.defaultValue;
 			}
 
-			return this.wrapInput(React__default.createElement('input', _extends({}, otherProps, {
+			return this.wrapInput(React$1__default.createElement('input', _extends({}, otherProps, {
 				ref: this.saveInput,
 				type: type,
 				style: inputStyle,
@@ -1332,7 +1332,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			var height = style.height;
 
 
-			return this.wrapInput(React__default.createElement('textarea', _extends({}, otherProps, {
+			return this.wrapInput(React$1__default.createElement('textarea', _extends({}, otherProps, {
 				ref: this.saveInput,
 				style: _extends({
 					height: height
@@ -1355,7 +1355,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			}
 
 			if (prefix) {
-				return React__default.createElement(
+				return React$1__default.createElement(
 					'span',
 					{ className: prefixCls + '-prefix' },
 					prefix
@@ -1377,7 +1377,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			}
 
 			if (suffix) {
-				return React__default.createElement(
+				return React$1__default.createElement(
 					'span',
 					{ className: prefixCls + '-suffix' },
 					suffix
@@ -1404,7 +1404,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 
 			var classname = classnames((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-wrapper', true), defineProperty(_classNames3, prefixCls + '-wrapper-block', !inline), defineProperty(_classNames3, className, className), _classNames3));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ className: classname, style: style },
 				prefix,
@@ -1422,7 +1422,7 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 		}
 	}]);
 	return Input;
-}(React.PureComponent), _class$1.propTypes = propTypes$1, _class$1.defaultProps = {
+}(React$1.PureComponent), _class$1.propTypes = propTypes$1, _class$1.defaultProps = {
 	disabled: false,
 	autoComplete: 'off',
 	type: 'text',
@@ -1440,7 +1440,7 @@ var InputGroup = function InputGroup(props) {
 	    className = _props$className === undefined ? '' : _props$className;
 
 	var cls = classnames((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), defineProperty(_classNames, className, className), _classNames));
-	return React__default.createElement(
+	return React$1__default.createElement(
 		'div',
 		{ className: cls, style: props.style },
 		props.children
@@ -1510,10 +1510,10 @@ var Checkbox = (_temp$1 = _class$2 = function (_PureComponent) {
 
 			var classString = classnames(prefixCls, className, (_classNames = {}, defineProperty(_classNames, prefixCls + '-checked', checked), defineProperty(_classNames, prefixCls + '-indeterminate', indeterminate), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'span',
 				{ className: classString, style: style },
-				React__default.createElement('input', _extends({
+				React$1__default.createElement('input', _extends({
 					name: name,
 					type: type,
 					readOnly: readOnly,
@@ -1526,12 +1526,12 @@ var Checkbox = (_temp$1 = _class$2 = function (_PureComponent) {
 					onBlur: onBlur,
 					onChange: this.handleChange
 				}, globalProps)),
-				React__default.createElement('span', { className: prefixCls + '-inner' })
+				React$1__default.createElement('span', { className: prefixCls + '-inner' })
 			);
 		}
 	}]);
 	return Checkbox;
-}(React.PureComponent), _class$2.propTypes = {
+}(React$1.PureComponent), _class$2.propTypes = {
 	prefixCls: propTypes.string,
 	className: propTypes.string,
 	style: propTypes.object,
@@ -1673,7 +1673,7 @@ var Checkbox$1 = (_temp$2 = _class$3 = function (_Component) {
 
 			var classString = classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-wrapper', true), defineProperty(_classNames, className, !!className), _classNames));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'label',
 				{
 					className: classString,
@@ -1681,10 +1681,10 @@ var Checkbox$1 = (_temp$2 = _class$3 = function (_Component) {
 					onMouseEnter: onMouseEnter,
 					onMouseLeave: onMouseLeave
 				},
-				React__default.createElement(Checkbox, _extends({}, others, {
+				React$1__default.createElement(Checkbox, _extends({}, others, {
 					prefixCls: prefixCls
 				})),
-				children !== undefined ? React__default.createElement(
+				children !== undefined ? React$1__default.createElement(
 					'span',
 					{ className: prefixCls + '-label' },
 					children
@@ -1693,7 +1693,7 @@ var Checkbox$1 = (_temp$2 = _class$3 = function (_Component) {
 		}
 	}]);
 	return Checkbox$$1;
-}(React.Component), _class$3.propTypes = {
+}(React$1.Component), _class$3.propTypes = {
 	className: propTypes.string,
 	style: propTypes.object,
 	prefixCls: propTypes.string
@@ -1793,7 +1793,7 @@ var CheckboxGroup = (_temp$3 = _class$4 = function (_React$Component) {
 			var children = props.children;
 			if (options && options.length > 0) {
 				children = this.getOptions().map(function (option) {
-					return React__default.createElement(
+					return React$1__default.createElement(
 						Checkbox$1,
 						{
 							key: option.value,
@@ -1811,7 +1811,7 @@ var CheckboxGroup = (_temp$3 = _class$4 = function (_React$Component) {
 			}
 
 			var classString = classnames(prefixCls, className);
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ className: classString },
 				children
@@ -1819,7 +1819,7 @@ var CheckboxGroup = (_temp$3 = _class$4 = function (_React$Component) {
 		}
 	}]);
 	return CheckboxGroup;
-}(React__default.Component), _class$4.defaultProps = {
+}(React$1__default.Component), _class$4.defaultProps = {
 	options: [],
 	prefixCls: 'nex-checkbox-group'
 }, _class$4.propTypes = {
@@ -1845,11 +1845,11 @@ var Radio = (_temp$4 = _class$5 = function (_React$Component) {
 	createClass(Radio, [{
 		key: 'render',
 		value: function render() {
-			return React__default.createElement(Checkbox, _extends({}, this.props, { ref: 'checkbox' }));
+			return React$1__default.createElement(Checkbox, _extends({}, this.props, { ref: 'checkbox' }));
 		}
 	}]);
 	return Radio;
-}(React__default.Component), _class$5.defaultProps = {
+}(React$1__default.Component), _class$5.defaultProps = {
 	prefixCls: 'nex-radio',
 	type: 'radio'
 }, _temp$4);
@@ -1897,7 +1897,7 @@ var Radio$1 = (_temp$5 = _class$6 = function (_Component) {
 				others.disabled = props.disabled || radioGroup.disabled;
 			}
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'label',
 				{
 					className: classString,
@@ -1905,10 +1905,10 @@ var Radio$1 = (_temp$5 = _class$6 = function (_Component) {
 					onMouseEnter: onMouseEnter,
 					onMouseLeave: onMouseLeave
 				},
-				React__default.createElement(Radio, _extends({}, others, {
+				React$1__default.createElement(Radio, _extends({}, others, {
 					prefixCls: prefixCls
 				})),
-				children !== undefined ? React__default.createElement(
+				children !== undefined ? React$1__default.createElement(
 					'span',
 					{ className: prefixCls + '-label' },
 					children
@@ -1917,7 +1917,7 @@ var Radio$1 = (_temp$5 = _class$6 = function (_Component) {
 		}
 	}]);
 	return Radio$$1;
-}(React.Component), _class$6.propTypes = {
+}(React$1.Component), _class$6.propTypes = {
 	className: propTypes.string,
 	style: propTypes.object,
 	prefixCls: propTypes.string
@@ -2016,7 +2016,7 @@ var RadioGroup = (_temp$6 = _class$7 = function (_React$Component) {
 			var children = props.children;
 			if (options && options.length > 0) {
 				children = this.getOptions().map(function (option) {
-					return React__default.createElement(
+					return React$1__default.createElement(
 						Radio$1,
 						{
 							key: option.value,
@@ -2032,7 +2032,7 @@ var RadioGroup = (_temp$6 = _class$7 = function (_React$Component) {
 			}
 
 			var classString = classnames(prefixCls, className);
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ className: classString, style: style },
 				children
@@ -2040,7 +2040,7 @@ var RadioGroup = (_temp$6 = _class$7 = function (_React$Component) {
 		}
 	}]);
 	return RadioGroup;
-}(React__default.Component), _class$7.defaultProps = {
+}(React$1__default.Component), _class$7.defaultProps = {
 	options: [],
 	prefixCls: 'nex-radio-group'
 }, _class$7.propTypes = {
@@ -2083,12 +2083,12 @@ var Row = (_temp$7 = _class$8 = function (_React$Component) {
 				marginRight: gutter / -2
 			}, style) : style;
 
-			var cols = React.Children.map(children, function (col) {
+			var cols = React$1.Children.map(children, function (col) {
 				if (!col) {
 					return null;
 				}
 				if (col.props && gutter > 0) {
-					return React.cloneElement(col, {
+					return React$1.cloneElement(col, {
 						style: _extends({
 							paddingLeft: gutter / 2,
 							paddingRight: gutter / 2
@@ -2097,7 +2097,7 @@ var Row = (_temp$7 = _class$8 = function (_React$Component) {
 				}
 				return col;
 			});
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				_extends({}, others, { className: classes, style: rowStyle }),
 				cols
@@ -2105,7 +2105,7 @@ var Row = (_temp$7 = _class$8 = function (_React$Component) {
 		}
 	}]);
 	return Row;
-}(React__default.Component), _class$8.propTypes = {
+}(React$1__default.Component), _class$8.propTypes = {
 	className: propTypes.string,
 	children: propTypes.node,
 	gutter: propTypes.number,
@@ -2144,7 +2144,7 @@ var Col = (_temp$8 = _class$9 = function (_React$Component) {
 
 			var classes = classnames((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, prefixCls + '-' + span, span), defineProperty(_classNames, prefixCls + '-offset-' + offset, offset), defineProperty(_classNames, className, className), _classNames));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				_extends({}, others, { className: classes }),
 				children
@@ -2152,7 +2152,7 @@ var Col = (_temp$8 = _class$9 = function (_React$Component) {
 		}
 	}]);
 	return Col;
-}(React__default.Component), _class$9.propTypes = {
+}(React$1__default.Component), _class$9.propTypes = {
 	span: stringOrNumber,
 	offset: stringOrNumber,
 	className: propTypes.string,
@@ -2178,7 +2178,7 @@ var Portal = (_temp$9 = _class$10 = function (_React$Component) {
 		}
 	}]);
 	return Portal;
-}(React__default.Component), _class$10.propTypes = {
+}(React$1__default.Component), _class$10.propTypes = {
 	children: propTypes.node.isRequired,
 	container: propTypes.node.isRequired,
 	onUpdate: propTypes.func
@@ -2570,7 +2570,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 			var classes = classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-mask', true), defineProperty(_classNames, prefixCls + '-mask-fixed', fixed), defineProperty(_classNames, maskClassName, maskClassName), _classNames));
 
-			return React__default.createElement('div', _extends({ onMouseDown: this.handleMaskMouseDown, onClick: this.handleMaskClick }, popupMaskProps, { ref: this.savePopupMaskDOM, className: classes }));
+			return React$1__default.createElement('div', _extends({ onMouseDown: this.handleMaskMouseDown, onClick: this.handleMaskClick }, popupMaskProps, { ref: this.savePopupMaskDOM, className: classes }));
 		}
 	}, {
 		key: 'getPopupComponent',
@@ -2590,16 +2590,16 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 
 			var classes = classnames(prefixCls, fixed ? prefixCls + '-fixed' : '', className);
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				Portal,
 				{
 					container: container
 				},
-				React__default.createElement(
+				React$1__default.createElement(
 					'div',
 					_extends({}, rootProps, { ref: this.saveRootDOM, className: classnames(prefixCls + '-root', rootClassName) }),
 					mask ? this.getMaskComponent() : null,
-					React__default.createElement(
+					React$1__default.createElement(
 						'div',
 						_extends({ tabIndex: -1, style: style }, popupProps, { ref: this.savePopupDOM, className: classes }),
 						children
@@ -2614,7 +2614,7 @@ var Popup$1 = (_temp$10 = _class$11 = function (_React$Component) {
 		}
 	}]);
 	return Popup;
-}(React__default.Component), _class$11.propTypes = propTypes$2, _class$11.defaultProps = {
+}(React$1__default.Component), _class$11.propTypes = propTypes$2, _class$11.defaultProps = {
 	prefixCls: 'nex-popup',
 	rootClassName: '',
 	container: document.body,
@@ -2787,11 +2787,11 @@ var ScrollViewBody = (_temp$16 = _class$17 = function (_React$Component) {
 
 			var Node = component;
 
-			return React__default.createElement(Node, others);
+			return React$1__default.createElement(Node, others);
 		}
 	}]);
 	return ScrollViewBody;
-}(React__default.Component), _class$17.propTypes = {
+}(React$1__default.Component), _class$17.propTypes = {
 	className: propTypes.string,
 	shouldComponentUpdate: propTypes.bool,
 	component: propTypes.oneOfType([propTypes.string, propTypes.func])
@@ -3358,20 +3358,20 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
 			    scrollbarThumbRef = isVertical ? 'verticalBarThumbEl' : 'horizontalBarThumbEl';
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ ref: this.saveRef.bind(this, scrollbarRef), className: classnames(prefixCls + '-bar', dirCls) },
-				React__default.createElement(
+				React$1__default.createElement(
 					'div',
 					{ ref: this.saveRef.bind(this, scrollbarWrapRef), className: prefixCls + '-bar-wrap' },
-					showTrack ? React__default.createElement('div', {
+					showTrack ? React$1__default.createElement('div', {
 						ref: this.saveRef.bind(this, scrollbarTrackRef),
 						className: classnames((_classNames = {}, defineProperty(_classNames, prefixCls + '-bar-track', true), defineProperty(_classNames, trackCls, trackCls), _classNames)),
 						onMouseDown: function onMouseDown(e) {
 							return _this4.handleTrackMouseDown(e, dir);
 						}
 					}) : null,
-					React__default.createElement('div', {
+					React$1__default.createElement('div', {
 						ref: this.saveRef.bind(this, scrollbarThumbRef),
 						className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-bar-thumb', true), defineProperty(_classNames2, thumbCls, thumbCls), _classNames2)),
 						onMouseDown: function onMouseDown(e) {
@@ -3410,10 +3410,10 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 
 			var otherProps = omit(others, Object.keys(ScrollView.defaultProps));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				_extends({}, otherProps, { ref: this.saveRef.bind(this, "scrollview"), className: classes, style: style, onWheel: this.handleWheel }),
-				React__default.createElement(
+				React$1__default.createElement(
 					ScrollViewBody,
 					{ ref: this.saveRef.bind(this, "scrollviewBody"), className: bodyClasses, style: scrollViewBodyStyle, component: component, onScroll: this.handleScroll, shouldComponentUpdate: shouldComponentUpdate },
 					children
@@ -3424,7 +3424,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 		}
 	}]);
 	return ScrollView;
-}(React__default.Component), _class$16.propTypes = {
+}(React$1__default.Component), _class$16.propTypes = {
 	prefixCls: propTypes.string,
 	className: propTypes.oneOfType([propTypes.string, propTypes.object]),
 	scrollViewBodyCls: propTypes.string,
@@ -3547,7 +3547,7 @@ var ListItem$1 = (_temp2$1 = _class$18 = function (_React$Component) {
 
 			var others = omit(this.props, Object.keys(ListItem.propTypes));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				_extends({}, others, {
 					ref: this.saveItem,
@@ -3559,7 +3559,7 @@ var ListItem$1 = (_temp2$1 = _class$18 = function (_React$Component) {
 		}
 	}]);
 	return ListItem;
-}(React__default.Component), _class$18.propTypes = {
+}(React$1__default.Component), _class$18.propTypes = {
 	prefixCls: propTypes.string,
 	value: propTypes.any,
 	onSelect: propTypes.func,
@@ -3593,15 +3593,15 @@ var ItemGroup = (_temp$17 = _class$19 = function (_React$Component) {
 			    label = _props.label,
 			    children = _props.children;
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ className: prefixCls },
-				React__default.createElement(
+				React$1__default.createElement(
 					'div',
 					{ className: prefixCls + '-title' },
 					label
 				),
-				React__default.createElement(
+				React$1__default.createElement(
 					'div',
 					{ className: prefixCls + '-list' },
 					children
@@ -3610,7 +3610,7 @@ var ItemGroup = (_temp$17 = _class$19 = function (_React$Component) {
 		}
 	}]);
 	return ItemGroup;
-}(React__default.Component), _class$19.defaultProps = {
+}(React$1__default.Component), _class$19.defaultProps = {
 	prefixCls: 'nex-listbox-item-group',
 	label: ''
 }, _class$19.isListItemGroup = true, _temp$17);
@@ -3882,7 +3882,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 					}
 				}
 
-				return !isGroup ? React__default.createElement(
+				return !isGroup ? React$1__default.createElement(
 					ListItem$1,
 					{
 						key: item[valueField],
@@ -3898,7 +3898,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 						onMouseLeave: onMouseLeave
 					},
 					item[labelField]
-				) : React__default.createElement(
+				) : React$1__default.createElement(
 					ItemGroup,
 					{ prefixCls: itemPrefixCls + '-group', key: item[labelField], label: item[labelField] },
 					_this3.renderListItems(item[itemsField] || [], markMap)
@@ -3922,11 +3922,11 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			var itemPrefixCls = prefixCls + '-item';
 			var activeCls = prefixCls + '-item-active';
 
-			return React__default.Children.map(children, function (child) {
+			return React$1__default.Children.map(children, function (child) {
 				var props = child.props;
 
 				if (child.type.isListItemGroup) {
-					return React__default.cloneElement(child, {}, _this4.renderListChild(props.children, markMap));
+					return React$1__default.cloneElement(child, {}, _this4.renderListChild(props.children, markMap));
 				}
 
 				var onMouseEnter = noop$2;
@@ -3962,7 +3962,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 					newProps.disabled = true;
 				}
 
-				return React__default.cloneElement(child, newProps);
+				return React$1__default.cloneElement(child, newProps);
 			});
 		}
 	}, {
@@ -3992,7 +3992,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 
 			var childs = items.length ? this.renderListItems(items, markMap) : this.renderListChild(children, markMap);
 
-			return React__default.Children.count(childs) ? childs : emptyLabel;
+			return React$1__default.Children.count(childs) ? childs : emptyLabel;
 		}
 	}, {
 		key: 'getListView',
@@ -4030,7 +4030,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 
 			var classes = classnames((_classNames = {}, defineProperty(_classNames, '' + prefixCls, true), defineProperty(_classNames, className, className), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				ScrollView,
 				{
 					ref: this.saveListView,
@@ -4048,7 +4048,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 		}
 	}]);
 	return ListBox;
-}(React__default.Component), _class$15.propTypes = {
+}(React$1__default.Component), _class$15.propTypes = {
 	className: propTypes.string,
 	style: propTypes.object,
 	scrollViewBodyStyle: propTypes.object,
@@ -4233,7 +4233,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			}
 
 			function parseChildren(childs) {
-				React__default.Children.map(childs, function (child) {
+				React$1__default.Children.map(childs, function (child) {
 					var props = child.props;
 
 					if (child.type.isOptOption) {
@@ -4293,7 +4293,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 
 			var value = this.state.value;
 
-			return React__default.createElement(ListBox$1, {
+			return React$1__default.createElement(ListBox$1, {
 				ref: this.handleDropdownCreate,
 				valueField: valueField,
 				labelField: labelField,
@@ -4314,18 +4314,18 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 			    valueField = _props3.valueField;
 
 
-			return React__default.Children.map(children, function (child) {
+			return React$1__default.Children.map(children, function (child) {
 				var props = child.props;
 
 				if (child.type.isOptOption) {
-					return React__default.createElement(
+					return React$1__default.createElement(
 						ListItemGroup,
 						{ label: props[labelField] },
 						_this3.renderSelectChild(props.children)
 					);
 				}
 
-				return React__default.createElement(ListItem, props);
+				return React$1__default.createElement(ListItem, props);
 			});
 		}
 	}, {
@@ -4387,7 +4387,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 
 			var otherProps = omit(others, ['value', 'valueField', 'dropdownCls', 'dropdownStyle', 'dropdownDestroyOnHide', 'labelField', 'optionsField', 'labelInValue']);
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				_extends({}, otherProps, {
 					ref: function ref(el) {
@@ -4398,13 +4398,13 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 					onClick: this.handleClick,
 					onKeyDown: this.onKeyDown
 				}),
-				React__default.createElement(
+				React$1__default.createElement(
 					'div',
 					{ className: prefixCls + '-text' },
 					this.getSelectText()
 				),
-				React__default.createElement('span', { className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
-				React__default.createElement(
+				React$1__default.createElement('span', { className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
+				React$1__default.createElement(
 					Popup$1,
 					{
 						ref: function ref(el) {
@@ -4432,7 +4432,7 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 		}
 	}]);
 	return Select;
-}(React__default.Component), _class$14.propTypes = {
+}(React$1__default.Component), _class$14.propTypes = {
 	className: propTypes.string,
 	style: propTypes.object,
 	prefixCls: propTypes.string,
@@ -5990,14 +5990,14 @@ var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
       var len2 = 7 + firstDay;
       for (var i = firstDay; i < len2; i++) {
         var day = i % 7;
-        ths.push(React__default.createElement(
+        ths.push(React$1__default.createElement(
           'th',
           { key: i, className: this.classNames(prefixCls + '-cell', prefixCls + '-cell-h') },
           dayNamesMin[day]
         ));
       }
 
-      return React__default.createElement(
+      return React$1__default.createElement(
         'tr',
         null,
         ths
@@ -6078,7 +6078,7 @@ var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
 
       var classes = this.classNames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-cell', true), defineProperty(_classNames2, prefixCls + '-cell-b', true), defineProperty(_classNames2, prefixCls + '-cell-other-month', !isEqualMonth(currentShowDate, date)), defineProperty(_classNames2, prefixCls + '-cell-today', isEqualDate(now, date)), defineProperty(_classNames2, prefixCls + '-cell-selected', currentDate && isEqualDate(currentDate, date)), defineProperty(_classNames2, prefixCls + '-cell-disabled', this.isDisabledDate(date)), _classNames2), dateClassNameRender ? dateClassNameRender(date, this) : null);
 
-      return React__default.createElement(
+      return React$1__default.createElement(
         'td',
         {
           key: key,
@@ -6118,7 +6118,7 @@ var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
         tds.push(this.renderDate(DateUtil.add(startDate, 'd', i), i));
 
         if (tds.length === 7) {
-          trs.push(React__default.createElement(
+          trs.push(React$1__default.createElement(
             'tr',
             { key: i },
             tds.map(function (td) {
@@ -6140,18 +6140,18 @@ var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
           style = _props5.style;
 
 
-      return React__default.createElement(
+      return React$1__default.createElement(
         'div',
         { className: this.classNames(prefixCls, className), style: style },
-        React__default.createElement(
+        React$1__default.createElement(
           'table',
           { className: prefixCls + '-table' },
-          React__default.createElement(
+          React$1__default.createElement(
             'thead',
             null,
             this.renderHeader()
           ),
-          React__default.createElement(
+          React$1__default.createElement(
             'tbody',
             null,
             this.renderBody()
@@ -6166,7 +6166,7 @@ var Calendar$1 = (_temp$18 = _class$20 = function (_React$Component) {
     }
   }]);
   return Calendar;
-}(React__default.Component), _class$20.DateUtil = DateUtil, _class$20.propTypes = {
+}(React$1__default.Component), _class$20.DateUtil = DateUtil, _class$20.propTypes = {
   className: propTypes.string,
   prefixCls: propTypes.string,
   onSelect: propTypes.func,
@@ -6395,7 +6395,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
             };
 
             for (; start < end; start++) {
-                list.push(React__default.createElement(
+                list.push(React$1__default.createElement(
                     'div',
                     { key: start, className: classnames({
                             'active': currentYear == start
@@ -6428,7 +6428,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
             };
 
             return months.map(function (num) {
-                return React__default.createElement(
+                return React$1__default.createElement(
                     'div',
                     { key: num, className: classnames({
                             'active': cMonth == num
@@ -6466,50 +6466,50 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
 
             var date = currentShowDate;
 
-            return React__default.createElement(
+            return React$1__default.createElement(
                 'div',
                 { className: prefixCls + '-picker-header' },
-                React__default.createElement(
+                React$1__default.createElement(
                     'div',
                     { className: 'prev-btns' },
-                    React__default.createElement('span', { className: 'prev-year-btn fa fa-angle-double-left', onClick: this.onPrevYear.bind(this) }),
-                    React__default.createElement('span', { className: 'prev-month-btn fa fa-angle-left', onClick: this.onPrevMonth.bind(this) })
+                    React$1__default.createElement('span', { className: 'prev-year-btn fa fa-angle-double-left', onClick: this.onPrevYear.bind(this) }),
+                    React$1__default.createElement('span', { className: 'prev-month-btn fa fa-angle-left', onClick: this.onPrevMonth.bind(this) })
                 ),
-                React__default.createElement(
+                React$1__default.createElement(
                     'span',
                     { className: 'year-label' },
-                    React__default.createElement(
+                    React$1__default.createElement(
                         'span',
                         { onClick: this.showYearList.bind(this) },
                         DateUtil.part(date, 'Y'),
                         '\u5E74'
                     ),
-                    showYearList ? React__default.createElement(
+                    showYearList ? React$1__default.createElement(
                         ScrollView,
                         { overflowX: 'hidden', className: 'year-list' },
                         this.renderYearList()
                     ) : null
                 ),
-                React__default.createElement(
+                React$1__default.createElement(
                     'span',
                     { className: 'month-label' },
-                    React__default.createElement(
+                    React$1__default.createElement(
                         'span',
                         { onClick: this.showMonthList.bind(this) },
                         DateUtil.part(date, 'm'),
                         '\u6708'
                     ),
-                    showMonthList ? React__default.createElement(
+                    showMonthList ? React$1__default.createElement(
                         ScrollView,
                         { overflowX: 'hidden', className: 'year-list' },
                         this.renderMonthList()
                     ) : null
                 ),
-                React__default.createElement(
+                React$1__default.createElement(
                     'div',
                     { className: 'next-btns' },
-                    React__default.createElement('span', { className: 'next-month-btn fa fa-angle-right', onClick: this.onNextMonth.bind(this) }),
-                    React__default.createElement('span', { className: 'next-year-btn fa fa-angle-double-right', onClick: this.onNextYear.bind(this) })
+                    React$1__default.createElement('span', { className: 'next-month-btn fa fa-angle-right', onClick: this.onNextMonth.bind(this) }),
+                    React$1__default.createElement('span', { className: 'next-year-btn fa fa-angle-double-right', onClick: this.onNextYear.bind(this) })
                 )
             );
         }
@@ -6574,14 +6574,14 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
                 currentShowDate = _state2.currentShowDate;
 
 
-            return React__default.createElement(
+            return React$1__default.createElement(
                 'div',
                 { ref: this.handleDropdownCreate, className: prefixCls + '-dropdown' },
                 this.renderPickerHeader(),
-                React__default.createElement(
+                React$1__default.createElement(
                     'div',
                     { className: prefixCls + '-picker-body' },
-                    React__default.createElement(Calendar$1, {
+                    React$1__default.createElement(Calendar$1, {
                         currentDate: value,
                         currentShowDate: currentShowDate,
                         maxDate: maxDate,
@@ -6649,7 +6649,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
 
             var classes = classnames((_classNames = {}, defineProperty(_classNames, prefixCls, true), defineProperty(_classNames, prefixCls + '-inline', inline), defineProperty(_classNames, prefixCls + '-readonly', readOnly), defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
 
-            return React__default.createElement(
+            return React$1__default.createElement(
                 'div',
                 {
                     style: style,
@@ -6658,11 +6658,11 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
                     tabIndex: tabIndex,
                     onClick: this.handleClick
                 },
-                React__default.createElement('input', { className: prefixCls + '-text', value: this.getInputLabel(),
+                React$1__default.createElement('input', { className: prefixCls + '-text', value: this.getInputLabel(),
                     onChange: this.onInputChange.bind(this),
                     onBlur: this.onInputBlur.bind(this) }),
-                React__default.createElement('span', { className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
-                React__default.createElement(
+                React$1__default.createElement('span', { className: classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-arrow', true), defineProperty(_classNames2, arrowCls, true), _classNames2)) }),
+                React$1__default.createElement(
                     Popup$1,
                     {
                         visible: showDropdown,
@@ -6686,7 +6686,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
         }
     }]);
     return DatePicker;
-}(React__default.Component), _class$21.DateUtil = DateUtil, _class$21.propTypes = {
+}(React$1__default.Component), _class$21.DateUtil = DateUtil, _class$21.propTypes = {
     className: propTypes.string,
     prefixCls: propTypes.string,
     value: propTypes.oneOfType([propTypes.string, propTypes.number, propTypes.instanceOf(Date)]),
@@ -7098,12 +7098,12 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 				var end = Math.min(pageNumber + p, pageCount - 1);
 				var start = Math.max(end - maxPagesShow + 1, 2);
 
-				list.push(React__default.createElement(
+				list.push(React$1__default.createElement(
 					'a',
 					{ key: '1', className: this.getPageItemCls(1), onClick: toPage(1) },
 					_itemRender(1)
 				));
-				list.push(showPrevMore && start > 2 ? React__default.createElement(
+				list.push(showPrevMore && start > 2 ? React$1__default.createElement(
 					'span',
 					{ key: 'prev', className: prefixCls + '-item ' + prefixCls + '-item-more' },
 					'...'
@@ -7116,19 +7116,19 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 				}
 
 				for (var page = start; page <= end; page++) {
-					list.push(React__default.createElement(
+					list.push(React$1__default.createElement(
 						'a',
 						{ key: page, className: this.getPageItemCls(page), onClick: toPage(page) },
 						_itemRender(page)
 					));
 				}
 
-				list.push(showNextMore && end < pageCount - 1 ? React__default.createElement(
+				list.push(showNextMore && end < pageCount - 1 ? React$1__default.createElement(
 					'span',
 					{ key: 'next', className: prefixCls + '-item ' + prefixCls + '-item-more' },
 					'...'
 				) : null);
-				list.push(pageCount > 1 ? React__default.createElement(
+				list.push(pageCount > 1 ? React$1__default.createElement(
 					'a',
 					{ key: pageCount, className: this.getPageItemCls(pageCount), onClick: toPage(pageCount) },
 					_itemRender(pageCount)
@@ -7151,7 +7151,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 			    pageSize = _state2.pageSize;
 
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'span',
 				{ key: 'total', className: prefixCls + '-total-text' },
 				totalRender.call(this, total, current, pageSize)
@@ -7174,10 +7174,10 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 				};
 			});
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'span',
 				{ key: 'sizes', className: prefixCls + '-pagesize' },
-				React__default.createElement(Select$1, { options: list, size: small ? 'small' : 'default', value: this.state.pageSize, onChange: this.handlePageSizeChange, className: prefixCls + '-changer' })
+				React$1__default.createElement(Select$1, { options: list, size: small ? 'small' : 'default', value: this.state.pageSize, onChange: this.handlePageSizeChange, className: prefixCls + '-changer' })
 			);
 		}
 	}, {
@@ -7194,7 +7194,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 
 			var _prevBtnCls = classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-btn', true), defineProperty(_classNames2, prefixCls + '-prev', true), defineProperty(_classNames2, '' + prevBtnCls, prevBtnCls), defineProperty(_classNames2, prefixCls + '-btn-disabled', current == 1), _classNames2));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'a',
 				{ key: 'prev-btn', className: '' + _prevBtnCls, onClick: function onClick() {
 						return _this3.prevPage();
@@ -7222,7 +7222,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 			var totalPages = this.getTotalPages();
 			var _nextBtnCls = classnames((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-btn', true), defineProperty(_classNames3, prefixCls + '-next', true), defineProperty(_classNames3, '' + nextBtnCls, nextBtnCls), defineProperty(_classNames3, prefixCls + '-btn-disabled', totalPages == current), _classNames3));
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'a',
 				{ key: 'next-btn', className: '' + _nextBtnCls, onClick: function onClick() {
 						return _this4.nextPage();
@@ -7250,9 +7250,9 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 				}
 			};
 
-			var jumper = React__default.createElement(Input, { style: { width: 40 }, key: 'jumper', size: small ? 'small' : 'default', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' });
+			var jumper = React$1__default.createElement(Input, { style: { width: 40 }, key: 'jumper', size: small ? 'small' : 'default', defaultValue: current, onPressEnter: _toPage, className: prefixCls + '-jumper' });
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'span',
 				{ key: 'jumper', className: prefixCls + '-quick-jumper' },
 				jumperRender ? jumperRender.call(this, jumper) : ['前往', jumper, '页']
@@ -7266,7 +7266,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 			    prefixCls = _props7.prefixCls;
 
 
-			return defalutLayoutRender ? React__default.createElement(
+			return defalutLayoutRender ? React$1__default.createElement(
 				'span',
 				{ key: 'defalut-' + layout, className: prefixCls + '-layout-default' },
 				defalutLayoutRender.call(this, layout, this.props, this.state)
@@ -7286,7 +7286,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 
 			var classes = classnames((_classNames4 = {}, defineProperty(_classNames4, '' + prefixCls, true), defineProperty(_classNames4, prefixCls + '-sm', small), _classNames4), className);
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'div',
 				{ className: classes },
 				layout.split(',').map(function (l) {
@@ -7317,7 +7317,7 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 		}
 	}]);
 	return Pagination;
-}(React__default.Component), _class$22.propTypes = {
+}(React$1__default.Component), _class$22.propTypes = {
 	className: propTypes.string,
 	prefixCls: propTypes.string,
 	small: propTypes.bool,
@@ -7452,7 +7452,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 				style.backgroundColor = unCheckedColor;
 			}
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				'span',
 				_extends({}, restProps, {
 					style: style,
@@ -7463,7 +7463,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 					onClick: this.toggle,
 					onMouseUp: this.handleMouseUp
 				}),
-				React__default.createElement(
+				React$1__default.createElement(
 					'span',
 					{ className: prefixCls + '-inner' },
 					checked ? checkedText : unCheckedText
@@ -7472,7 +7472,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 		}
 	}]);
 	return Switch;
-}(React.Component), _class$23.propTypes = {
+}(React$1.Component), _class$23.propTypes = {
 	className: propTypes.string,
 	size: propTypes.oneOf(['small', 'default', 'large']),
 	prefixCls: propTypes.string,
@@ -7874,7 +7874,7 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 
 			var triggerNode = ReactDOM__default.findDOMNode(this.refs.trigger);
 
-			return React__default.createElement(
+			return React$1__default.createElement(
 				Popup$1,
 				_extends({}, placements(placement), {
 					popupAnimate: popupAnimate,
@@ -7979,9 +7979,9 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 			var children = this.props.children;
 
 
-			var child = React__default.Children.only(children);
+			var child = React$1__default.Children.only(children);
 
-			var trigger = React__default.cloneElement(child, _extends({}, this.getClickTriggerProps(child), this.getContextMenuTriggerProps(child), this.getHoverTriggerProps(child), this.getFocusTriggerProps(child), {
+			var trigger = React$1__default.cloneElement(child, _extends({}, this.getClickTriggerProps(child), this.getContextMenuTriggerProps(child), this.getHoverTriggerProps(child), this.getFocusTriggerProps(child), {
 				key: 'trigger',
 				ref: 'trigger'
 			}));
@@ -7990,7 +7990,7 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 		}
 	}]);
 	return Trigger;
-}(React__default.Component), _class$24.propTypes = propTypes$3, _class$24.defaultProps = {
+}(React$1__default.Component), _class$24.propTypes = propTypes$3, _class$24.defaultProps = {
 	onPopupVisibleChange: noop$6,
 	destroyPopupOnHide: false,
 	action: 'click',
@@ -7998,6 +7998,1333 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 	maskClosable: true,
 	placement: 'BottomLeft'
 }, _temp$22);
+
+var hasClass_1 = createCommonjsModule(function (module, exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports["default"] = hasClass;
+  function hasClass(element, className) {
+    if (element.classList) return !!className && element.classList.contains(className);else return (" " + element.className + " ").indexOf(" " + className + " ") !== -1;
+  }
+  module.exports = exports["default"];
+});
+
+var addClass_1 = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports['default'] = addClass;
+
+  var _hasClass2 = _interopRequireDefault(hasClass_1);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { 'default': obj };
+  }
+
+  function addClass(element, className) {
+    if (element.classList) element.classList.add(className);else if (!(0, _hasClass2['default'])(element)) element.className = element.className + ' ' + className;
+  }
+  module.exports = exports['default'];
+});
+
+var removeClass$1 = function removeClass(element, className) {
+  if (element.classList) element.classList.remove(className);else element.className = element.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)', 'g'), '$1').replace(/\s+/g, ' ').replace(/^\s*|\s*$/g, '');
+};
+
+var PropTypes$1 = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  exports.__esModule = true;
+  exports.classNamesShape = exports.timeoutsShape = undefined;
+  exports.transitionTimeout = transitionTimeout;
+
+  var _propTypes2 = _interopRequireDefault(propTypes);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { 'default': obj };
+  }
+
+  function transitionTimeout(transitionType) {
+    var timeoutPropName = 'transition' + transitionType + 'Timeout';
+    var enabledPropName = 'transition' + transitionType;
+
+    return function (props) {
+      // If the transition is enabled
+      if (props[enabledPropName]) {
+        // If no timeout duration is provided
+        if (props[timeoutPropName] == null) {
+          return new Error(timeoutPropName + ' wasn\'t supplied to CSSTransitionGroup: ' + 'this can cause unreliable animations and won\'t be supported in ' + 'a future version of React. See ' + 'https://fb.me/react-animation-transition-group-timeout for more ' + 'information.');
+
+          // If the duration isn't a number
+        } else if (typeof props[timeoutPropName] !== 'number') {
+          return new Error(timeoutPropName + ' must be a number (in milliseconds)');
+        }
+      }
+
+      return null;
+    };
+  }
+
+  var timeoutsShape = exports.timeoutsShape = _propTypes2['default'].oneOfType([_propTypes2['default'].number, _propTypes2['default'].shape({
+    enter: _propTypes2['default'].number,
+    exit: _propTypes2['default'].number
+  }).isRequired]);
+
+  var classNamesShape = exports.classNamesShape = _propTypes2['default'].oneOfType([_propTypes2['default'].string, _propTypes2['default'].shape({
+    enter: _propTypes2['default'].string,
+    exit: _propTypes2['default'].string,
+    active: _propTypes2['default'].string
+  }), _propTypes2['default'].shape({
+    enter: _propTypes2['default'].string,
+    enterActive: _propTypes2['default'].string,
+    exit: _propTypes2['default'].string,
+    exitActive: _propTypes2['default'].string
+  })]);
+});
+
+var Transition_1 = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  exports.__esModule = true;
+  exports.EXITING = exports.ENTERED = exports.ENTERING = exports.EXITED = exports.UNMOUNTED = undefined;
+
+  var PropTypes = _interopRequireWildcard(propTypes);
+
+  var _react2 = _interopRequireDefault(React$1__default);
+
+  var _reactDom2 = _interopRequireDefault(ReactDOM__default);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { 'default': obj };
+  }
+
+  function _interopRequireWildcard(obj) {
+    if (obj && obj.__esModule) {
+      return obj;
+    } else {
+      var newObj = {};if (obj != null) {
+        for (var key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+        }
+      }newObj['default'] = obj;return newObj;
+    }
+  }
+
+  function _objectWithoutProperties(obj, keys) {
+    var target = {};for (var i in obj) {
+      if (keys.indexOf(i) >= 0) continue;if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;target[i] = obj[i];
+    }return target;
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
+  var UNMOUNTED = exports.UNMOUNTED = 'unmounted';
+  var EXITED = exports.EXITED = 'exited';
+  var ENTERING = exports.ENTERING = 'entering';
+  var ENTERED = exports.ENTERED = 'entered';
+  var EXITING = exports.EXITING = 'exiting';
+
+  /**
+   * The Transition component lets you describe a transition from one component
+   * state to another _over time_ with a simple declarative API. Most commonly
+   * it's used to animate the mounting and unmounting of a component, but can also
+   * be used to describe in-place transition states as well.
+   *
+   * By default the `Transition` component does not alter the behavior of the
+   * component it renders, it only tracks "enter" and "exit" states for the components.
+   * It's up to you to give meaning and effect to those states. For example we can
+   * add styles to a component when it enters or exits:
+   *
+   * ```jsx
+   * import Transition from 'react-transition-group/Transition';
+   *
+   * const duration = 300;
+   *
+   * const defaultStyle = {
+   *   transition: `opacity ${duration}ms ease-in-out`,
+   *   opacity: 0,
+   * }
+   *
+   * const transitionStyles = {
+   *   entering: { opacity: 0 },
+   *   entered:  { opacity: 1 },
+   * };
+   *
+   * const Fade = ({ in: inProp }) => (
+   *   <Transition in={inProp} timeout={duration}>
+   *     {(state) => (
+   *       <div style={{
+   *         ...defaultStyle,
+   *         ...transitionStyles[state]
+   *       }}>
+   *         I'm A fade Transition!
+   *       </div>
+   *     )}
+   *   </Transition>
+   * );
+   * ```
+   *
+   * As noted the `Transition` component doesn't _do_ anything by itself to its child component.
+   * What it does do is track transition states over time so you can update the
+   * component (such as by adding styles or classes) when it changes states.
+   *
+   * There are 4 main states a Transition can be in:
+   *  - `ENTERING`
+   *  - `ENTERED`
+   *  - `EXITING`
+   *  - `EXITED`
+   *
+   * Transition state is toggled via the `in` prop. When `true` the component begins the
+   * "Enter" stage. During this stage, the component will shift from its current transition state,
+   * to `'entering'` for the duration of the transition and then to the `'entered'` stage once
+   * it's complete. Let's take the following example:
+   *
+   * ```jsx
+   * state= { in: false };
+   *
+   * toggleEnterState = () => {
+   *   this.setState({ in: true });
+   * }
+   *
+   * render() {
+   *   return (
+   *     <div>
+   *       <Transition in={this.state.in} timeout={500} />
+   *       <button onClick={this.toggleEnterState}>Click to Enter</button>
+   *     </div>
+   *   );
+   * }
+   * ```
+   *
+   * When the button is clicked the component will shift to the `'entering'` state and
+   * stay there for 500ms (the value of `timeout`) when finally switches to `'entered'`.
+   *
+   * When `in` is `false` the same thing happens except the state moves from `'exiting'` to `'exited'`.
+   */
+
+  var Transition = function (_React$Component) {
+    _inherits(Transition, _React$Component);
+
+    function Transition(props, context) {
+      _classCallCheck(this, Transition);
+
+      var _this = _possibleConstructorReturn(this, _React$Component.call(this, props, context));
+
+      var parentGroup = context.transitionGroup;
+      // In the context of a TransitionGroup all enters are really appears
+      var appear = parentGroup && !parentGroup.isMounting ? props.enter : props.appear;
+
+      var initialStatus = void 0;
+      _this.nextStatus = null;
+
+      if (props['in']) {
+        if (appear) {
+          initialStatus = EXITED;
+          _this.nextStatus = ENTERING;
+        } else {
+          initialStatus = ENTERED;
+        }
+      } else {
+        if (props.unmountOnExit || props.mountOnEnter) {
+          initialStatus = UNMOUNTED;
+        } else {
+          initialStatus = EXITED;
+        }
+      }
+
+      _this.state = { status: initialStatus };
+
+      _this.nextCallback = null;
+      return _this;
+    }
+
+    Transition.prototype.getChildContext = function getChildContext() {
+      return { transitionGroup: null }; // allows for nested Transitions
+    };
+
+    Transition.prototype.componentDidMount = function componentDidMount() {
+      this.updateStatus(true);
+    };
+
+    Transition.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var _ref = this.pendingState || this.state,
+          status = _ref.status;
+
+      if (nextProps['in']) {
+        if (status === UNMOUNTED) {
+          this.setState({ status: EXITED });
+        }
+        if (status !== ENTERING && status !== ENTERED) {
+          this.nextStatus = ENTERING;
+        }
+      } else {
+        if (status === ENTERING || status === ENTERED) {
+          this.nextStatus = EXITING;
+        }
+      }
+    };
+
+    Transition.prototype.componentDidUpdate = function componentDidUpdate() {
+      this.updateStatus();
+    };
+
+    Transition.prototype.componentWillUnmount = function componentWillUnmount() {
+      this.cancelNextCallback();
+    };
+
+    Transition.prototype.getTimeouts = function getTimeouts() {
+      var timeout = this.props.timeout;
+
+      var exit = void 0,
+          enter = void 0,
+          appear = void 0;
+
+      exit = enter = appear = timeout;
+
+      if (timeout != null && typeof timeout !== 'number') {
+        exit = timeout.exit;
+        enter = timeout.enter;
+        appear = timeout.appear;
+      }
+      return { exit: exit, enter: enter, appear: appear };
+    };
+
+    Transition.prototype.updateStatus = function updateStatus() {
+      var mounting = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      var nextStatus = this.nextStatus;
+
+      if (nextStatus !== null) {
+        this.nextStatus = null;
+        // nextStatus will always be ENTERING or EXITING.
+        this.cancelNextCallback();
+        var node = _reactDom2['default'].findDOMNode(this);
+
+        if (nextStatus === ENTERING) {
+          this.performEnter(node, mounting);
+        } else {
+          this.performExit(node);
+        }
+      } else if (this.props.unmountOnExit && this.state.status === EXITED) {
+        this.setState({ status: UNMOUNTED });
+      }
+    };
+
+    Transition.prototype.performEnter = function performEnter(node, mounting) {
+      var _this2 = this;
+
+      var enter = this.props.enter;
+
+      var appearing = this.context.transitionGroup ? this.context.transitionGroup.isMounting : mounting;
+
+      var timeouts = this.getTimeouts();
+
+      // no enter animation skip right to ENTERED
+      // if we are mounting and running this it means appear _must_ be set
+      if (!mounting && !enter) {
+        this.safeSetState({ status: ENTERED }, function () {
+          _this2.props.onEntered(node);
+        });
+        return;
+      }
+
+      this.props.onEnter(node, appearing);
+
+      this.safeSetState({ status: ENTERING }, function () {
+        _this2.props.onEntering(node, appearing);
+
+        // FIXME: appear timeout?
+        _this2.onTransitionEnd(node, timeouts.enter, function () {
+          _this2.safeSetState({ status: ENTERED }, function () {
+            _this2.props.onEntered(node, appearing);
+          });
+        });
+      });
+    };
+
+    Transition.prototype.performExit = function performExit(node) {
+      var _this3 = this;
+
+      var exit = this.props.exit;
+
+      var timeouts = this.getTimeouts();
+
+      // no exit animation skip right to EXITED
+      if (!exit) {
+        this.safeSetState({ status: EXITED }, function () {
+          _this3.props.onExited(node);
+        });
+        return;
+      }
+      this.props.onExit(node);
+
+      this.safeSetState({ status: EXITING }, function () {
+        _this3.props.onExiting(node);
+
+        _this3.onTransitionEnd(node, timeouts.exit, function () {
+          _this3.safeSetState({ status: EXITED }, function () {
+            _this3.props.onExited(node);
+          });
+        });
+      });
+    };
+
+    Transition.prototype.cancelNextCallback = function cancelNextCallback() {
+      if (this.nextCallback !== null) {
+        this.nextCallback.cancel();
+        this.nextCallback = null;
+      }
+    };
+
+    Transition.prototype.safeSetState = function safeSetState(nextState, callback) {
+      var _this4 = this;
+
+      // We need to track pending updates for instances where a cWRP fires quickly
+      // after cDM and before the state flushes, which would double trigger a
+      // transition
+      this.pendingState = nextState;
+
+      // This shouldn't be necessary, but there are weird race conditions with
+      // setState callbacks and unmounting in testing, so always make sure that
+      // we can cancel any pending setState callbacks after we unmount.
+      callback = this.setNextCallback(callback);
+      this.setState(nextState, function () {
+        _this4.pendingState = null;
+        callback();
+      });
+    };
+
+    Transition.prototype.setNextCallback = function setNextCallback(callback) {
+      var _this5 = this;
+
+      var active = true;
+
+      this.nextCallback = function (event) {
+        if (active) {
+          active = false;
+          _this5.nextCallback = null;
+
+          callback(event);
+        }
+      };
+
+      this.nextCallback.cancel = function () {
+        active = false;
+      };
+
+      return this.nextCallback;
+    };
+
+    Transition.prototype.onTransitionEnd = function onTransitionEnd(node, timeout, handler) {
+      this.setNextCallback(handler);
+
+      if (node) {
+        if (this.props.addEndListener) {
+          this.props.addEndListener(node, this.nextCallback);
+        }
+        if (timeout != null) {
+          setTimeout(this.nextCallback, timeout);
+        }
+      } else {
+        setTimeout(this.nextCallback, 0);
+      }
+    };
+
+    Transition.prototype.render = function render() {
+      var status = this.state.status;
+      if (status === UNMOUNTED) {
+        return null;
+      }
+
+      var _props = this.props,
+          children = _props.children,
+          childProps = _objectWithoutProperties(_props, ['children']);
+      // filter props for Transtition
+
+
+      delete childProps['in'];
+      delete childProps.mountOnEnter;
+      delete childProps.unmountOnExit;
+      delete childProps.appear;
+      delete childProps.enter;
+      delete childProps.exit;
+      delete childProps.timeout;
+      delete childProps.addEndListener;
+      delete childProps.onEnter;
+      delete childProps.onEntering;
+      delete childProps.onEntered;
+      delete childProps.onExit;
+      delete childProps.onExiting;
+      delete childProps.onExited;
+
+      if (typeof children === 'function') {
+        return children(status, childProps);
+      }
+
+      var child = _react2['default'].Children.only(children);
+      return _react2['default'].cloneElement(child, childProps);
+    };
+
+    return Transition;
+  }(_react2['default'].Component);
+
+  Transition.contextTypes = {
+    transitionGroup: PropTypes.object
+  };
+  Transition.childContextTypes = {
+    transitionGroup: function transitionGroup() {}
+  };
+
+  Transition.propTypes = {};
+
+  // Name the function so it is clearer in the documentation
+  function noop() {}
+
+  Transition.defaultProps = {
+    'in': false,
+    mountOnEnter: false,
+    unmountOnExit: false,
+    appear: false,
+    enter: true,
+    exit: true,
+
+    onEnter: noop,
+    onEntering: noop,
+    onEntered: noop,
+
+    onExit: noop,
+    onExiting: noop,
+    onExited: noop
+  };
+
+  Transition.UNMOUNTED = 0;
+  Transition.EXITED = 1;
+  Transition.ENTERING = 2;
+  Transition.ENTERED = 3;
+  Transition.EXITING = 4;
+
+  exports['default'] = Transition;
+});
+
+var Transition = unwrapExports(Transition_1);
+
+var CSSTransition_1 = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  exports.__esModule = true;
+
+  var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }return target;
+  };
+
+  var PropTypes = _interopRequireWildcard(propTypes);
+
+  var _addClass2 = _interopRequireDefault(addClass_1);
+
+  var _removeClass2 = _interopRequireDefault(removeClass$1);
+
+  var _react2 = _interopRequireDefault(React$1__default);
+
+  var _Transition2 = _interopRequireDefault(Transition_1);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { 'default': obj };
+  }
+
+  function _interopRequireWildcard(obj) {
+    if (obj && obj.__esModule) {
+      return obj;
+    } else {
+      var newObj = {};if (obj != null) {
+        for (var key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+        }
+      }newObj['default'] = obj;return newObj;
+    }
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
+  var addClass = function addClass(node, classes) {
+    return classes && classes.split(' ').forEach(function (c) {
+      return (0, _addClass2['default'])(node, c);
+    });
+  };
+  var removeClass = function removeClass(node, classes) {
+    return classes && classes.split(' ').forEach(function (c) {
+      return (0, _removeClass2['default'])(node, c);
+    });
+  };
+
+  var propTypes$$1 = _extends({}, _Transition2['default'].propTypes, {
+
+    /**
+     * The animation classNames applied to the component as it enters or exits.
+     * A single name can be provided and it will be suffixed for each stage: e.g.
+     *
+     * `classNames="fade"` applies `fade-enter`, `fade-enter-active`,
+     * `fade-exit`, `fade-exit-active`, `fade-appear`, and `fade-appear-active`.
+     * Each individual classNames can also be specified independently like:
+     *
+     * ```js
+     * classNames={{
+     *  appear: 'my-appear',
+     *  appearActive: 'my-active-appear',
+     *  enter: 'my-enter',
+     *  enterActive: 'my-active-enter',
+     *  exit: 'my-exit',
+     *  exitActive: 'my-active-exit',
+     * }}
+     * ```
+     *
+     * @type {string | {
+     *  appear?: string,
+     *  appearActive?: string,
+     *  enter?: string,
+     *  enterActive?: string,
+     *  exit?: string,
+     *  exitActive?: string,
+     * }}
+     */
+    classNames: PropTypes$1.classNamesShape,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'enter' or 'appear' class is
+     * applied.
+     *
+     * @type Function(node: HtmlElement, isAppearing: bool)
+     */
+    onEnter: PropTypes.func,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'enter-active' or
+     * 'appear-active' class is applied.
+     *
+     * @type Function(node: HtmlElement, isAppearing: bool)
+     */
+    onEntering: PropTypes.func,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'enter' or
+     * 'appear' classes are **removed** from the DOM node.
+     *
+     * @type Function(node: HtmlElement, isAppearing: bool)
+     */
+    onEntered: PropTypes.func,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'exit' class is
+     * applied.
+     *
+     * @type Function(node: HtmlElement)
+     */
+    onExit: PropTypes.func,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'exit-active' is applied.
+     *
+     * @type Function(node: HtmlElement
+     */
+    onExiting: PropTypes.func,
+
+    /**
+     * A `<Transition>` callback fired immediately after the 'exit' classes
+     * are **removed** from the DOM node.
+     *
+     * @type Function(node: HtmlElement)
+     */
+    onExited: PropTypes.func
+  });
+
+  /**
+   * A `Transition` component using CSS transitions and animations.
+   * It's inspired by the excellent [ng-animate](http://www.nganimate.org/) library.
+   *
+   * `CSSTransition` applies a pair of class names during the `appear`, `enter`,
+   * and `exit` stages of the transition. The first class is applied and then a
+   * second "active" class in order to activate the css animation.
+   *
+   * When the `in` prop is toggled to `true` the Component will get
+   * the `example-enter` CSS class and the `example-enter-active` CSS class
+   * added in the next tick. This is a convention based on the `classNames` prop.
+   *
+   * ```js
+   * import CSSTransition from 'react-transition-group/CSSTransition';
+   *
+   * const Fade = ({ children, ...props }) => (
+   *  <CSSTransition
+   *    {...props}
+   *    timeout={500}
+   *    classNames="fade"
+   *  >
+   *   {children}
+   *  </CSSTransition>
+   * );
+   *
+   * class FadeInAndOut extends React.Component {
+   *   constructor(...args) {
+   *     super(...args);
+   *     this.state= { show: false }
+   *
+   *     setInterval(() => {
+   *       this.setState({ show: !this.state.show })
+   *     }, 5000)
+   *   }
+   *   render() {
+   *     return (
+   *       <Fade in={this.state.show}>
+   *         <div>Hello world</div>
+   *       </Fade>
+   *     )
+   *   }
+   * }
+   * ```
+   *
+   * And the coorresponding CSS for the `<Fade>` component:
+   *
+   * ```css
+   * .fade-enter {
+   *   opacity: 0.01;
+   * }
+   *
+   * .fade-enter.fade-enter-active {
+   *   opacity: 1;
+   *   transition: opacity 500ms ease-in;
+   * }
+   *
+   * .fade-exit {
+   *   opacity: 1;
+   * }
+   *
+   * .fade-exit.fade-exit-active {
+   *   opacity: 0.01;
+   *   transition: opacity 300ms ease-in;
+   * }
+   * ```
+   */
+
+  var CSSTransition = function (_React$Component) {
+    _inherits(CSSTransition, _React$Component);
+
+    function CSSTransition() {
+      var _temp, _this, _ret;
+
+      _classCallCheck(this, CSSTransition);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.onEnter = function (node, appearing) {
+        var _this$getClassNames = _this.getClassNames(appearing ? 'appear' : 'enter'),
+            className = _this$getClassNames.className;
+
+        _this.removeClasses(node, 'exit');
+        addClass(node, className);
+
+        if (_this.props.onEnter) {
+          _this.props.onEnter(node);
+        }
+      }, _this.onEntering = function (node, appearing) {
+        var _this$getClassNames2 = _this.getClassNames(appearing ? 'appear' : 'enter'),
+            activeClassName = _this$getClassNames2.activeClassName;
+
+        _this.reflowAndAddClass(node, activeClassName);
+
+        if (_this.props.onEntering) {
+          _this.props.onEntering(node);
+        }
+      }, _this.onEntered = function (node, appearing) {
+        _this.removeClasses(node, appearing ? 'appear' : 'enter');
+
+        if (_this.props.onEntered) {
+          _this.props.onEntered(node);
+        }
+      }, _this.onExit = function (node) {
+        var _this$getClassNames3 = _this.getClassNames('exit'),
+            className = _this$getClassNames3.className;
+
+        _this.removeClasses(node, 'appear');
+        _this.removeClasses(node, 'enter');
+        addClass(node, className);
+
+        if (_this.props.onExit) {
+          _this.props.onExit(node);
+        }
+      }, _this.onExiting = function (node) {
+        var _this$getClassNames4 = _this.getClassNames('exit'),
+            activeClassName = _this$getClassNames4.activeClassName;
+
+        _this.reflowAndAddClass(node, activeClassName);
+
+        if (_this.props.onExiting) {
+          _this.props.onExiting(node);
+        }
+      }, _this.onExited = function (node) {
+        _this.removeClasses(node, 'exit');
+
+        if (_this.props.onExited) {
+          _this.props.onExited(node);
+        }
+      }, _this.getClassNames = function (type) {
+        var classNames = _this.props.classNames;
+
+        var className = typeof classNames !== 'string' ? classNames[type] : classNames + '-' + type;
+
+        var activeClassName = typeof classNames !== 'string' ? classNames[type + 'Active'] : className + '-active';
+
+        return { className: className, activeClassName: activeClassName };
+      }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    CSSTransition.prototype.removeClasses = function removeClasses(node, type) {
+      var _getClassNames = this.getClassNames(type),
+          className = _getClassNames.className,
+          activeClassName = _getClassNames.activeClassName;
+
+      className && removeClass(node, className);
+      activeClassName && removeClass(node, activeClassName);
+    };
+
+    CSSTransition.prototype.reflowAndAddClass = function reflowAndAddClass(node, className) {
+      // This is for to force a repaint,
+      // which is necessary in order to transition styles when adding a class name.
+      /* eslint-disable no-unused-expressions */
+      node.scrollTop;
+      /* eslint-enable no-unused-expressions */
+      addClass(node, className);
+    };
+
+    CSSTransition.prototype.render = function render() {
+      var props = _extends({}, this.props);
+
+      delete props.classNames;
+
+      return _react2['default'].createElement(_Transition2['default'], _extends({}, props, {
+        onEnter: this.onEnter,
+        onEntered: this.onEntered,
+        onEntering: this.onEntering,
+        onExit: this.onExit,
+        onExiting: this.onExiting,
+        onExited: this.onExited
+      }));
+    };
+
+    return CSSTransition;
+  }(_react2['default'].Component);
+
+  CSSTransition.propTypes = {};
+
+  exports['default'] = CSSTransition;
+  module.exports = exports['default'];
+});
+
+var CSSTransition$1 = unwrapExports(CSSTransition_1);
+
+var ChildMapping = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  exports.__esModule = true;
+  exports.getChildMapping = getChildMapping;
+  exports.mergeChildMappings = mergeChildMappings;
+
+  /**
+   * Given `this.props.children`, return an object mapping key to child.
+   *
+   * @param {*} children `this.props.children`
+   * @return {object} Mapping of key to child
+   */
+  function getChildMapping(children, mapFn) {
+    var mapper = function mapper(child) {
+      return mapFn && (0, React$1__default.isValidElement)(child) ? mapFn(child) : child;
+    };
+
+    var result = Object.create(null);
+    if (children) React$1__default.Children.map(children, function (c) {
+      return c;
+    }).forEach(function (child) {
+      // run the map function here instead so that the key is the computed one
+      result[child.key] = mapper(child);
+    });
+    return result;
+  }
+
+  /**
+   * When you're adding or removing children some may be added or removed in the
+   * same render pass. We want to show *both* since we want to simultaneously
+   * animate elements in and out. This function takes a previous set of keys
+   * and a new set of keys and merges them with its best guess of the correct
+   * ordering. In the future we may expose some of the utilities in
+   * ReactMultiChild to make this easy, but for now React itself does not
+   * directly have this concept of the union of prevChildren and nextChildren
+   * so we implement it here.
+   *
+   * @param {object} prev prev children as returned from
+   * `ReactTransitionChildMapping.getChildMapping()`.
+   * @param {object} next next children as returned from
+   * `ReactTransitionChildMapping.getChildMapping()`.
+   * @return {object} a key set that contains all keys in `prev` and all keys
+   * in `next` in a reasonable order.
+   */
+  function mergeChildMappings(prev, next) {
+    prev = prev || {};
+    next = next || {};
+
+    function getValueForKey(key) {
+      return key in next ? next[key] : prev[key];
+    }
+
+    // For each key of `next`, the list of keys to insert before that key in
+    // the combined list
+    var nextKeysPending = Object.create(null);
+
+    var pendingKeys = [];
+    for (var prevKey in prev) {
+      if (prevKey in next) {
+        if (pendingKeys.length) {
+          nextKeysPending[prevKey] = pendingKeys;
+          pendingKeys = [];
+        }
+      } else {
+        pendingKeys.push(prevKey);
+      }
+    }
+
+    var i = void 0;
+    var childMapping = {};
+    for (var nextKey in next) {
+      if (nextKeysPending[nextKey]) {
+        for (i = 0; i < nextKeysPending[nextKey].length; i++) {
+          var pendingNextKey = nextKeysPending[nextKey][i];
+          childMapping[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
+        }
+      }
+      childMapping[nextKey] = getValueForKey(nextKey);
+    }
+
+    // Finally, add the keys which didn't appear before any key in `next`
+    for (i = 0; i < pendingKeys.length; i++) {
+      childMapping[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
+    }
+
+    return childMapping;
+  }
+});
+
+var TransitionGroup_1 = createCommonjsModule(function (module, exports) {
+  'use strict';
+
+  exports.__esModule = true;
+
+  var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }return target;
+  };
+
+  var _propTypes2 = _interopRequireDefault(propTypes);
+
+  var _react2 = _interopRequireDefault(React$1__default);
+
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { 'default': obj };
+  }
+
+  function _objectWithoutProperties(obj, keys) {
+    var target = {};for (var i in obj) {
+      if (keys.indexOf(i) >= 0) continue;if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;target[i] = obj[i];
+    }return target;
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (!self) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && ((typeof call === 'undefined' ? 'undefined' : _typeof(call)) === "object" || typeof call === "function") ? call : self;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function, not " + (typeof superClass === 'undefined' ? 'undefined' : _typeof(superClass)));
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+
+  var values = Object.values || function (obj) {
+    return Object.keys(obj).map(function (k) {
+      return obj[k];
+    });
+  };
+
+  var propTypes$$1 = {
+    /**
+     * `<TransitionGroup>` renders a `<div>` by default. You can change this
+     * behavior by providing a `component` prop.
+     */
+    component: _propTypes2['default'].any,
+    /**
+     * A set of `<Transition>` components, that are toggled `in` and out as they
+     * leave. the `<TransitionGroup>` will inject specific transition props, so
+     * remember to spread them through if you are wrapping the `<Transition>` as
+     * with our `<Fade>` example.
+     */
+    children: _propTypes2['default'].node,
+
+    /**
+     * A convenience prop that enables or disabled appear animations
+     * for all children. Note that specifying this will override any defaults set
+     * on individual children Transitions.
+     */
+    appear: _propTypes2['default'].bool,
+    /**
+     * A convenience prop that enables or disabled enter animations
+     * for all children. Note that specifying this will override any defaults set
+     * on individual children Transitions.
+     */
+    enter: _propTypes2['default'].bool,
+    /**
+      * A convenience prop that enables or disabled exit animations
+      * for all children. Note that specifying this will override any defaults set
+      * on individual children Transitions.
+      */
+    exit: _propTypes2['default'].bool,
+
+    /**
+     * You may need to apply reactive updates to a child as it is exiting.
+     * This is generally done by using `cloneElement` however in the case of an exiting
+     * child the element has already been removed and not accessible to the consumer.
+     *
+     * If you do need to update a child as it leaves you can provide a `childFactory`
+     * to wrap every child, even the ones that are leaving.
+     *
+     * @type Function(child: ReactElement) -> ReactElement
+     */
+    childFactory: _propTypes2['default'].func
+  };
+
+  var defaultProps = {
+    component: 'div',
+    childFactory: function childFactory(child) {
+      return child;
+    }
+  };
+
+  /**
+   * The `<TransitionGroup>` component manages a set of `<Transition>` components
+   * in a list. Like with the `<Transition>` component, `<TransitionGroup>`, is a
+   * state machine for managing the mounting and unmounting of components over
+   * time.
+   *
+   * Consider the example below using the `Fade` CSS transition from before.
+   * As items are removed or added to the TodoList the `in` prop is toggled
+   * automatically by the `<TransitionGroup>`. You can use _any_ `<Transition>`
+   * component in a `<TransitionGroup>`, not just css.
+   *
+   * ```jsx
+   * import TransitionGroup from 'react-transition-group/TransitionGroup';
+   *
+   * class TodoList extends React.Component {
+   *   constructor(props) {
+   *     super(props)
+   *     this.state = {items: ['hello', 'world', 'click', 'me']}
+   *   }
+   *   handleAdd() {
+   *     const newItems = this.state.items.concat([
+   *       prompt('Enter some text')
+   *     ]);
+   *     this.setState({ items: newItems });
+   *   }
+   *   handleRemove(i) {
+   *     let newItems = this.state.items.slice();
+   *     newItems.splice(i, 1);
+   *     this.setState({items: newItems});
+   *   }
+   *   render() {
+   *     return (
+   *       <div>
+   *         <button onClick={() => this.handleAdd()}>Add Item</button>
+   *         <TransitionGroup>
+   *           {this.state.items.map((item, i) => (
+   *             <FadeTransition key={item}>
+   *               <div>
+   *                 {item}{' '}
+   *                 <button onClick={() => this.handleRemove(i)}>
+   *                   remove
+   *                 </button>
+   *               </div>
+   *             </FadeTransition>
+   *           ))}
+   *         </TransitionGroup>
+   *       </div>
+   *     );
+   *   }
+   * }
+   * ```
+   *
+   * Note that `<TransitionGroup>`  does not define any animation behavior!
+   * Exactly _how_ a list item animates is up to the individual `<Transition>`
+   * components. This means you can mix and match animations across different
+   * list items.
+   */
+
+  var TransitionGroup = function (_React$Component) {
+    _inherits(TransitionGroup, _React$Component);
+
+    function TransitionGroup(props, context) {
+      _classCallCheck(this, TransitionGroup);
+
+      // Initial children should all be entering, dependent on appear
+      var _this = _possibleConstructorReturn(this, _React$Component.call(this, props, context));
+
+      _this.handleExited = function (key, node, originalHandler) {
+        var currentChildMapping = (0, ChildMapping.getChildMapping)(_this.props.children);
+
+        if (key in currentChildMapping) return;
+
+        if (originalHandler) originalHandler(node);
+
+        _this.setState(function (state) {
+          var children = _extends({}, state.children);
+
+          delete children[key];
+          return { children: children };
+        });
+      };
+
+      _this.state = {
+        children: (0, ChildMapping.getChildMapping)(props.children, function (child) {
+          var onExited = function onExited(node) {
+            _this.handleExited(child.key, node, child.props.onExited);
+          };
+
+          return (0, React$1__default.cloneElement)(child, {
+            onExited: onExited,
+            'in': true,
+            appear: _this.getProp(child, 'appear'),
+            enter: _this.getProp(child, 'enter'),
+            exit: _this.getProp(child, 'exit')
+          });
+        })
+      };
+      return _this;
+    }
+
+    TransitionGroup.prototype.getChildContext = function getChildContext() {
+      return {
+        transitionGroup: { isMounting: !this.appeared }
+      };
+    };
+    // use child config unless explictly set by the Group
+
+
+    TransitionGroup.prototype.getProp = function getProp(child, prop) {
+      var props = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.props;
+
+      return props[prop] != null ? props[prop] : child.props[prop];
+    };
+
+    TransitionGroup.prototype.componentDidMount = function componentDidMount() {
+      this.appeared = true;
+    };
+
+    TransitionGroup.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var _this2 = this;
+
+      var prevChildMapping = this.state.children;
+      var nextChildMapping = (0, ChildMapping.getChildMapping)(nextProps.children);
+
+      var children = (0, ChildMapping.mergeChildMappings)(prevChildMapping, nextChildMapping);
+
+      Object.keys(children).forEach(function (key) {
+        var child = children[key];
+
+        if (!(0, React$1__default.isValidElement)(child)) return;
+
+        var onExited = function onExited(node) {
+          _this2.handleExited(child.key, node, child.props.onExited);
+        };
+
+        var hasPrev = key in prevChildMapping;
+        var hasNext = key in nextChildMapping;
+
+        var prevChild = prevChildMapping[key];
+        var isLeaving = (0, React$1__default.isValidElement)(prevChild) && !prevChild.props['in'];
+
+        // item is new (entering)
+        if (hasNext && (!hasPrev || isLeaving)) {
+          // console.log('entering', key)
+          children[key] = (0, React$1__default.cloneElement)(child, {
+            onExited: onExited,
+            'in': true,
+            exit: _this2.getProp(child, 'exit', nextProps),
+            enter: _this2.getProp(child, 'enter', nextProps)
+          });
+        }
+        // item is old (exiting)
+        else if (!hasNext && hasPrev && !isLeaving) {
+            // console.log('leaving', key)
+            children[key] = (0, React$1__default.cloneElement)(child, { 'in': false });
+          }
+          // item hasn't changed transition states
+          // copy over the last transition props;
+          else if (hasNext && hasPrev && (0, React$1__default.isValidElement)(prevChild)) {
+              // console.log('unchanged', key)
+              children[key] = (0, React$1__default.cloneElement)(child, {
+                onExited: onExited,
+                'in': prevChild.props['in'],
+                exit: _this2.getProp(child, 'exit', nextProps),
+                enter: _this2.getProp(child, 'enter', nextProps)
+              });
+            }
+      });
+
+      this.setState({ children: children });
+    };
+
+    TransitionGroup.prototype.render = function render() {
+      var _props = this.props,
+          Component$$1 = _props.component,
+          childFactory = _props.childFactory,
+          props = _objectWithoutProperties(_props, ['component', 'childFactory']);
+
+      var children = this.state.children;
+
+      delete props.appear;
+      delete props.enter;
+      delete props.exit;
+
+      return _react2['default'].createElement(Component$$1, props, values(children).map(childFactory));
+    };
+
+    return TransitionGroup;
+  }(_react2['default'].Component);
+
+  TransitionGroup.childContextTypes = {
+    transitionGroup: _propTypes2['default'].object.isRequired
+  };
+
+  TransitionGroup.propTypes = {};
+  TransitionGroup.defaultProps = defaultProps;
+
+  exports['default'] = TransitionGroup;
+  module.exports = exports['default'];
+});
+
+var TransitionGroup$1 = unwrapExports(TransitionGroup_1);
+
+var Identity = function (_Component) {
+	inherits(Identity, _Component);
+
+	function Identity() {
+		classCallCheck(this, Identity);
+		return possibleConstructorReturn(this, (Identity.__proto__ || Object.getPrototypeOf(Identity)).apply(this, arguments));
+	}
+
+	createClass(Identity, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(_ref) {
+			var shouldUpdate = _ref.shouldUpdate;
+
+			return !!shouldUpdate;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return this.props.children;
+		}
+	}]);
+	return Identity;
+}(React$1.Component);
+
+/**
+ * Transition 改进
+ */
+var NTransition = function (_Component) {
+	inherits(NTransition, _Component);
+
+	function NTransition() {
+		classCallCheck(this, NTransition);
+		return possibleConstructorReturn(this, (NTransition.__proto__ || Object.getPrototypeOf(NTransition)).apply(this, arguments));
+	}
+
+	createClass(NTransition, [{
+		key: 'render',
+		value: function render() {
+			var props = this.props;
+			var rest = {};
+
+			if (typeof children !== 'function') {
+				rest.children = function (state) {
+					var shouldUpdate = props['in'] && state === 'exited' || !props['in'] && state === 'entered';
+					return React.createElement(
+						Identity,
+						{ shouldUpdate: shouldUpdate },
+						props.children
+					);
+				};
+			}
+
+			return React.createElement(Transition, _extends({}, props, rest));
+		}
+	}]);
+	return NTransition;
+}(React$1.Component);
+
+/**
+ * https://github.com/reactjs/react-transition-group
+ */
+//import ReplaceTransition from './ReplaceTransition';
 
 //import Tree from './tree/Tree';
 
@@ -8024,6 +9351,9 @@ exports.Switch = Switch;
 exports.Trigger = Trigger;
 exports.Calendar = Calendar$1;
 exports.DatePicker = DatePicker$1;
+exports.Transition = NTransition;
+exports.TransitionGroup = TransitionGroup$1;
+exports.CSSTransition = CSSTransition$1;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
