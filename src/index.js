@@ -37,6 +37,13 @@ import Switch from './switch/Switch';
 
 import Trigger from './trigger/Trigger';
 
+import {
+	Transition,
+	TransitionGroup,
+	//ReplaceTransition,
+	CSSTransition,	
+} from './transition';
+
 export {
 	Button,
 	ButtonGroup,
@@ -62,4 +69,9 @@ export {
 	Trigger,
     Calendar,
     DatePicker,
+	//Transition
+	Transition,
+	TransitionGroup,
+	//ReplaceTransition,
+	CSSTransition,	
 }
