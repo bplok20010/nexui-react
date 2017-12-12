@@ -17,8 +17,9 @@
          <link rel="stylesheet" href="../../css/pagination.css">
         <script src="../lib/jquery/jquery.min.js"></script>
         <script src="../lib/jquery-ui/jquery-ui.min.js"></script>
-        <script src="./../lib/react/dist/react.js"></script>
-        <script src="./../lib/react-dom/dist/react-dom.js"></script>
+        <!--[if lte IE 11]><script src="../lib/core.min.js"></script><![endif]-->
+        <script src="../lib/react/umd/react.development.js"></script>
+        <script src="../lib/react-dom/umd/react-dom.development.js"></script>
         <script src="./../lib/require.js"></script>
     </head>
 <body style="padding: 50px;">
@@ -41,8 +42,14 @@ define('react-dom', ReactDOM);
             </ul>
         </div>
     </div>
+    <hr />
+    
 </div>
-
+	<span style="display:inline-block; padding:0 6px;font-size:14px;border:1px solid red;"><i class="fa fa-commenting" ></i>Hello</span>
+     <hr />
+	<div>
+    	<div class="nex-pagination"><span class="nex-pagination-total-text">共 175 条</span><span class="nex-pagination-pagesize"><div class="nex-select nex-select-inline" tabindex="0"><div class="nex-select-text">20 条/页</div><span class="nex-select-arrow fa fa-caret-down"></span></div></span><a class="nex-pagination-btn nex-pagination-prev"><i class="fa fa-angle-left"></i></a><a class="nex-pagination-item nex-pagination-item-first">1</a><span class="nex-pagination-item nex-pagination-item-more">...</span><a class="nex-pagination-item">4</a><a class="nex-pagination-item">5</a><a class="nex-pagination-item">6</a><a class="nex-pagination-item">7</a><a class="nex-pagination-item">8</a><a class="nex-pagination-item nex-pagination-item-last nex-pagination-item-active">9</a><a class="nex-pagination-btn nex-pagination-next nex-pagination-btn-disabled"><i class="fa fa-angle-right"></i></a><span class="nex-pagination-quick-jumper">前往<div class="nex-input-wrapper nex-pagination-jumper" style="width: 40px;"><input type="text" autocomplete="off" class="nex-input" value="9"></div>页</span></div>
+    </div>
 <style type="text/css">
 /*ul, li {
 	list-style:none;

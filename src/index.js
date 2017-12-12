@@ -44,6 +44,8 @@ import {
 	CSSTransition,	
 } from './transition';
 
+import Icon from './icon';
+
 export {
 	Button,
 	ButtonGroup,
@@ -74,4 +76,5 @@ export {
 	TransitionGroup,
 	//ReplaceTransition,
 	CSSTransition,	
+	Icon,
 }

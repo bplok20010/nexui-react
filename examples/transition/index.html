@@ -24,15 +24,39 @@ define('react', React);
 define('react-dom', ReactDOM);
 </script>
 
+<style type="text/css">
+.fade-enter {
+  opacity: 0.01;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit.fade-exit-active {
+  opacity: 0.01;
+  transition: opacity 800ms ease-in;
+}
+
+
+
+
+.greeting {
+  padding: 20px;
+  background-color: #ccc;
+  width: 200px;
+  margin: auto;
+  text-align: center;
+  border-radius: 4px;
+}
+</style>
+
 <div id="demo" style="border:1px solid #E6E6E6; width:620px; margin:0 auto; padding:10px;"></div>
-
-<div id="d0" style="border:1px solid red; padding:5px;">
-a
-</div>
-
-<div id="d1"  style="border:1px solid green; padding:5px;">
-b
-</div>
 
 <script>
 

@@ -6949,6 +6949,45 @@ var Ajax = function () {
 	return Ajax;
 }();
 
+var _class$23;
+var _temp$21;
+
+var Icon = (_temp$21 = _class$23 = function (_PureComponent) {
+	inherits(Icon, _PureComponent);
+
+	function Icon() {
+		classCallCheck(this, Icon);
+		return possibleConstructorReturn(this, (Icon.__proto__ || Object.getPrototypeOf(Icon)).apply(this, arguments));
+	}
+
+	createClass(Icon, [{
+		key: 'render',
+		value: function render() {
+			var _classNames;
+
+			var _props = this.props,
+			    type = _props.type,
+			    className = _props.className,
+			    spin = _props.spin,
+			    otherProps = objectWithoutProperties(_props, ['type', 'className', 'spin']);
+
+			var cls = classnames((_classNames = {
+				fa: true
+			}, defineProperty(_classNames, 'fa-' + type, true), defineProperty(_classNames, className, className), _classNames));
+
+			return React$1__default.createElement('i', _extends({ className: cls }, otherProps));
+		}
+	}]);
+	return Icon;
+}(React$1.PureComponent), _class$23.propTypes = {
+	type: propTypes.string.isRequired,
+	className: propTypes.string,
+	spin: propTypes.bool
+}, _class$23.defaultProps = {
+	className: '',
+	spin: false
+}, _temp$21);
+
 var _class$22;
 var _temp$20;
 
@@ -7192,14 +7231,14 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 			    prevBtnRender = _props4.prevBtnRender;
 			var current = this.state.current;
 
-			var _prevBtnCls = classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-btn', true), defineProperty(_classNames2, prefixCls + '-prev', true), defineProperty(_classNames2, '' + prevBtnCls, prevBtnCls), defineProperty(_classNames2, prefixCls + '-btn-disabled', current == 1), _classNames2));
+			var _prevBtnCls = classnames((_classNames2 = {}, defineProperty(_classNames2, prefixCls + '-btn', true), defineProperty(_classNames2, prefixCls + '-prev', true), defineProperty(_classNames2, prefixCls + '-btn-disabled', current == 1), _classNames2));
 
 			return React$1__default.createElement(
 				'a',
 				{ key: 'prev-btn', className: '' + _prevBtnCls, onClick: function onClick() {
 						return _this3.prevPage();
 					} },
-				prevBtnRender ? prevBtnRender.call(this) : null
+				prevBtnRender ? prevBtnRender.call(this) : React$1__default.createElement(Icon, { type: 'angle-left' })
 			);
 		}
 	}, {
@@ -7220,14 +7259,14 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 			var current = this.state.current;
 
 			var totalPages = this.getTotalPages();
-			var _nextBtnCls = classnames((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-btn', true), defineProperty(_classNames3, prefixCls + '-next', true), defineProperty(_classNames3, '' + nextBtnCls, nextBtnCls), defineProperty(_classNames3, prefixCls + '-btn-disabled', totalPages == current), _classNames3));
+			var _nextBtnCls = classnames((_classNames3 = {}, defineProperty(_classNames3, prefixCls + '-btn', true), defineProperty(_classNames3, prefixCls + '-next', true), defineProperty(_classNames3, prefixCls + '-btn-disabled', totalPages == current), _classNames3));
 
 			return React$1__default.createElement(
 				'a',
 				{ key: 'next-btn', className: '' + _nextBtnCls, onClick: function onClick() {
 						return _this4.nextPage();
 					} },
-				nextBtnRender ? nextBtnRender.call(this) : null
+				nextBtnRender ? nextBtnRender.call(this) : React$1__default.createElement(Icon, { type: 'angle-right' })
 			);
 		}
 	}, {
@@ -7368,13 +7407,13 @@ var Pagination = (_temp$20 = _class$22 = function (_React$Component) {
 	showNextMore: true
 }, _temp$20);
 
-var _class$23;
-var _temp$21;
+var _class$24;
+var _temp$22;
 var _initialiseProps$3;
 
 function noop$5() {}
 
-var Switch = (_temp$21 = _class$23 = function (_Component) {
+var Switch = (_temp$22 = _class$24 = function (_Component) {
 	inherits(Switch, _Component);
 
 	function Switch(props) {
@@ -7472,7 +7511,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 		}
 	}]);
 	return Switch;
-}(React$1.Component), _class$23.propTypes = {
+}(React$1.Component), _class$24.propTypes = {
 	className: propTypes.string,
 	size: propTypes.oneOf(['small', 'default', 'large']),
 	prefixCls: propTypes.string,
@@ -7487,7 +7526,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 	defaultChecked: propTypes.bool,
 	checkedColor: propTypes.string,
 	unCheckedColor: propTypes.string
-}, _class$23.defaultProps = {
+}, _class$24.defaultProps = {
 	prefixCls: 'nex-switch',
 	checkedText: null,
 	unCheckedText: null,
@@ -7531,7 +7570,7 @@ var Switch = (_temp$21 = _class$23 = function (_Component) {
 	this.saveNode = function (node) {
 		_this2.node = node;
 	};
-}, _temp$21);
+}, _temp$22);
 
 var reg = /^\-/;
 
@@ -7654,8 +7693,8 @@ function placements(placement, offset) {
 	return _placements[placement] ? _placements[placement](offset) : null;
 }
 
-var _class$24;
-var _temp$22;
+var _class$25;
+var _temp$23;
 
 function noop$6() {}
 
@@ -7677,7 +7716,7 @@ var propTypes$3 = {
 	placement: propTypes.string
 };
 
-var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
+var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 	inherits(Trigger, _React$Component);
 
 	function Trigger(props) {
@@ -7910,9 +7949,9 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 			ReactDOM__default.unstable_renderSubtreeIntoContainer(this, this.getComponent(), this._container);
 		}
 	}, {
-		key: 'getPopupDomNode',
-		value: function getPopupDomNode() {
-			return this._popup ? this._popup.getPopupDomNode() : null;
+		key: 'getPopupDOM',
+		value: function getPopupDOM() {
+			return this._popup ? this._popup.getPopupDOM() : null;
 		}
 
 		//创建相关的close事件
@@ -7941,7 +7980,7 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 						if (action === 'click' || action === 'contextMenu') {
 							var target = e.target;
 							var root = ReactDOM.findDOMNode(_this6);
-							var popupNode = _this6.getPopupDomNode();
+							var popupNode = _this6.getPopupDOM();
 
 							if (!contains$1(root, target) && !contains$1(popupNode, target)) {
 								_this6.setPopupVisible(false);
@@ -7990,14 +8029,14 @@ var Trigger = (_temp$22 = _class$24 = function (_React$Component) {
 		}
 	}]);
 	return Trigger;
-}(React$1__default.Component), _class$24.propTypes = propTypes$3, _class$24.defaultProps = {
+}(React$1__default.Component), _class$25.propTypes = propTypes$3, _class$25.defaultProps = {
 	onPopupVisibleChange: noop$6,
 	destroyPopupOnHide: false,
 	action: 'click',
 	mask: false,
 	maskClosable: true,
 	placement: 'BottomLeft'
-}, _temp$22);
+}, _temp$23);
 
 var hasClass_1 = createCommonjsModule(function (module, exports) {
   "use strict";
@@ -8862,7 +8901,134 @@ var CSSTransition_1 = createCommonjsModule(function (module, exports) {
   module.exports = exports['default'];
 });
 
-var CSSTransition$1 = unwrapExports(CSSTransition_1);
+var CSSTransition = unwrapExports(CSSTransition_1);
+
+var Identity = function (_Component) {
+	inherits(Identity, _Component);
+
+	function Identity() {
+		classCallCheck(this, Identity);
+		return possibleConstructorReturn(this, (Identity.__proto__ || Object.getPrototypeOf(Identity)).apply(this, arguments));
+	}
+
+	createClass(Identity, [{
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(_ref) {
+			var shouldUpdate = _ref.shouldUpdate;
+
+			return !!shouldUpdate;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return this.props.children;
+		}
+	}]);
+	return Identity;
+}(React$1.Component);
+
+var _class$27;
+var _temp$25;
+
+/**
+ * Transition 改进
+ */
+var NTransition = (_temp$25 = _class$27 = function (_Component) {
+	inherits(NTransition, _Component);
+
+	function NTransition() {
+		classCallCheck(this, NTransition);
+		return possibleConstructorReturn(this, (NTransition.__proto__ || Object.getPrototypeOf(NTransition)).apply(this, arguments));
+	}
+
+	createClass(NTransition, [{
+		key: 'render',
+		value: function render() {
+			var props = this.props;
+			var rest = {};
+
+			if (typeof props.children !== 'function') {
+
+				var shouldUpdate = true;
+
+				rest.onEnter = function () {
+					shouldUpdate = false;
+					if (props.onEnter) {
+						props.onEnter.apply(props, arguments);
+					}
+				};
+
+				rest.onEntered = function () {
+					shouldUpdate = true;
+					if (props.onEntered) {
+						props.onEntered.apply(props, arguments);
+					}
+				};
+
+				rest.onExit = function () {
+					shouldUpdate = false;
+					if (props.onExit) {
+						props.onExit.apply(props, arguments);
+					}
+				};
+
+				rest.onExited = function () {
+					shouldUpdate = true;
+					if (props.onExited) {
+						props.onExited.apply(props, arguments);
+					}
+				};
+
+				rest.children = function (state) {
+					return React.createElement(
+						Identity,
+						{ shouldUpdate: shouldUpdate },
+						props.children
+					);
+				};
+			}
+
+			return React.createElement(Transition, _extends({}, props, rest));
+		}
+	}]);
+	return NTransition;
+}(React$1.Component), _class$27.propTypes = {
+	onEnter: propTypes.func,
+	onEntered: propTypes.func,
+	onExit: propTypes.func,
+	onExited: propTypes.func
+}, _temp$25);
+
+var _class$26;
+var _temp$24;
+
+var NCSSTransition = (_temp$24 = _class$26 = function (_CSSTransition) {
+	inherits(NCSSTransition, _CSSTransition);
+
+	function NCSSTransition() {
+		classCallCheck(this, NCSSTransition);
+		return possibleConstructorReturn(this, (NCSSTransition.__proto__ || Object.getPrototypeOf(NCSSTransition)).apply(this, arguments));
+	}
+
+	createClass(NCSSTransition, [{
+		key: 'render',
+		value: function render() {
+			var props = _extends({}, this.props);
+
+			delete props.classNames;
+
+			return React.createElement(NTransition, _extends({}, props, {
+				onEnter: this.onEnter,
+				onEntered: this.onEntered,
+				onEntering: this.onEntering,
+				onExit: this.onExit,
+				onExiting: this.onExiting,
+				onExited: this.onExited
+			}));
+		}
+	}]);
+	return NCSSTransition;
+}(CSSTransition), _class$26.propTypes = _extends({}, CSSTransition.propTypes), _temp$24);
 
 var ChildMapping = createCommonjsModule(function (module, exports) {
   'use strict';
@@ -9263,64 +9429,6 @@ var TransitionGroup_1 = createCommonjsModule(function (module, exports) {
 
 var TransitionGroup$1 = unwrapExports(TransitionGroup_1);
 
-var Identity = function (_Component) {
-	inherits(Identity, _Component);
-
-	function Identity() {
-		classCallCheck(this, Identity);
-		return possibleConstructorReturn(this, (Identity.__proto__ || Object.getPrototypeOf(Identity)).apply(this, arguments));
-	}
-
-	createClass(Identity, [{
-		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(_ref) {
-			var shouldUpdate = _ref.shouldUpdate;
-
-			return !!shouldUpdate;
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return this.props.children;
-		}
-	}]);
-	return Identity;
-}(React$1.Component);
-
-/**
- * Transition 改进
- */
-var NTransition = function (_Component) {
-	inherits(NTransition, _Component);
-
-	function NTransition() {
-		classCallCheck(this, NTransition);
-		return possibleConstructorReturn(this, (NTransition.__proto__ || Object.getPrototypeOf(NTransition)).apply(this, arguments));
-	}
-
-	createClass(NTransition, [{
-		key: 'render',
-		value: function render() {
-			var props = this.props;
-			var rest = {};
-
-			if (typeof children !== 'function') {
-				rest.children = function (state) {
-					var shouldUpdate = props['in'] && state === 'exited' || !props['in'] && state === 'entered';
-					return React.createElement(
-						Identity,
-						{ shouldUpdate: shouldUpdate },
-						props.children
-					);
-				};
-			}
-
-			return React.createElement(Transition, _extends({}, props, rest));
-		}
-	}]);
-	return NTransition;
-}(React$1.Component);
-
 /**
  * https://github.com/reactjs/react-transition-group
  */
@@ -9353,7 +9461,8 @@ exports.Calendar = Calendar$1;
 exports.DatePicker = DatePicker$1;
 exports.Transition = NTransition;
 exports.TransitionGroup = TransitionGroup$1;
-exports.CSSTransition = CSSTransition$1;
+exports.CSSTransition = NCSSTransition;
+exports.Icon = Icon;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

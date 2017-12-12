@@ -241,8 +241,8 @@ export default class Trigger extends React.Component {
 		);
 	}
 	
-	getPopupDomNode(){
-		return this._popup ? this._popup.getPopupDomNode() : null;
+	getPopupDOM(){
+		return this._popup ? this._popup.getPopupDOM() : null;
 	}
 	
 	//创建相关的close事件
@@ -265,7 +265,7 @@ export default class Trigger extends React.Component {
 					if( action === 'click' || action === 'contextMenu' ) {
 						const target = e.target;
 						const root = findDOMNode(this);
-						const popupNode = this.getPopupDomNode();
+						const popupNode = this.getPopupDOM();
 						
 						if (!contains(root, target) && !contains(popupNode, target)) {
 							this.setPopupVisible(false);

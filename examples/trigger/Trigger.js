@@ -234,7 +234,9 @@ define(['../../dist/rnexui'], function (_rnexui) {
 							{ type: 'primary', onClick: this.toggle },
 							'Click'
 						)
-					)
+					),
+					React.createElement('hr', null),
+					this.renderOthers()
 				);
 			}
 		}]);

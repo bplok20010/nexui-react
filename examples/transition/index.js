@@ -59,9 +59,92 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	}
 
+	var _extends = Object.assign || function (target) {
+		for (var i = 1; i < arguments.length; i++) {
+			var source = arguments[i];
+
+			for (var key in source) {
+				if (Object.prototype.hasOwnProperty.call(source, key)) {
+					target[key] = source[key];
+				}
+			}
+		}
+
+		return target;
+	};
+
+	function _objectWithoutProperties(obj, keys) {
+		var target = {};
+
+		for (var i in obj) {
+			if (keys.indexOf(i) >= 0) continue;
+			if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+			target[i] = obj[i];
+		}
+
+		return target;
+	}
+
+	var Fade2 = function Fade2(_ref) {
+		var children = _ref.children,
+		    props = _objectWithoutProperties(_ref, ['children']);
+
+		return _react2['default'].createElement(
+			_rnexui.CSSTransition,
+			_extends({}, props, {
+				timeout: 1000,
+				unmountOnExit: true,
+				classNames: 'fade'
+			}),
+			children
+		);
+	};
+
+	var FadeInAndOut = function (_React$Component) {
+		_inherits(FadeInAndOut, _React$Component);
+
+		function FadeInAndOut() {
+			var _ref2;
+
+			_classCallCheck(this, FadeInAndOut);
+
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			var _this = _possibleConstructorReturn(this, (_ref2 = FadeInAndOut.__proto__ || Object.getPrototypeOf(FadeInAndOut)).call.apply(_ref2, [this].concat(args)));
+
+			_this.state = { show: false };
+
+			setInterval(function () {
+				_this.setState({ show: !_this.state.show });
+			}, 1500);
+			return _this;
+		}
+
+		_createClass(FadeInAndOut, [{
+			key: 'render',
+			value: function render() {
+				return _react2['default'].createElement(
+					Fade2,
+					{ 'in': this.state.show },
+					_react2['default'].createElement(
+						'div',
+						{ className: 'greeting' },
+						'Hello world',
+						_react2['default'].createElement(Demo, null)
+					)
+				);
+			}
+		}]);
+
+		return FadeInAndOut;
+	}(_react2['default'].Component);
+
 	var idx = 1;
 
 	function Demo() {
+		console.log('Demo');
 		return _react2['default'].createElement(
 			'div',
 			null,
@@ -69,25 +152,27 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		);
 	}
 
-	var Fade = function (_React$Component) {
-		_inherits(Fade, _React$Component);
+	var Fade = function (_React$Component2) {
+		_inherits(Fade, _React$Component2);
 
 		function Fade() {
-			var _ref;
+			var _ref3;
 
-			var _temp, _this, _ret;
+			var _temp, _this2, _ret;
 
 			_classCallCheck(this, Fade);
 
-			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-				args[_key] = arguments[_key];
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
 			}
 
-			return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Fade.__proto__ || Object.getPrototypeOf(Fade)).call.apply(_ref, [this].concat(args))), _this), _this.timeout = 500, _this.onEnter = function (node) {
-				$(node).hide().fadeIn(_this.timeout);
-			}, _this.onEntering = function (node) {}, _this.onEntered = function (node) {}, _this.onExit = function (node) {
-				$(node).fadeOut(_this.timeout);
-			}, _this.onExiting = function (node) {}, _this.onExited = function (node) {}, _temp), _possibleConstructorReturn(_this, _ret);
+			return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_ref3 = Fade.__proto__ || Object.getPrototypeOf(Fade)).call.apply(_ref3, [this].concat(args))), _this2), _this2.timeout = 500, _this2.onEnter = function (node) {
+				$(node).hide().fadeIn(_this2.timeout);
+			}, _this2.onEntering = function (node) {}, _this2.onEntered = function (node) {}, _this2.onExit = function (node) {
+				$(node).fadeOut(_this2.timeout);
+			}, _this2.onExiting = function (node) {}, _this2.onExited = function (node) {
+				if (_this2.props.onExited) _this2.props.onExited(node);
+			}, _temp), _possibleConstructorReturn(_this2, _ret);
 		}
 
 		_createClass(Fade, [{
@@ -105,7 +190,7 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 						onExited: this.onExited,
 						timeout: this.timeout,
 						'in': props['in'],
-						appear: true
+						appear: props.appear
 					},
 					_react2['default'].createElement(Demo, null)
 				);
@@ -115,41 +200,106 @@ define(['../../dist/rnexui', 'react', 'react-dom'], function (_rnexui, _react, _
 		return Fade;
 	}(_react2['default'].Component);
 
-	var App = function (_React$Component2) {
-		_inherits(App, _React$Component2);
+	var list = ['a_4', 't_2'];
+
+	var T = function (_React$Component3) {
+		_inherits(T, _React$Component3);
+
+		function T() {
+			_classCallCheck(this, T);
+
+			return _possibleConstructorReturn(this, (T.__proto__ || Object.getPrototypeOf(T)).apply(this, arguments));
+		}
+
+		_createClass(T, [{
+			key: 'render',
+			value: function render() {
+				return 'T';
+			}
+		}]);
+
+		return T;
+	}(_react2['default'].Component);
+
+	var App = function (_React$Component4) {
+		_inherits(App, _React$Component4);
 
 		function App() {
-			var _ref2;
+			var _ref4;
 
-			var _temp2, _this2, _ret2;
+			var _temp2, _this4, _ret2;
 
 			_classCallCheck(this, App);
 
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
+			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+				args[_key3] = arguments[_key3];
 			}
 
-			return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn(this, (_ref2 = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref2, [this].concat(args))), _this2), _this2.show = true, _temp2), _possibleConstructorReturn(_this2, _ret2);
+			return _ret2 = (_temp2 = (_this4 = _possibleConstructorReturn(this, (_ref4 = App.__proto__ || Object.getPrototypeOf(App)).call.apply(_ref4, [this].concat(args))), _this4), _this4.show = true, _this4.addItem = function () {
+				var key = Math.random().toString(16).substr(3, 8);
+				list.push(key);
+				_this4.forceUpdate();
+			}, _this4.delItem = function () {
+				var rad = Math.random() * 10000;
+				var len = list.length;
+
+				list.splice(rad % len, 1);
+
+				_this4.forceUpdate();
+			}, _temp2), _possibleConstructorReturn(_this4, _ret2);
 		}
 
 		_createClass(App, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				//setInterval(()=> (this.forceUpdate()), 1000);
+
+			}
+		}, {
 			key: 'render',
 			value: function render() {
-				var _this3 = this;
+				var _this5 = this;
 
 				var show = this.show;
-				this.show = !show;
 				return _react2['default'].createElement(
 					'div',
 					null,
 					_react2['default'].createElement(
 						'button',
 						{ onClick: function onClick() {
-								return _this3.forceUpdate();
+								return _this5.show = !_this5.show, _this5.forceUpdate();
 							} },
 						'\u5207\u6362'
 					),
-					_react2['default'].createElement(Fade, { 'in': show })
+					_react2['default'].createElement(Fade, { 'in': show, appear: true }),
+					_react2['default'].createElement(
+						'h2',
+						null,
+						'TransitionGroup'
+					),
+					_react2['default'].createElement(
+						'div',
+						null,
+						_react2['default'].createElement(
+							'button',
+							{ onClick: this.addItem },
+							'\u65B0\u589E'
+						),
+						_react2['default'].createElement(
+							'button',
+							{ onClick: this.delItem },
+							'\u968F\u673A\u5220\u9664'
+						),
+						_react2['default'].createElement(
+							_rnexui.TransitionGroup,
+							{ component: _react2['default'].Fragment },
+							list.map(function (key) {
+								return _react2['default'].createElement(Fade, { key: key });
+							})
+						),
+						_react2['default'].createElement(T, null)
+					),
+					_react2['default'].createElement(FadeInAndOut, null)
 				);
 			}
 		}]);

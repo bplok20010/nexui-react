@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import {isUndefined, isArray} from '../shared/util';
 import Select from '../select/index';
 import Input from '../input/Input';
+import Icon from '../icon';
 
 export default class Pagination extends React.Component{
 	
@@ -219,11 +220,11 @@ export default class Pagination extends React.Component{
 		const _prevBtnCls = classNames({
 			[`${prefixCls}-btn`]: true,
 			[`${prefixCls}-prev`]: true,
-			[`${prevBtnCls}`]: prevBtnCls,
+			//[`${prevBtnCls}`]: prevBtnCls,
 			[`${prefixCls}-btn-disabled`]: current == 1
 		});
 		
-		return <a key="prev-btn" className={`${_prevBtnCls}`} onClick={()=> this.prevPage()}>{ prevBtnRender ? prevBtnRender.call(this) : null }</a>;
+		return <a key="prev-btn" className={`${_prevBtnCls}`} onClick={()=> this.prevPage()}>{ prevBtnRender ? prevBtnRender.call(this) : <Icon type="angle-left" /> }</a>;
 	}
 	renderLPager(){
 		return this.renderPagination();	
@@ -235,11 +236,11 @@ export default class Pagination extends React.Component{
 		const _nextBtnCls = classNames({
 			[`${prefixCls}-btn`]: true,
 			[`${prefixCls}-next`]: true,
-			[`${nextBtnCls}`]: nextBtnCls,
+			//[`${nextBtnCls}`]: nextBtnCls,
 			[`${prefixCls}-btn-disabled`]: totalPages == current
 		});
 		
-		return <a key="next-btn" className={`${_nextBtnCls}`} onClick={()=> this.nextPage()}>{ nextBtnRender ? nextBtnRender.call(this) : null }</a>;		
+		return <a key="next-btn" className={`${_nextBtnCls}`} onClick={()=> this.nextPage()}>{ nextBtnRender ? nextBtnRender.call(this) : <Icon type="angle-right" /> }</a>;		
 	}
 	renderLJumper(){
 		const {prefixCls, nextBtnCls, jumperRender, small} = this.props;

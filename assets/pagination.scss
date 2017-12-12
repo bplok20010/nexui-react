@@ -21,7 +21,10 @@ $paginationBorderRadius: 2px;
 		margin-right:10px;	
 	}
 	.nex-pagination-quick-jumper {
-		margin-left:10px;		
+		margin-left:10px;	
+		.nex-pagination-jumper {
+			vertical-align: top;	
+		}	
 	}
 	.nex-pagination-total-text {
 		margin:0 10px;

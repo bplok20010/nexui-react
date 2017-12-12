@@ -83,7 +83,8 @@ class App extends React.Component {
 		>
         	<Button type="primary" onClick={this.toggle}>Click</Button>
 		</Trigger>
-		
+		<hr/>
+		{this.renderOthers()}
       </div>
     );
   }

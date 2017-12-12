@@ -16,6 +16,8 @@
 
 .nex-pagination .nex-pagination-quick-jumper {
   margin-left: 10px; }
+  .nex-pagination .nex-pagination-quick-jumper .nex-pagination-jumper {
+    vertical-align: top; }
 
 .nex-pagination .nex-pagination-total-text {
   margin: 0 10px; }
