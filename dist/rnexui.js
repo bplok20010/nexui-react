@@ -7713,7 +7713,8 @@ var propTypes$3 = {
 	popupProps: propTypes.object,
 	mask: propTypes.bool,
 	maskClosable: propTypes.bool,
-	placement: propTypes.string
+	placement: propTypes.string,
+	delay: propTypes.oneOfType([propTypes.number, propTypes.object])
 };
 
 var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
@@ -7729,7 +7730,7 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 
 
 			if (maskClosable) {
-				_this.setPopupVisible(false);
+				_this.delaySetPopupVisible(false);
 			}
 		};
 
@@ -7813,7 +7814,7 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 			return {
 				onClick: function onClick(e) {
 					_onClick(e);
-					_this2.setPopupVisible(!popupVisible);
+					_this2.delaySetPopupVisible(!popupVisible);
 				}
 			};
 		}
@@ -7834,7 +7835,7 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 				onContextMenu: function onContextMenu(e) {
 					e.preventDefault();
 					_onContextMenu(e);
-					if (!popupVisible) _this3.setPopupVisible(true);
+					if (!popupVisible) _this3.delaySetPopupVisible(true);
 				}
 			};
 		}
@@ -7857,11 +7858,11 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 			return {
 				onMouseEnter: function onMouseEnter(e) {
 					_onMouseEnter(e);
-					_this4.setPopupVisible(true);
+					_this4.delaySetPopupVisible(true);
 				},
 				onMouseLeave: function onMouseLeave(e) {
 					_onMouseLeave(e);
-					_this4.setPopupVisible(false);
+					_this4.delaySetPopupVisible(false);
 				}
 			};
 		}
@@ -7884,17 +7885,53 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 			return {
 				onFocus: function onFocus(e) {
 					_onFocus(e);
-					_this5.setPopupVisible(true);
+					_this5.delaySetPopupVisible(true);
 				},
 				onBlur: function onBlur(e) {
 					_onBlur(e);
-					_this5.setPopupVisible(false);
+					_this5.delaySetPopupVisible(false);
 				}
 			};
 		}
 	}, {
-		key: 'getPopupAlign',
-		value: function getPopupAlign() {}
+		key: 'getDelay',
+		value: function getDelay() {
+			var action = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'show';
+			var delay = this.props.delay;
+
+
+			if (delay != null && typeof delay !== 'number') {
+				return delay[action];
+			}
+
+			return delay;
+		}
+	}, {
+		key: 'delaySetPopupVisible',
+		value: function delaySetPopupVisible(visible) {
+			var _this6 = this;
+
+			this.clearDelayTimer();
+
+			var delay = this.getDelay(visible ? 'show' : 'hide');
+
+			if (delay) {
+				this.delayTimer = setTimeout(function () {
+					_this6.setPopupVisible(visible);
+					_this6.clearDelayTimer();
+				}, delay);
+			} else {
+				this.setPopupVisible(visible);
+			}
+		}
+	}, {
+		key: 'clearDelayTimer',
+		value: function clearDelayTimer() {
+			if (this.delayTimer) {
+				clearTimeout(this.delayTimer);
+				this.delayTimer = null;
+			}
+		}
 	}, {
 		key: 'getComponent',
 		value: function getComponent() {
@@ -7959,7 +7996,7 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 	}, {
 		key: 'createPopupEvents',
 		value: function createPopupEvents() {
-			var _this6 = this;
+			var _this7 = this;
 
 			var action = this.props.action;
 			var popupVisible = this.state.popupVisible;
@@ -7979,15 +8016,15 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 					this.__mousedownHandle = function (e) {
 						if (action === 'click' || action === 'contextMenu') {
 							var target = e.target;
-							var root = ReactDOM.findDOMNode(_this6);
-							var popupNode = _this6.getPopupDOM();
+							var root = ReactDOM.findDOMNode(_this7);
+							var popupNode = _this7.getPopupDOM();
 
 							if (!contains$1(root, target) && !contains$1(popupNode, target)) {
-								_this6.setPopupVisible(false);
+								_this7.setPopupVisible(false);
 							}
 
 							if (action === 'contextMenu' && !contains$1(popupNode, target)) {
-								_this6.setPopupVisible(false);
+								_this7.setPopupVisible(false);
 							}
 						}
 					};
@@ -8035,7 +8072,8 @@ var Trigger = (_temp$23 = _class$25 = function (_React$Component) {
 	action: 'click',
 	mask: false,
 	maskClosable: true,
-	placement: 'BottomLeft'
+	placement: 'BottomLeft',
+	delay: null
 }, _temp$23);
 
 var hasClass_1 = createCommonjsModule(function (module, exports) {

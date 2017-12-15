@@ -27,7 +27,7 @@ class App extends React.Component {
 	
 	renderOthers(){
 		return (<div>
-			<Trigger popup={<div style={{padding: 10, border: '1px solid red', background: '#fff'}}>popup hover...</div>} action="hover">
+			<Trigger delay={1000} popup={<div style={{padding: 10, border: '1px solid red', background: '#fff'}}>popup hover...</div>} action="hover">
 				<Button type="primary" onClick={this.toggle}>Hover</Button>
 			</Trigger>
 			<Trigger popup={<div style={{padding: 10, border: '1px solid red', background: '#fff'}}>popup focus...</div>} action="focus">

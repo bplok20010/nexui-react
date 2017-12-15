@@ -87,7 +87,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					null,
 					React.createElement(
 						_rnexui.Trigger,
-						{ popup: React.createElement(
+						{ delay: 1000, popup: React.createElement(
 								'div',
 								{ style: { padding: 10, border: '1px solid red', background: '#fff' } },
 								'popup hover...'

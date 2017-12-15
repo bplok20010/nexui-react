@@ -29,6 +29,10 @@ const propTypes = {
 		mask: PropTypes.bool,
 		maskClosable: PropTypes.bool,
 		placement: PropTypes.string,
+		delay: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.object,
+		]),
 	};
 
 export default class Trigger extends React.Component {
@@ -40,7 +44,8 @@ export default class Trigger extends React.Component {
 		action: 'click',
 		mask: false,
 		maskClosable: true,
-		placement: 'BottomLeft'
+		placement: 'BottomLeft',
+		delay: null,
 	}
 	
 	constructor(props){
@@ -109,7 +114,7 @@ export default class Trigger extends React.Component {
 		return {
 			onClick: (e)=>{
 				onClick(e);	
-				this.setPopupVisible(!popupVisible);
+				this.delaySetPopupVisible(!popupVisible);
 			}	
 		}	
 	}
@@ -126,7 +131,7 @@ export default class Trigger extends React.Component {
 				e.preventDefault();
 				onContextMenu(e);
 				if( !popupVisible )
-					this.setPopupVisible(true);
+					this.delaySetPopupVisible(true);
 			}		
 		}
 	}
@@ -141,11 +146,11 @@ export default class Trigger extends React.Component {
 		return {
 			onMouseEnter: (e)=>{
 				onMouseEnter(e);
-				this.setPopupVisible(true);
+				this.delaySetPopupVisible(true);
 			},
 			onMouseLeave: (e)=>{
 				onMouseLeave(e);
-				this.setPopupVisible(false);
+				this.delaySetPopupVisible(false);
 			}		
 		}	
 	}
@@ -160,24 +165,52 @@ export default class Trigger extends React.Component {
 		return {
 			onFocus: (e)=>{
 				onFocus(e);
-				this.setPopupVisible(true);
+				this.delaySetPopupVisible(true);
 			},
 			onBlur: (e)=>{
 				onBlur(e);	
-				this.setPopupVisible(false);
+				this.delaySetPopupVisible(false);
 			}		
 		}	
 	}
 	
-	getPopupAlign(){
-			
+	getDelay(action='show'){
+		const {delay} = this.props;
+		
+		if (delay != null && typeof delay !== 'number') {
+			return delay[action];
+		}
+		
+		return delay;
+	}
+	
+	delaySetPopupVisible(visible){
+		this.clearDelayTimer();
+		
+		const delay = this.getDelay(visible ? 'show' : 'hide');
+		
+		if (delay) {
+			this.delayTimer = setTimeout(() => {
+				this.setPopupVisible(visible);
+				this.clearDelayTimer();
+			}, delay);
+		} else {
+			this.setPopupVisible(visible);
+		}	
+	}
+	
+	clearDelayTimer() {
+		if (this.delayTimer) {
+			clearTimeout(this.delayTimer);
+			this.delayTimer = null;
+		}
 	}
 	
 	onMaskClick = () => {
 		const {maskClosable} = this.props;
 		
 		if(maskClosable) {
-			this.setPopupVisible(false);	
+			this.delaySetPopupVisible(false);	
 		}
 	}
 	
