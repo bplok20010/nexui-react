@@ -16,6 +16,18 @@ function getOffset(h, v, offset){
 // my: point(at) position of target
 
 const _placements = {
+	Center: function(offset = []){
+		return {
+			at: getOffset('center', 'center', offset),
+			my: 'center center',
+		  } 	
+	},
+	CenterCenter: function(offset = []){
+		return {
+			at: getOffset('center', 'center', offset),
+			my: 'center center',
+		  } 	
+	},
 	LeftCenter: function(offset = []){
 		return {
 			at: getOffset('left', 'center', offset),

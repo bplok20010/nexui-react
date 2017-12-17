@@ -10,6 +10,10 @@ import placements from './placements';
 
 function noop(){}
 
+function getDocContainer(){
+	return window.document.body;	
+}
+
 const propTypes = {
 		popupVisible: PropTypes.bool,
 		defaultPopupVisible: PropTypes.bool,
@@ -26,6 +30,7 @@ const propTypes = {
 		popupMaskAnimate: PropTypes.object,
 		popupStyle: PropTypes.object,
 		popupProps: PropTypes.object,
+		getPopupContainer: PropTypes.func,
 		mask: PropTypes.bool,
 		maskClosable: PropTypes.bool,
 		placement: PropTypes.string,
@@ -45,6 +50,10 @@ export default class Trigger extends React.Component {
 		mask: false,
 		maskClosable: true,
 		placement: 'BottomLeft',
+		getPopupContainer: getDocContainer,
+		//@type object
+		//object.show
+		//object.hide
 		delay: null,
 	}
 	
@@ -101,8 +110,6 @@ export default class Trigger extends React.Component {
 			this.props.onPopupVisibleChange(popupVisible);
 		}
 	}
-	
-	clearDelayTimer(){}
 	
 	getClickTriggerProps(child){
 		const {action} = this.props;
@@ -192,7 +199,7 @@ export default class Trigger extends React.Component {
 		if (delay) {
 			this.delayTimer = setTimeout(() => {
 				this.setPopupVisible(visible);
-				this.clearDelayTimer();
+				this.delayTimer = null;
 			}, delay);
 		} else {
 			this.setPopupVisible(visible);
@@ -218,6 +225,26 @@ export default class Trigger extends React.Component {
 		this._popup = node;	
 	}
 	
+	getPopupRootProps(){
+		const {action} = this.props;
+		if( action === 'hover' ) {
+			return {
+				onMouseEnter: (e) => {
+					this.clearDelayTimer();
+				},
+				onMouseLeave: (e) => {
+					if (e.relatedTarget && !e.relatedTarget.setTimeout &&
+					  this._popup &&
+					  this._popup.getRootDOM &&
+					  contains(this._popup.getRootDOM(), e.relatedTarget)) {
+					  return;
+					}
+					this.delaySetPopupVisible(false);
+				},	
+			};	
+		}
+	}
+	
 	getComponent(){
 		const {
 			popup, 
@@ -230,6 +257,7 @@ export default class Trigger extends React.Component {
 			popupMaskAnimate, 
 			popupProps,
 			placement,
+			getPopupContainer,
 		} = this.props;
 		const {popupVisible} = this.state;
 		const triggerNode = ReactDOM.findDOMNode(this.refs.trigger);
@@ -250,8 +278,10 @@ export default class Trigger extends React.Component {
 				mask={mask}
 				onMaskClick={this.onMaskClick}
 				{...popupProps}
+				container={getPopupContainer()}
 				visible={popupVisible}
 				ref={this.savePopup}
+				rootProps={this.getPopupRootProps()}
 			>
 				{typeof popup === 'function' ? popup() : popup}
 			</Popup>
@@ -282,13 +312,12 @@ export default class Trigger extends React.Component {
 	createPopupEvents(){
 		const {action} = this.props;
 		const {popupVisible} = this.state;
-		const popup = this._popup;
 		
 		if( popupVisible ) {
 			
 			if( !this.__resizeHandle ) {
 				this.__resizeHandle = ()=>{
-					popup.updatePosition();
+					this._popup.updatePosition();
 				};
 				on(window, 'resize', this.__resizeHandle);
 			}

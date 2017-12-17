@@ -319,7 +319,7 @@ export default class Popup extends React.Component {
 		this._popupMaskDOM = node;		
 	}
 	
-	getPopupRootDOM(){
+	getRootDOM(){
 		return this._rootDOM;	
 	}
 	

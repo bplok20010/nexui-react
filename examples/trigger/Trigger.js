@@ -1,6 +1,21 @@
 define(['../../dist/rnexui'], function (_rnexui) {
 	'use strict';
 
+	function _defineProperty(obj, key, value) {
+		if (key in obj) {
+			Object.defineProperty(obj, key, {
+				value: value,
+				enumerable: true,
+				configurable: true,
+				writable: true
+			});
+		} else {
+			obj[key] = value;
+		}
+
+		return obj;
+	}
+
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
 			throw new TypeError("Cannot call a class as a function");
@@ -80,18 +95,52 @@ define(['../../dist/rnexui'], function (_rnexui) {
 		}
 
 		_createClass(App, [{
+			key: 'renderInnter',
+			value: function renderInnter() {
+				var _this2 = this;
+
+				return React.createElement(
+					_rnexui.Trigger,
+					{ delay: 100, action: 'click', getPopupContainer: function getPopupContainer() {
+							return _this2.popupCt;
+						}, popup: function popup(trigger) {
+							//const node = ReactDOM.findDONNode(trigger);
+							return React.createElement(
+								'div',
+								{ style: { padding: 10, border: '1px solid red', background: '#fff' } },
+								'hello inner trigger'
+							);
+						}
+					},
+					React.createElement(
+						'a',
+						{ href: '###' },
+						'go'
+					)
+				);
+			}
+		}, {
 			key: 'renderOthers',
 			value: function renderOthers() {
+				var _this3 = this;
+
 				return React.createElement(
 					'div',
 					null,
 					React.createElement(
 						_rnexui.Trigger,
-						{ delay: 1000, popup: React.createElement(
-								'div',
-								{ style: { padding: 10, border: '1px solid red', background: '#fff' } },
-								'popup hover...'
-							), action: 'hover' },
+						_defineProperty({ delay: 100, action: 'hover', popup: function popup(inst) {
+
+								return React.createElement(
+									'div',
+									{ style: { padding: 10, border: '1px solid red', background: '#fff' } },
+									React.createElement('div', { ref: function ref(el) {
+											return _this3.popupCt = el;
+										} }),
+									_this3.renderInnter(inst),
+									'popup hover...'
+								);
+							} }, 'action', 'hover'),
 						React.createElement(
 							_rnexui.Button,
 							{ type: 'primary', onClick: this.toggle },
@@ -138,6 +187,11 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					React.createElement(
 						'select',
 						{ value: this.pacement, onChange: this.handleChange },
+						React.createElement(
+							'option',
+							{ value: 'Center' },
+							'Center'
+						),
 						React.createElement(
 							'option',
 							{ value: 'LeftCenter' },
