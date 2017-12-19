@@ -34,6 +34,7 @@ const propTypes = {
 		mask: PropTypes.bool,
 		maskClosable: PropTypes.bool,
 		placement: PropTypes.string,
+		popupOffset: PropTypes.array,
 		delay: PropTypes.oneOfType([
 			PropTypes.number,
 			PropTypes.object,
@@ -50,6 +51,7 @@ export default class Trigger extends React.Component {
 		mask: false,
 		maskClosable: true,
 		placement: 'BottomLeft',
+		popupOffset: [0, 0],
 		getPopupContainer: getDocContainer,
 		//@type object
 		//object.show
@@ -258,13 +260,14 @@ export default class Trigger extends React.Component {
 			popupProps,
 			placement,
 			getPopupContainer,
+			popupOffset,
 		} = this.props;
 		const {popupVisible} = this.state;
 		const triggerNode = ReactDOM.findDOMNode(this.refs.trigger);
 
 		return (
 			<Popup 
-				{...placements(placement)}
+				{...placements(placement, popupOffset)}
 				popupAnimate={popupAnimate}
 				maskAnimate={popupMaskAnimate}
 				className={popupClassName}

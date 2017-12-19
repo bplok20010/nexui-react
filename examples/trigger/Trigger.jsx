@@ -86,6 +86,7 @@ class App extends React.Component {
 		<hr/>
 	  	<Trigger 
 			popup={<div style={{padding: 10, border: '1px solid red', background: '#fff'}}>placement: {this.placement}...</div>}
+			popupOffset={[10, 10]}
 			popupAnimate={{
 				appear: function(node){
 					$(node).hide().fadeIn();

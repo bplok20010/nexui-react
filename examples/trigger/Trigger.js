@@ -270,6 +270,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 								this.placement,
 								'...'
 							),
+							popupOffset: [10, 10],
 							popupAnimate: {
 								appear: function appear(node) {
 									$(node).hide().fadeIn();
