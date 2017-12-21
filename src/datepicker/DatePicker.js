@@ -27,7 +27,7 @@ function fixValue(date, format) {
         return new Date(date);
     }
 
-    return date;
+    return date ? DateUtil.clone(date) : new Date;
 }
 
 export default class DatePicker extends React.Component{
@@ -62,13 +62,14 @@ export default class DatePicker extends React.Component{
 
     constructor(props){
         super(props);
-
+		
         const value = fixValue('value' in props ? props.value : props.defaultValue, props.dateFormat);
 
         this.state = {
             value,
             currentShowDate: DateUtil.isDate(value) ? DateUtil.clone(value) : new Date,
             _ext: uuid(6),
+			showDropdown: false,
             showYearList: false,
             showMonthList: false,
         }
@@ -133,6 +134,7 @@ export default class DatePicker extends React.Component{
     }
 
     handleClick= (e) => {
+		if(this.refs.dropdown && $.contains( this.refs.dropdown, e.target )) return;
         this.setState({
             showDropdown: !this.state.showDropdown,
             showYearList: false,
@@ -179,11 +181,11 @@ export default class DatePicker extends React.Component{
             this.hideDropdown();
             return;
         }
-
+		
         if( !('value' in props) ) {
             this.setState({
-                value: date,
-                currentShowDate: date,
+                value: DateUtil.clone(date),
+                currentShowDate: DateUtil.clone(date),
                 showYearList: false,
                 showMonthList: false,
             });
@@ -340,8 +342,8 @@ export default class DatePicker extends React.Component{
                 {this.renderPickerHeader()}
                 <div className={`${prefixCls}-picker-body`}>
                     <Calendar
-                        currentDate={value}
-                        currentShowDate={currentShowDate}
+                        currentDate={DateUtil.clone(value)}
+                        currentShowDate={DateUtil.clone(currentShowDate)}
                         maxDate = {maxDate}
                         minDate = {minDate}
                         disabledDate={disabledDate}
@@ -357,9 +359,9 @@ export default class DatePicker extends React.Component{
     onInputChange(e){
         const {dateFormat} = this.props;
         this.inputValue = e.target.value;
-
+		
         const date = DateUtil.parse(e.target.value, dateFormat);
-
+		
         if( date ) {
             this.onDateSelect(date);
         }
@@ -376,7 +378,7 @@ export default class DatePicker extends React.Component{
 
         if( !this.state.showDropdown ) {
             const date = DateUtil.parse(e.target.value, dateFormat);
-
+			
             if(!date) {
                 //this.inputValue = null;
                 this.forceUpdate();
@@ -397,7 +399,7 @@ export default class DatePicker extends React.Component{
             [`${prefixCls}-readonly`]: readOnly,
             [`${prefixCls}-disabled`]: disabled,
         });
-
+	
         return (
 			<div
                 style={style}

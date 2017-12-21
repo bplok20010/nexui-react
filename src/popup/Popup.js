@@ -11,7 +11,7 @@ function noop(){}
 const propTypes = {
 		prefixCls: PropTypes.string,
 		rootClassName: PropTypes.string,
-		container: PropTypes.node.isRequired,
+		container: PropTypes.node,
 		className: PropTypes.string,
 		mask: PropTypes.bool,
 		maskClassName: PropTypes.string,

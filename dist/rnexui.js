@@ -2200,7 +2200,7 @@ function noop$1() {}
 var propTypes$2 = {
 	prefixCls: propTypes.string,
 	rootClassName: propTypes.string,
-	container: propTypes.node.isRequired,
+	container: propTypes.node,
 	className: propTypes.string,
 	mask: propTypes.bool,
 	maskClassName: propTypes.string,
@@ -4487,10 +4487,15 @@ var Select$1 = (_temp$13 = _class$14 = function (_React$Component) {
 	};
 
 	this.handleDropdownShow = function () {
-		_this5._refs.listbox.focus();
+		setTimeout(function () {
+			return _this5._refs.listbox.focus();
+		}, 0);
 	};
 
 	this.handleClick = function (e) {
+		var popupEl = ReactDOM.findDOMNode(_this5._refs.popup);
+		if (popupEl && contains$1(popupEl, e.target)) return;
+
 		_this5.setState({
 			showDropdown: !_this5.state.showDropdown
 		});
@@ -6213,7 +6218,7 @@ function fixValue(date, format) {
         return new Date(date);
     }
 
-    return date;
+    return date ? DateUtil.clone(date) : new Date();
 }
 
 var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
@@ -6229,6 +6234,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
         };
 
         _this.handleClick = function (e) {
+            if (_this.refs.dropdown && $.contains(_this.refs.dropdown, e.target)) return;
             _this.setState({
                 showDropdown: !_this.state.showDropdown,
                 showYearList: false,
@@ -6245,6 +6251,7 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
             value: value,
             currentShowDate: DateUtil.isDate(value) ? DateUtil.clone(value) : new Date(),
             _ext: uuid(6),
+            showDropdown: false,
             showYearList: false,
             showMonthList: false
         };
@@ -6362,8 +6369,8 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
 
             if (!('value' in props)) {
                 this.setState({
-                    value: date,
-                    currentShowDate: date,
+                    value: DateUtil.clone(date),
+                    currentShowDate: DateUtil.clone(date),
                     showYearList: false,
                     showMonthList: false
                 });
@@ -6582,8 +6589,8 @@ var DatePicker$1 = (_temp$19 = _class$21 = function (_React$Component) {
                     'div',
                     { className: prefixCls + '-picker-body' },
                     React$1__default.createElement(Calendar$1, {
-                        currentDate: value,
-                        currentShowDate: currentShowDate,
+                        currentDate: DateUtil.clone(value),
+                        currentShowDate: DateUtil.clone(currentShowDate),
                         maxDate: maxDate,
                         minDate: minDate,
                         disabledDate: disabledDate,

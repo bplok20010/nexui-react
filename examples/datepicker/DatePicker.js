@@ -74,7 +74,7 @@ define(['../../dist/rnexui'], function (_rnexui) {
 					'div',
 					null,
 					React.createElement(_rnexui.DatePicker, { dateFormat: 'Y-m-d H:i:s' }),
-					React.createElement(_rnexui.DatePicker, { dateFormat: 'Y-m-d H:i:s', value: this.date, onChange: this.handleChange })
+					React.createElement(_rnexui.DatePicker, { dateFormat: 'Y-m-d H:i:s', onChange: this.handleChange })
 				);
 			}
 		}]);

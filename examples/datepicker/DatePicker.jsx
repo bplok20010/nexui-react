@@ -18,8 +18,8 @@ class App extends React.Component{
 	render(){
 		return 	(
 			<div>
-			<DatePicker dateFormat="Y-m-d H:i:s" />
-            <DatePicker dateFormat="Y-m-d H:i:s" value={this.date} onChange={ this.handleChange } />
+				<DatePicker dateFormat="Y-m-d H:i:s" />
+            	<DatePicker dateFormat="Y-m-d H:i:s" onChange={ this.handleChange } />
 			</div>
 		)
 	}	

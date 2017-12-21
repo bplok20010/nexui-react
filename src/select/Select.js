@@ -184,7 +184,7 @@ export default class Select extends React.Component{
 	}
 	
 	handleDropdownShow = ()=>{
-		this._refs.listbox.focus();	
+		setTimeout(()=>this._refs.listbox.focus(), 0);	
 	}
 	
 	getSelectOptions(){
@@ -226,6 +226,9 @@ export default class Select extends React.Component{
 	}
 	
 	handleClick= (e) => {
+		const popupEl = findDOMNode(this._refs.popup);
+		if( popupEl && contains(popupEl, e.target) ) return;
+		
 		this.setState({
 			showDropdown: !this.state.showDropdown
 		});	
