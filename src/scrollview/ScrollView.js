@@ -501,7 +501,7 @@ export default class ScrollView extends React.Component {
 	}
 	
 	getScrollBar(dir = 'y'){
-		const {prefixCls, showTrack, thumbCls, trackCls} = this.props;
+		const {prefixCls, showTrack, thumbCls, scrollBarSize, trackCls} = this.props;
 		const isVertical = dir === 'y';
 		const dirCls = `${prefixCls}-bar-${isVertical ? 'vertical' : 'horizontal'}`;
 		
@@ -510,8 +510,12 @@ export default class ScrollView extends React.Component {
 				scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
 				scrollbarThumbRef = isVertical ? 'verticalBarThumbEl' : 'horizontalBarThumbEl';
 		
+		const barStyle={
+			[isVertical ? 'width' : 'height']: scrollBarSize + 'px'
+		};
+		
 		return (
-			<div ref={this.saveRef.bind(this, scrollbarRef)} className={classNames(`${prefixCls}-bar`, dirCls)}>
+			<div ref={this.saveRef.bind(this, scrollbarRef)} style={barStyle} className={classNames(`${prefixCls}-bar`, dirCls)}>
 				<div ref={this.saveRef.bind(this, scrollbarWrapRef)} className={`${prefixCls}-bar-wrap`}>
 					{
 						showTrack ?　

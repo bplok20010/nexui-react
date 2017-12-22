@@ -3348,6 +3348,7 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    prefixCls = _props5.prefixCls,
 			    showTrack = _props5.showTrack,
 			    thumbCls = _props5.thumbCls,
+			    scrollBarSize = _props5.scrollBarSize,
 			    trackCls = _props5.trackCls;
 
 			var isVertical = dir === 'y';
@@ -3358,9 +3359,11 @@ var ScrollView = (_temp$15 = _class$16 = function (_React$Component) {
 			    scrollbarTrackRef = isVertical ? 'verticalBarTrackEl' : 'horizontalBarTrackEl',
 			    scrollbarThumbRef = isVertical ? 'verticalBarThumbEl' : 'horizontalBarThumbEl';
 
+			var barStyle = defineProperty({}, isVertical ? 'width' : 'height', scrollBarSize + 'px');
+
 			return React$1__default.createElement(
 				'div',
-				{ ref: this.saveRef.bind(this, scrollbarRef), className: classnames(prefixCls + '-bar', dirCls) },
+				{ ref: this.saveRef.bind(this, scrollbarRef), style: barStyle, className: classnames(prefixCls + '-bar', dirCls) },
 				React$1__default.createElement(
 					'div',
 					{ ref: this.saveRef.bind(this, scrollbarWrapRef), className: prefixCls + '-bar-wrap' },
