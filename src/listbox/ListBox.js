@@ -35,10 +35,12 @@ export default class ListBox extends React.Component{
 		height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		labelInValue: PropTypes.bool,
 		tabIndex: PropTypes.number,
+		enableDownUpSelect: PropTypes.bool,
 		onItemClick: PropTypes.func,
 		onChange: PropTypes.func,
 		onFocus: PropTypes.func,
 		onBlur: PropTypes.func,
+		onKeyDown: PropTypes.func,
 	};
 
 	static defaultProps = {
@@ -50,8 +52,10 @@ export default class ListBox extends React.Component{
 		tabIndex: 0,
 		items: [],
 		emptyLabel: null,
+		enableDownUpSelect: true,
 		onFocus: noop,
 		onBlur: noop,
+		onKeyDown: noop,
 		
 	};
 	
@@ -235,6 +239,9 @@ export default class ListBox extends React.Component{
 			const indexValueMap = this._indexValueMap;
 			const activeIndex = this._activeIndex;
 			
+			if( props.enableDownUpSelect )
+				props.onKeyDown(e);
+			
 			if( !list ) {
 				list = dom.querySelectorAll(selector);
 			}
@@ -411,7 +418,7 @@ export default class ListBox extends React.Component{
 	}
 	
 	render(){
-		const {className, value, prefixCls, items, width, height, tabIndex, disabled, onFocus, onBlur, style={}, scrollViewBodyStyle={}} = this.props;
+		const {className, value, prefixCls, items, width, height, tabIndex, disabled, enableDownUpSelect, onKeyDown, onFocus, onBlur, style={}, scrollViewBodyStyle={}} = this.props;
 		
 		if( width ) {
 			style.width = width;
@@ -434,7 +441,7 @@ export default class ListBox extends React.Component{
 				scrollViewBodyStyle={scrollViewBodyStyle} 
 				className={classes} 
 				style={style}
-				onKeyDown={this.onKeyDown()}
+				onKeyDown={enableDownUpSelect ? this.onKeyDown() : onKeyDown}
 				onFocus={onFocus}
 				onBlur={onBlur}
 			>

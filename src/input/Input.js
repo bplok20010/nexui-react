@@ -84,6 +84,10 @@ export default class Input extends PureComponent{
 		this._input = input;	
 	}
 	
+	getInput(){
+		return this._input;	
+	}
+	
 	renderInput(){
 		const props = this.props;
 		const {
@@ -180,8 +184,6 @@ export default class Input extends PureComponent{
 		
 		return null;
 	}
-	
-	
 	
 	wrapInput(input){
 		const {prefixCls, className, inline, style={}} = this.props;

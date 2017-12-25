@@ -1275,6 +1275,11 @@ var Input = (_temp2 = _class$1 = function (_PureComponent) {
 			return classnames(prefixCls, (_classNames = {}, defineProperty(_classNames, prefixCls + '-sm', size === 'small'), defineProperty(_classNames, prefixCls + '-lg', size === 'large'), defineProperty(_classNames, prefixCls + '-disabled', disabled), defineProperty(_classNames, inputCls, inputCls), _classNames));
 		}
 	}, {
+		key: 'getInput',
+		value: function getInput() {
+			return this._input;
+		}
+	}, {
 		key: 'renderInput',
 		value: function renderInput() {
 			var props = this.props;
@@ -3805,6 +3810,8 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 				var indexValueMap = _this2._indexValueMap;
 				var activeIndex = _this2._activeIndex;
 
+				if (props.enableDownUpSelect) props.onKeyDown(e);
+
 				if (!list) {
 					list = dom.querySelectorAll(selector);
 				}
@@ -4016,6 +4023,8 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 			    height = _props6.height,
 			    tabIndex = _props6.tabIndex,
 			    disabled = _props6.disabled,
+			    enableDownUpSelect = _props6.enableDownUpSelect,
+			    onKeyDown = _props6.onKeyDown,
 			    onFocus = _props6.onFocus,
 			    onBlur = _props6.onBlur,
 			    _props6$style = _props6.style,
@@ -4042,7 +4051,7 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 					scrollViewBodyStyle: scrollViewBodyStyle,
 					className: classes,
 					style: style,
-					onKeyDown: this.onKeyDown(),
+					onKeyDown: enableDownUpSelect ? this.onKeyDown() : onKeyDown,
 					onFocus: onFocus,
 					onBlur: onBlur
 				},
@@ -4068,10 +4077,12 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 	height: propTypes.oneOfType([propTypes.string, propTypes.number]),
 	labelInValue: propTypes.bool,
 	tabIndex: propTypes.number,
+	enableDownUpSelect: propTypes.bool,
 	onItemClick: propTypes.func,
 	onChange: propTypes.func,
 	onFocus: propTypes.func,
-	onBlur: propTypes.func
+	onBlur: propTypes.func,
+	onKeyDown: propTypes.func
 }, _class$15.defaultProps = {
 	prefixCls: 'nex-listbox',
 	valueField: 'value',
@@ -4081,8 +4092,10 @@ var ListBox$1 = (_temp$14 = _class$15 = function (_React$Component) {
 	tabIndex: 0,
 	items: [],
 	emptyLabel: null,
+	enableDownUpSelect: true,
 	onFocus: noop$2,
-	onBlur: noop$2
+	onBlur: noop$2,
+	onKeyDown: noop$2
 
 }, _initialiseProps$2 = function _initialiseProps() {
 	var _this5 = this;
