@@ -1,0 +1,117 @@
+.nex-steps {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	font-size: 0;
+	line-height: 1.5;
+	cursor:default;
+}
+
+.nex-steps {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 100%
+}
+
+.nex-steps-step {
+	position: relative
+}
+
+.nex-steps-item {
+	-ms-flex: 1;
+	-webkit-box-flex: 1;
+	display: inline-block;
+	flex: 1;
+	overflow: visible;
+	position: relative;
+	vertical-align: top
+}
+
+
+.nex-steps-item:last-child {
+	-ms-flex: none;
+	-webkit-box-flex: 0;
+	flex: none
+}
+
+.nex-steps-breadcrumb {
+	overflow: hidden
+}
+
+.nex-steps-breadcrumb .nex-steps-item {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 8px
+}
+
+.nex-steps-breadcrumb .nex-steps-item.is-clicked {
+	cursor: pointer
+}
+
+.nex-steps-breadcrumb .nex-steps-item:first-child {
+	padding-left: 0
+}
+
+.nex-steps-breadcrumb .nex-steps-item:first-child .nex-steps-step:before {
+	display: none
+}
+
+.nex-steps-breadcrumb .nex-steps-item:last-child {
+	padding-right: 0
+}
+
+.nex-steps-breadcrumb .nex-steps-item:last-child .nex-steps-step:after {
+	display: none
+}
+
+.nex-steps-breadcrumb .nex-steps-item .nex-steps-step {
+	background: #f8f8f8;
+	color: #666;
+	font-size: 14px;
+	height: 44px;
+	line-height: 44px;
+	padding: 0 10px;
+	text-align: center
+}
+
+.nex-steps-breadcrumb .nex-steps-item .nex-steps-step:after {
+	border-bottom: 22px solid transparent;
+	border-left: 12px solid #f8f8f8;
+	border-top: 22px solid transparent;
+	content: " ";
+	display: block;
+	height: 0;
+	margin-top: -22px;
+	position: absolute;
+	right: -12px;
+	top: 50%;
+	width: 0
+}
+
+.nex-steps-breadcrumb .nex-steps-item .nex-steps-step:before {
+	border-bottom: 22px solid #f8f8f8;
+	border-left: 12px solid transparent;
+	border-top: 22px solid #f8f8f8;
+	content: " ";
+	display: block;
+	height: 0;
+	left: -12px;
+	margin-top: -22px;
+	position: absolute;
+	top: 50%;
+	width: 0
+}
+
+.nex-steps-breadcrumb .nex-steps-item.is-finish .nex-steps-step {
+	background: #38f;
+	color: #fff
+}
+
+.nex-steps-breadcrumb .nex-steps-item.is-finish .nex-steps-step:after {
+	border-left-color: #38f
+}
+
+.nex-steps-breadcrumb .nex-steps-item.is-finish .nex-steps-step:before {
+	border-bottom-color: #38f;
+	border-top-color: #38f
+}

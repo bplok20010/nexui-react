@@ -37,6 +37,8 @@ import Switch from './switch/Switch';
 
 import Trigger from './trigger/Trigger';
 
+import Steps from './steps';
+
 import {
 	Transition,
 	TransitionGroup,
@@ -77,4 +79,5 @@ export {
 	//ReplaceTransition,
 	CSSTransition,	
 	Icon,
+	Steps,
 }
